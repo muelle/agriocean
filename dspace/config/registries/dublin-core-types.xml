@@ -5,7 +5,7 @@
   -
   - Version:  $Revision: 3705 $
   -
-  - Date:     $Date: 2009-04-11 13:02:24 -0400 (Sat, 11 Apr 2009) $
+  - Date:     $Date: 2009-04-11 20:02:24 +0300 (Sat, 11 Apr 2009) $
   -
   - Initial contents for Dublin Core type registry.  Once the registry has
   - been loaded, this file becomes obsolete; the current version of the
@@ -34,7 +34,7 @@
     <contributor.author>Rebecca Lubas</contributor.author>
     <contributor.author>Sarah Mitchell</contributor.author>
     <contributor.editor>$Author: mdiggory $</contributor.editor>
-    <date.created>$Date: 2009-04-11 13:02:24 -0400 (Sat, 11 Apr 2009) $</date.created>
+    <date.created>$Date: 2009-04-11 20:02:24 +0300 (Sat, 11 Apr 2009) $</date.created>
     <description>
       $Log$
       Revision 1.5  2006/10/18 15:38:34  cjuergen
@@ -583,5 +583,155 @@
     <!-- unqualified -->
     <scope_note>Nature or genre of content.</scope_note>
   </dc-type>
+
+    <!-- AgriOcean -->
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>subject</element>
+        <qualifier>asfa</qualifier>
+        <scope_note>ASFA Keywords</scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>type</element>
+        <qualifier>specified</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>format</element>
+        <qualifier>pages</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>description</element>
+        <qualifier>notes</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>contributor</element>
+        <qualifier>corpauthor</qualifier>
+        <scope_note>Corporate Author</scope_note>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>title</qualifier>
+        <scope_note>Journal title</scope_note>		
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>volume</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>issue</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>stpage</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>endpage</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>authors</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>edition</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>conferencedate</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>conferencename</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>conferenceplace</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>agscitationNumber</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>subject</element>
+        <qualifier>agrovoc</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>description</element>
+        <qualifier>other</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>relation</element>
+        <qualifier>references</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>description</element>
+        <qualifier>status</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>type</element>
+        <qualifier>refereed</qualifier>
+    </dc-type>
+
+	<dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>booktitle</qualifier>
+    </dc-type>
+
+	<dc-type>
+        <schema>dc</schema>
+        <element>bibliographicCitation</element>
+        <qualifier>proceedingstitle</qualifier>
+    </dc-type>
+
+	<dc-type>
+        <schema>dc</schema>
+        <element>type</element>
+        <qualifier>thesis</qualifier>
+    </dc-type>
+	
 
 </dspace-dc-types>
