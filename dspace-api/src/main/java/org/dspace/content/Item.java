@@ -9,6 +9,8 @@ package org.dspace.content;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -494,7 +496,7 @@ public class Item extends DSpaceObject
         int i = 0;
         while(dcf.hasMoreTokens())
         {
-            tokens[i] = dcf.nextToken().trim();
+            tokens[i] = dcf.nextToken().toLowerCase().trim();
             i++;
         }
         String schema = tokens[0];
@@ -2715,4 +2717,84 @@ public class Item extends DSpaceObject
             return null;
         }
     }
+
+    // Edited by Dimitri Surinx START
+	public static int[] latestAdditionsId(Context context) throws SQLException
+	{
+		String query = "SELECT item.item_id FROM item,handle WHERE item.item_id = handle.resource_id AND handle.resource_type_id = 2 AND in_archive AND NOT withdrawn ORDER BY handle.handle_id DESC ";
+		PreparedStatement statement = context.getDBConnection().prepareStatement(query);
+		int[] ids=  new int[5];
+
+		ResultSet rs = statement.executeQuery();
+
+		for(int i = 0;i < 5 && rs.next();i++){
+
+			ids[i] = rs.getInt("item_id");
+}
+		return ids;
+	}
+	public static int returnId(Context context,String element,String qualifier)  throws SQLException{
+		String query = null;
+		PreparedStatement statement = null;
+		if(qualifier.equals("")){
+			query = "SELECT metadata_field_id FROM metadatafieldregistry where metadatafieldregistry.element = ?";
+			statement = context.getDBConnection().prepareStatement(query);
+			statement.setString(1,element);
+		}
+		else {
+			query = "SELECT metadata_field_id FROM metadatafieldregistry where metadatafieldregistry.element = ? AND metadatafieldregistry.qualifier = ?";
+			statement= context.getDBConnection().prepareStatement(query);
+			statement.setString(1,element);
+			statement.setString(2,qualifier);
+
+		}
+
+		ResultSet rs = statement.executeQuery();
+		if(rs.next())
+			return rs.getInt("metadata_field_id");
+		else
+			return 0;
+
+	}
+	public static List<String> latestAdditionsText(Context context,int id,String element,String qualifier)throws SQLException{
+		int regId = returnId(context,element,qualifier);
+		return latestAdditionsText(context,id,regId);
+	}
+	public static List<String> latestAdditionsText(Context context,int id,int regId) throws SQLException {
+		return latestAdditionsText(context,id,regId,3);
+	}
+	public static List<String> latestAdditionsText(Context context,int id,int regId,int amount) throws SQLException
+	{
+		String query = "SELECT text_value FROM item item,metadatavalue where item.item_id = metadatavalue.item_id AND item.item_id = ? AND metadata_field_id = ? ORDER BY last_modified DESC";
+		PreparedStatement statement = context.getDBConnection().prepareStatement(query);
+		List<String> titles = new ArrayList<String>();
+		String citation = "";
+		statement.setInt(1, id);
+		statement.setInt(2, regId);
+		int i = 1;
+
+		ResultSet rs = statement.executeQuery();
+		for(i = 0;(i<amount || (amount == 0)) && rs.next();i++){
+			if(i == 0)
+				titles.clear();
+			titles.add(rs.getString("text_value"));
+		}
+		return titles;
+	}
+
+	public static String getHandleMod(Context context,int regId) throws SQLException
+	{
+
+		String query = "SELECT handle FROM handle where resource_type_id = 2 AND resource_id = ? ";
+		PreparedStatement statement = context.getDBConnection().prepareStatement(query);
+		String title = "";
+		statement.setInt(1, regId);
+		ResultSet rs = statement.executeQuery();
+
+		while (rs.next()){
+			title = rs.getString("handle");
+		}
+		return title;
+	}
+	// Edited by Dimitri Surinx STOP
 }

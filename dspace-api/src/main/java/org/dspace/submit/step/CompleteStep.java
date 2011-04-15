@@ -19,10 +19,14 @@ import org.apache.log4j.Logger;
 import org.dspace.app.util.SubmissionInfo;
 import org.dspace.submit.AbstractProcessingStep;
 import org.dspace.authorize.AuthorizeException;
+import org.dspace.content.DCValue;
+import org.dspace.content.Item;
+import org.dspace.content.MetadataSchema;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
 import org.dspace.workflow.WorkflowManager;
+import proj.oceandocs.citation.CitationManager;
 
 /**
  * This is the class which defines what happens once a submission completes!
@@ -85,6 +89,21 @@ public class CompleteStep extends AbstractProcessingStep
         {
         WorkflowManager.start(context, (WorkspaceItem) subInfo
                 .getSubmissionItem());
+
+                 Item item = subInfo.getSubmissionItem().getItem();
+                 //add citation and AGRIS number to item
+                 CitationManager cm = new CitationManager();
+                 String cit = cm.updateCitationString(item);
+                 //update ISSN field
+                 DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", Item.ANY);
+                 if (titles.length >0)
+                 {
+                     String issn = titles[0].authority;
+                     item.clearMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY);
+                     item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY, issn);
+                     item.update();
+                 }
+
             success = true;
         }
         catch (Exception e)

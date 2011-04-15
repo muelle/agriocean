@@ -423,6 +423,10 @@ public class JSPStepManager
             }
             else
             {
+                if (status == AbstractProcessingStep.NEW_DOC_TYPE)
+                    //if just document type was changed we will show the same page
+                    AbstractProcessingStep.setCurrentPage(request, currentPage);
+                else
                 // otherwise, increment to the next page
                 AbstractProcessingStep.setCurrentPage(request, currentPage + 1);
 

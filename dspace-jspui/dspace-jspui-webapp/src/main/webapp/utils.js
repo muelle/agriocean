@@ -265,5 +265,9 @@ function isBrowser(b,v) {
 		  return browserOk && versionOk;
 }
 
-
+// type submission function
+function SetDocType()
+{
+    document.edit_metadata.submit();
+}
 

@@ -65,6 +65,12 @@ public class DCInput
     /** is the entry closed to vocabulary terms? */
     private boolean closedVocabulary = false;
 
+    /** size of the input field (characters)*/
+    private int size = 0;
+
+    /** show choice of language */
+    private boolean askLang = false;
+
     /** 
      * The scope of the input sets, this restricts hidden metadata fields from 
      * view during workflow processing. 
@@ -118,6 +124,28 @@ public class DCInput
         String closedVocabularyStr = fieldMap.get("closedVocabulary");
         closedVocabulary = "true".equalsIgnoreCase(closedVocabularyStr)
                             || "yes".equalsIgnoreCase(closedVocabularyStr);
+
+        if (fieldMap.containsKey("asklang"))
+        {
+            if("true".equals(fieldMap.get("asklang")))
+                askLang=true;
+    }
+
+        if (fieldMap.containsKey("size"))
+        {
+            try
+            {
+                size = Integer.parseInt(fieldMap.get("size"));
+            }
+            catch(Exception e)
+            {
+                size = 0;
+            }
+        }
+        else
+        {
+            size=0;
+        }
     }
 
     /**
@@ -376,4 +404,38 @@ public class DCInput
 		return closedVocabulary;
 	}
 
+        /**
+         * Gets the desired size for input element (box) in user interface.
+         * @return size
+         *              the desired size of the input element
+         */
+        public int getSize()
+        {
+            return this.size;
+}
+
+        /**
+         * Gets the flag value  - to request user input for language attribute
+         * for the field.
+         */
+        public boolean getAskLanguage()
+        {
+            return askLang;
+        }
+
+    /**
+         * Returns fully qualified name of the field.
+         *
+         * @return String full name of the field schema.element.qualifier
+         */
+        public String getFullQualName()
+        {
+            String result="";
+
+            result += getSchema() == null ? "":getSchema();
+            result += getElement() == null ? "":("." +getElement());
+            result += getQualifier() == null ? "":("." +getQualifier());
+
+            return result;
+        }
 }

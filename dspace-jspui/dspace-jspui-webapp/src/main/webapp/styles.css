@@ -4,21 +4,17 @@
  * tree and available online at
  *
  * http://www.dspace.org/license/
- */
+*/
 A { color: #336699 }
 
-BODY { font-family: "verdana", Arial, Helvetica, sans-serif;
-       font-size: 10pt;
-       font-style: normal;
-       color: #000000;
-       background: #bbbbbb;
-       margin: 0;
-       padding: 0;
-       margin-left:0px;
-       margin-right:0px;
-       margin-top:0px;
-       margin-bottom:0px }
-
+BODY
+{
+    font-family: "verdana", Arial, Helvetica,
+        sans-serif; font-size: 10pt; font-style: normal; color: rgb(68,68,68);
+    background: white; text-align: center; background-repeat: repeat-y;
+    background-position: center; background-color: rgb(255,255,255);
+    padding: 0
+}
 H1 { margin-left: 10px;
      margin-right: 10px;
      font-size: 16pt;
@@ -47,7 +43,7 @@ p {  margin-left: 10px;
      margin-right: 10px;
      font-family: "verdana", "Arial", "Helvetica", sans-serif;
      font-size: 10pt }
-     
+
 /* This class is here so that a "DIV" by default acts as a "P".
    This is necessary since the "dspace:popup" tag must have a "DIV"
    (or block element) surrounding it in order to be valid XHTML 1.0 */
@@ -98,21 +94,29 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                border: 0;
                margin: 0 }
 
-.stripe { background: #336699 url(./image/stripe.gif) repeat-x;
-          vertical-align: top;
-          border: 0;
-          padding: 0;
-          margin: 0;
-          color: #ffffff }
+.stripe
+{
+    background: #336699;
+    color: #ffffff
+}
+
+.navbarcolor
+{
+    background: #000000;
+    color: #ffffff
+}
 
 .locationBar { font-size: 10pt;
                font-family: "verdana", "Arial", "Helvetica", sans-serif;
                text-align: left }
 
-.centralPane { margin: 1px;
-               vertical-align: top;
-               padding: 3px;
-               border: 0 }
+.centralPane
+{
+    margin: 0px;
+    vertical-align: top;
+    padding: 0px;
+    border: 1px solid #336699;
+}
 
 /* HACK: Width shouldn't really be 100%:  Really, this is asking that the
        table cell be the full width of the table.  The side effect of
@@ -120,46 +124,62 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
        a width of 0%, but in practice browsers will only take this 100%
        as a hint, and just make it as wide as it can without impinging
        the other cells.  This, fortunately, is precisely what we want. */
-.pageContents { FONT-FAMILY: "verdana", Arial, Helvetica, sans-serif;
-                background: white;
-                color: black;
-                vertical-align: top;
-                width: 100% }
+.pageContents
+{
+    FONT-FAMILY: "verdana", Arial, Helvetica, sans-serif;
+    background: white;
+    color: black;
+    vertical-align: top;
+    width: 100%
+}
 
-.navigationBarTable{ width: 100%;
-                     padding: 2px;
-                     margin: 2px;
-                     border: 0 }
+.navigationBarTable
+{
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    border: 0 }
 
-.navigationBar { font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                 font-size: 10pt;
-                 font-style: normal;
-                 font-weight: bold;
-                 color: #252645;
-                 text-decoration: none;
-                 background: white }
+.navigationBar
+{
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 10pt;
+    font-style: normal;
+    font-weight: bold;
+    color: #252645;
+    text-decoration: none;
+    background: white;
+    border-right: 1px solid #336699
+}
 
-.navigationBarSublabel{  font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                         font-size: 12pt;
-                         font-style: normal;
-                         font-weight: bold;
-                         color: black;
-                         text-decoration: none;
-                         background: white;
-                         white-space: nowrap }
+.navigationBarSublabel
+{
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 12pt;
+    font-style: normal;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+    background: white;
+    white-space: nowrap
+}
 
 /* HACK: Shouldn't have to repeat font information and colour here, it
        should be inherited from the parent, but isn't in Netscape 4.x,
        IE or Opera.  (Only Mozilla functions correctly.) */
-.navigationBarItem { font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                     font-size: 10pt;
-                     font-style: normal;
-                     font-weight: normal;
-                     color: #252645;
-                     background: #ffffff;
-                     text-decoration: none;
-                     vertical-align: middle;
-                     white-space: nowrap }
+.navigationBarItem
+{
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 10pt;
+    font-style: normal;
+    font-weight: normal;
+    color: #252645;
+    background: #5970B2;
+    text-decoration: none;
+    vertical-align: middle;
+    white-space: nowrap
+
+}
 
 .loggedIn { font-family: "verdana", "Arial", "Helvetica", sans-serif;
             font-size: 8pt;
@@ -188,17 +208,21 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                 margin-left: 10px;
                 margin-right: 10px }
 
-.sidebar { background: #ffffff;
-           color: #000000 }
+.sidebar
+{
+    background: #ffffff;
+    color: #000000;
+    border-left: 1px solid #336699;
+}
 
 .communityLink { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                  font-size: 14pt;
                  font-weight: bold }
 
 .communityStrength {
-                                font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                 font-size: 12pt;
-                 font-weight: normal }
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 12pt;
+    font-weight: normal }
 
 .communityDescription { margin-left: 20px;
                         margin-right: 10px;
@@ -212,11 +236,11 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                       font-weight: normal }
 
 .collectionDescription { margin-left: 20px;
-                     margin-right: 10px;
-                     font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                     font-size: 10pt;
+                         margin-right: 10px;
+                         font-family: "verdana", "Arial", "Helvetica", sans-serif;
+                         font-size: 10pt;
                          font-weight: normal;
-                     list-style-type: none }
+                         list-style-type: none }
 
 .miscListItem { margin-left: 20px;
                 margin-right: 10px;
@@ -279,33 +303,34 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                        background: #ddddff }
 
 .topNavLink { margin-left: 10px;
-          margin-right: 10px;
-          font-family: "verdana", "Arial", "Helvetica", sans-serif;
-          font-size: 10pt;
-          text-align: center }
+              margin-right: 10px;
+              font-family: "verdana", "Arial", "Helvetica", sans-serif;
+              font-size: 10pt;
+              text-align: center }
 
 .submitFormLabel { margin-left: 10px;
-           margin-right: 10px;
-           font-family: "verdana", "Arial", "Helvetica", sans-serif;
+                   margin-right: 10px;
+                   font-family: "verdana", "Arial", "Helvetica", sans-serif;
                    font-weight: bold;
-           font-size: 10pt;
-           text-align: right;
-           vertical-align: top }
+                   font-size: 10pt;
+                   text-align: right;
+                   vertical-align: top }
 
 .submitFormHelp {  margin-left: 10px;
-           margin-right: 10px;
-           font-family: "verdana", "Arial", "Helvetica", sans-serif;
-           font-size: 8pt;
-           text-align: center }
-           
+                   margin-right: 10px;
+                   font-family: "verdana", "Arial", "Helvetica", sans-serif;
+                   font-size: 8pt;
+                   text-align: center }
 
-.submitFormWarn {  margin-left: 10px;
-           margin-right: 10px;
-           font-family: "verdana", "Arial", "Helvetica", sans-serif;
-           font-weight: bold;
-           font-size: 12pt;
-           color: #ff6600;
-           text-align: center }
+
+.submitFormWarn {  margin-left: 5px;
+                   margin-right: 5px;
+                   font-family: "verdana", "Arial", "Helvetica", sans-serif;
+                   font-weight: bold;
+                   font-size: 8pt;
+                   font-style: oblique;
+                   color: #C00000;
+                   text-align: center }
 
 .uploadHelp { margin-left: 20px;
               margin-right: 20px;
@@ -340,22 +365,22 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                            background-repeat: no-repeat; }
 
 .submitProgressButtonCurrent{ border: 0;
-                           background-image: url(./image/submit/current.gif);
-                           background-position: center;
-                           height: 30px;
-                           width: 90px;
-                           font-size: 12pt;
-                           color: white;
-                           background-repeat: no-repeat; }
+                              background-image: url(./image/submit/current.gif);
+                              background-position: center;
+                              height: 30px;
+                              width: 90px;
+                              font-size: 12pt;
+                              color: white;
+                              background-repeat: no-repeat; }
 
 .submitProgressButtonNotDone{ border: 0;
-                           background-image: url(./image/submit/notdone.gif);
-                           background-position: center;
-                           height: 30px;
-                           width: 90px;
-                           font-size: 12pt;
-                           color: black;
-                           background-repeat: no-repeat; }
+                              background-image: url(./image/submit/notdone.gif);
+                              background-position: center;
+                              height: 30px;
+                              width: 90px;
+                              font-size: 12pt;
+                              color: black;
+                              background-repeat: no-repeat; }
 
 .miscTable { font-family: "verdana", "Arial", "Helvetica", sans-serif;
              font-size: 12pt;
@@ -364,16 +389,16 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
              color: #000000;
              vertical-align: middle;
              text-decoration: none;
-             background: #cccccc }
+}
 
 .miscTableNoColor { font-family: "verdana", "Arial", "Helvetica", sans-serif;
-             font-size: 12pt;
-             font-style: normal;
-             font-weight: normal;
-             color: #000000;
-             vertical-align: middle;
-             text-decoration: none;
-             background: #ffffff }
+                    font-size: 12pt;
+                    font-style: normal;
+                    font-weight: normal;
+                    color: #000000;
+                    vertical-align: middle;
+                    text-decoration: none;
+                    background: #ffffff }
 
 .oddRowOddCol{ font-family: "verdana", "Arial", "Helvetica", sans-serif;
                font-size: 12pt;
@@ -479,13 +504,13 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                   vertical-align: middle }
 
 .searchBoxLabelSmall { font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                  font-size: 8pt;
-                  font-style: normal;
-                  font-weight: bold;
-                  color: #000000;
-                  background: #fefecd;
-                  text-decoration: none;
-                  vertical-align: middle }
+                       font-size: 8pt;
+                       font-style: normal;
+                       font-weight: bold;
+                       color: #000000;
+                       background: #fefecd;
+                       text-decoration: none;
+                       vertical-align: middle }
 
 .attentionTable
 {
@@ -504,12 +529,12 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
 }
 
 .help {font-family: "verdana", "Arial", "Helvetica", sans-serif;
-        background: #ffffff;
-        margin-left:10px;}
+       background: #ffffff;
+       margin-left:10px;}
 
 .help h2{text-align:center;
-                font-size:18pt;
-                color:#000000;}
+         font-size:18pt;
+         color:#000000;}
 
 .help h3{font-weight:bold;
          margin-left:0px;}
@@ -532,62 +557,62 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
 .help ul {font-size:10pt;}
 
 .help p.bottomLinks {font-size:10pt;
-                    font-weight:bold;}
+                     font-weight:bold;}
 
 .help td.leftAlign{font-size:10pt;}
 .help td.rightAlign{text-align:right;
                     font-size:10pt;}
-                    
+
 
 /* The following rules are used by the controlled-vocabulary add-on */
 ul.controlledvocabulary  {
-                list-style-type:none; }
+    list-style-type:none; }
 
-        
+
 .controlledvocabulary ul  li ul {
-             list-style-type:none;
-                display:none; }
+    list-style-type:none;
+    display:none; }
 
 input.controlledvocabulary  {
-                border:0px; }
+    border:0px; }
 
 img.controlledvocabulary {
-                margin-right:8px ! important;
-                margin-left:11px ! important;
-                cursor:hand; }
+    margin-right:8px ! important;
+    margin-left:11px ! important;
+    cursor:hand; }
 
 .submitFormHelpControlledVocabularies {
-                   margin-left: 10px;
-           margin-right: 10px;
-           font-family: "verdana", "Arial", "Helvetica", sans-serif;
-           font-size: 8pt;
-           text-align: left; }
+    margin-left: 10px;
+    margin-right: 10px;
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 8pt;
+    text-align: left; }
 
 .controlledVocabularyLink {
-           font-family: "verdana", "Arial", "Helvetica", sans-serif;
-           font-size: 8pt; }
-           
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 8pt; }
+
 .browse_buttons
 {
-        float: right;
-        padding: 1px;
-        margin: 1px;
+    float: right;
+    padding: 1px;
+    margin: 1px;
 }
 
 #browse_navigation
 {
-        margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 #browse_controls
 {
-        margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 .browse_range
 {
-        margin-top: 5px;
-        margin-bottom: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 
@@ -631,27 +656,27 @@ span.ds-authority-confidence
   padding: 0px 2px; vertical-align: bottom; color: transparent;}
 img.ds-authority-confidence.cf-unset,
 span.ds-authority-confidence.cf-unset
-  { background-image: url(./image/authority/bug.png);}
+{ background-image: url(./image/authority/bug.png);}
 img.ds-authority-confidence.cf-novalue,
 span.ds-authority-confidence.cf-novalue
-  { background-image: url(./image/confidence/0-unauthored.gif);}
+{ background-image: url(./image/confidence/0-unauthored.gif);}
 img.ds-authority-confidence.cf-rejected,
 img.ds-authority-confidence.cf-failed,
 span.ds-authority-confidence.cf-rejected,
 span.ds-authority-confidence.cf-failed
-  { background-image: url(./image/confidence/2-errortriangle.gif); }
+{ background-image: url(./image/confidence/2-errortriangle.gif); }
 img.ds-authority-confidence.cf-notfound,
 span.ds-authority-confidence.cf-notfound
-  { background-image: url(./image/confidence/3-thumb1.gif); }
+{ background-image: url(./image/confidence/3-thumb1.gif); }
 img.ds-authority-confidence.cf-ambiguous,
 span.ds-authority-confidence.cf-ambiguous
-  { background-image: url(./image/confidence/4-question.gif); }
+{ background-image: url(./image/confidence/4-question.gif); }
 img.ds-authority-confidence.cf-uncertain,
 span.ds-authority-confidence.cf-uncertain
-  { background-image: url(./image/confidence/5-pinion.gif); }
+{ background-image: url(./image/confidence/5-pinion.gif); }
 img.ds-authority-confidence.cf-accepted,
 span.ds-authority-confidence.cf-accepted
-  { background-image: url(./image/confidence/6-greencheck.gif); }
+{ background-image: url(./image/confidence/6-greencheck.gif); }
 
 /* hide authority-value inputs in forms */
 input.ds-authority-value { display:none; }
@@ -667,12 +692,12 @@ table.authority-statistics {padding: 5px; margin-bottom: 15px;}
 table.authority-statistics table {float: left; text-align: center;}
 
 .statsTable {
-        border: 1px gray solid;
-        width: 85%;
+    border: 1px gray solid;
+    width: 85%;
 }
 
 .statsTable td {
-        font-size: 0.8em;
+    font-size: 0.8em;
 }
 
 
@@ -686,7 +711,7 @@ div#authority-message {
     padding: 10px;
     border: 1px dashed #FFCC00;
     background-color: #FFF4C8;
- }
+}
 
 a.authority {
     background: transparent url(./image/authority/book_key.png) no-repeat;
@@ -696,9 +721,335 @@ a.authority {
 
 /* for edit-item-form lock button */
 input.ds-authority-lock
-  { vertical-align: bottom; height: 24px; width: 24px; margin-right: 8px;
-    background-repeat: no-repeat; background-color: transparent; }
+{ vertical-align: bottom; height: 24px; width: 24px; margin-right: 8px;
+  background-repeat: no-repeat; background-color: transparent; }
 input.ds-authority-lock.is-locked
-  { background-image: url(./image/lock24.png); }
+{ background-image: url(./image/lock24.png); }
 input.ds-authority-lock.is-unlocked
-  { background-image: url(./image/unlock24.png); }
+{ background-image: url(./image/unlock24.png); }
+/* AgrisOcean Docs: added by Denys Slipetskyy  (oct 2010) . CSS was originaly made by ??? */
+.metadataWrapper
+{
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+/* for name, journalbox */
+.metadataCell
+{
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+.metadataForm
+{
+    width: 90%;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.metadataTitlegroup
+{
+    display: block;
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+
+.metadataFieldgroupTitle
+{
+    display: inline;
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 11pt;
+    margin: 0;
+    border: 0px solid #F5D0A9;
+    margin-right: 0.3em;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #FFFFFF;
+    color: black
+}
+
+.metadataFieldgroupHint
+{
+    display: inline;
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 0.8em;
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    color: #252525
+}
+
+.metadataFieldgroup
+{
+    float: left;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-top: 1em;
+    clear: both;
+    display: block;
+}
+
+.metadataFieldrow
+{
+    display: block;
+    width: 100%;
+    background-color: white;
+    border: 0px solid #000000;
+    margin: 0;
+    margin-bottom: -1px;
+    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-right: 0px;
+    background-color: #E0E9F2;
+    float: left;
+    clear: both;
+}
+
+.metadataField
+{
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 0;
+    margin-right: 15px;
+}
+
+.metadataFieldItem
+{
+    display: block;
+    margin: 0;
+    padding: 0;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+}
+
+
+.metadataLabel
+{
+    display: block;
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 9pt;
+    color: #7f0b0c;
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.metadataType
+{
+    display: block;
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 13pt;
+    margin: 0;
+    padding: 0;
+}
+
+.metadataWarning
+{
+    color: red;
+    text-decoration: underline;
+    font-style: italic;
+}
+
+.metadataCollections
+{
+    list-style-type: none;
+}
+
+#sddm
+{
+    margin: 0;
+    padding: 0;
+}
+
+#sddm li
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    float: left;
+    font: bold 11px arial
+}
+
+
+#sddm li a
+{
+    display: block;
+    margin: 0 1px 0 0;
+    padding: 5px 10px;
+    width: 110px;
+    background: #5970B2;
+    color: #FFF;
+    text-align: center;
+    text-decoration: none
+}
+
+#sddm ti a
+{
+    display: block;
+    margin: 0 1px 0 0;
+    padding: 5px 10px;
+    width: 130px;
+    background: #5970B2;
+    color: #FFF;
+    text-align: center;
+    text-decoration: none
+}
+
+#searchform
+{
+    text-align: center;
+}
+
+#sddm li a:hover
+{
+    background: #49A3FF
+}
+
+.bla
+{
+    text-align: center;
+}
+
+#sddm div
+{
+    position: absolute;
+    visibility: hidden;
+    margin: 0;
+    border-left: 0.1px solid #FFFFFF;
+    border-right: 0.1px solid #FFFFFF;
+    border-top: 0.1px solid #FFFFFF;
+    padding: 0;	background: #0198E1;
+    width: 150px;
+}
+
+#sddm div a
+{
+    position: relative;
+    display: block;
+    margin: 0px;
+    padding: 2px 2px;
+    width: 146px;
+    white-space: nowrap;
+    text-align: left;
+    text-decoration: none;
+    border-bottom: 0.1px solid #FFFFFF;
+    background: #0198E1;
+    color: #FFFFFF;
+    font: 11px arial
+}
+
+
+#sddm div a:hover
+{
+    background: #49A3FF;
+    color: #FFF
+}
+
+div#ds-main
+{
+    position: relative; width: 917px; color:
+        inherit; background-color: white; margin-left: auto; margin-right: auto;
+    text-align: left; padding: 0;
+}
+
+.borderBanner
+{
+    border-top: 1px solid #336699;
+    border-left: 1px solid #336699;
+    border-right: 1px solid #336699;
+}
+
+.navigatiobarRow
+{
+    font-size: 10pt;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #000000;
+    padding: 2px 20px;
+    margin-left: 10px;
+    color: #FFFFFF;
+    margin-left: 10px;
+    background: #5970B2
+}
+.navigatiobarTitle
+{
+    font-size: 10pt;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #000000;
+    padding: 2px 5px;
+    margin-left: 10px;
+    color: #FFFFFF;
+    margin-left: 10px;
+    background: #5970B2
+}
+
+.navigatiobarRow a
+{
+    font-size: 10px;
+    color: #FFFFFF;
+    padding: 0px 0px;
+    background: #5970B2
+}
+.navigationTableBg
+{
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000
+}
+
+.navigationBarSpacing
+{
+    border-left: 0px solid #FFFFFF;
+    border-right: 0px solid #FFFFFF;
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000
+}
+
+.latestLayout{
+    border: 0px solid #000000;
+    margin: 25px;
+    font-size: 10pt;
+    color: #000000;
+    background: #E0E9F2;
+    padding: 2px 10px
+}
+.latestLayout a
+{
+    color: #000000;
+    padding: 2px 10px;
+    font-size: 11pt;
+    text-decoration:none;
+    font-weight:bold
+}
+
+.latestLayoutTitle{
+    border-bottom: 1px solid #000000;
+    font-size: 11pt;
+    padding: 2px 5px;
+    font-weight:bold
+}
+.latestLayoutType{
+    border-bottom: 1px solid #000000;
+    margin: 25px;
+    font-size: 11pt;
+    padding: 2px 10px;
+    font-weight:bold
+}
+.navigatiobarRow
+{
+    font-size: 10pt;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #000000;
+    padding: 2px 20px;
+    margin-left: 10px;
+    color: #FFFFFF;
+    margin-left: 10px;
+    background: #5970B2
+}

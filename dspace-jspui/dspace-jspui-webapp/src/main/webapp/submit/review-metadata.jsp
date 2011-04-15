@@ -8,6 +8,7 @@
 
 --%>
 
+<%@page import="java.util.List"%>
 <%--
   - Review metadata page(s)
   -
@@ -19,14 +20,12 @@
 
 <%@ page import="java.io.IOException" %>
 
-<%@ page import="org.dspace.submit.step.DescribeStep" %>
+<%@ page import="org.dspace.submit.step.DescribeStepExt" %>
 <%@ page import="org.dspace.app.webui.servlet.SubmissionController" %>
 <%@ page import="org.dspace.app.util.SubmissionInfo" %>
 <%@ page import="org.dspace.content.InProgressSubmission" %>
 <%@ page import="org.dspace.app.webui.util.UIUtil" %>
-<%@ page import="org.dspace.app.util.DCInputsReader" %>
 <%@ page import="org.dspace.app.util.DCInputsReaderException" %>
-<%@ page import="org.dspace.app.util.DCInputSet" %>
 <%@ page import="org.dspace.app.util.DCInput" %>
 <%@ page import="org.dspace.content.Collection" %>
 <%@ page import="org.dspace.content.DCDate" %>
@@ -41,6 +40,9 @@
 <%@ page import="javax.servlet.jsp.jstl.fmt.LocaleSupport" %>
 <%@ page import="javax.servlet.jsp.PageContext" %>
 
+<%@ page import="proj.oceandocs.submission.DCInputSetExt" %>
+<%@ page import="proj.oceandocs.submission.DCInputGroup" %>
+<%@ page import="proj.oceandocs.submission.DCInputsReaderExt" %>
 
 <%@ taglib uri="http://www.dspace.org/dspace-tags.tld" prefix="dspace" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -68,15 +70,15 @@
     // determine collection
     Collection c = subInfo.getSubmissionItem().getCollection();
 
-    DCInputSet inputSet = null;
+    DCInputSetExt inputSet = null;
 
     try
     {
         //get the inputs reader
-        DCInputsReader inputsReader = DescribeStep.getInputsReader();
+        DCInputsReaderExt inputsReader = DescribeStepExt.getInputsReader();
 
         //load the input set for the current collection
-        inputSet = inputsReader.getInputs(c.getHandle());
+        inputSet = inputsReader.getInputs(c.getHandle(), item.getMetadata("dc.type")[0].value);
     }
     catch (DCInputsReaderException e)
     {
@@ -86,7 +88,7 @@
 
 <%!void layoutSection(HttpServletRequest request,
                        javax.servlet.jsp.JspWriter out,
-                       DCInputSet inputSet,
+                       DCInputSetExt inputSet,
                        SubmissionInfo subInfo,
                        Item item,
                        int pageNum,
@@ -95,40 +97,38 @@
     {
        InProgressSubmission ip = subInfo.getSubmissionItem();
 
-           //need to actually get the rows for pageNum-1 (since first page is index 0)
-           DCInput[] inputs = inputSet.getPageRows(pageNum-1,
-                                                   ip.hasMultipleTitles(),
-                                                   ip.isPublishedBefore());
+       List<DCInput> inputs = inputSet.getPageInputs(pageNum);
 
         MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
 
 
-       for (int z = 0; z < inputs.length; z++)
+       for (DCInput input: inputs)
        {
           String scope = subInfo.isInWorkflow() ? DCInput.WORKFLOW_SCOPE : DCInput.SUBMISSION_SCOPE;
-          if (!inputs[z].isVisible(scope) && !inputs[z].isReadOnly(scope))
+          if (!input.isVisible(scope) && !input.isReadOnly(scope))
           {
               continue;
           }
-          String inputType = inputs[z].getInputType();
-          String pairsName = inputs[z].getPairsType();
+
+          String inputType = input.getInputType();
+          String pairsName = input.getPairsType();
           String value;
           DCValue[] values;
           StringBuffer row = new StringBuffer();
           
           row.append("<tr>");
           row.append("<td width=\"40%\" class=\"metadataFieldLabel\">");
-          row.append(inputs[z].getLabel());
+          row.append(input.getLabel());
           row.append("</td>");
           row.append("<td width=\"60%\" class=\"metadataFieldValue\">");
 
           if (inputType.equals("qualdrop_value"))
           {
-             values = item.getMetadata(inputs[z].getSchema(), inputs[z].getElement(), Item.ANY, Item.ANY);
+             values = item.getMetadata(input.getSchema(), input.getElement(), Item.ANY, Item.ANY);
           }
           else
           {
-             values = item.getMetadata(inputs[z].getSchema(), inputs[z].getElement(), inputs[z].getQualifier(), Item.ANY);
+             values = item.getMetadata(input.getSchema(), input.getElement(), input.getQualifier(), Item.ANY);
           }
           if (values.length == 0)
           {
@@ -136,8 +136,8 @@
           }
           else
           {
-             boolean isAuthorityControlled = mam.isAuthorityControlled(inputs[z].getSchema(),
-                                                    inputs[z].getElement(),inputs[z].getQualifier());
+             boolean isAuthorityControlled = mam.isAuthorityControlled(input.getSchema(),
+                                                    input.getElement(),input.getQualifier());
 
              for (int i = 0; i < values.length; i++)
              {
@@ -150,7 +150,7 @@
                 else if (inputType.equals("dropdown") || inputType.equals("list"))
                 {
                    String storedVal = values[i].value;
-                   String displayVal = inputs[z].getDisplayString(pairsName,
+                   String displayVal = input.getDisplayString(pairsName,
                                                                 storedVal);
                    if (displayVal != null && !displayVal.equals(""))
                    {
@@ -172,7 +172,7 @@
                    }
                    else
                    {
-                        String displayQual = inputs[z].getDisplayString(pairsName,qual);
+                        String displayQual = input.getDisplayString(pairsName,qual);
                         String displayValue = Utils.addEntities(values[i].value);
                         if (displayQual != null)
                         {

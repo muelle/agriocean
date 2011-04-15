@@ -88,6 +88,8 @@ public abstract class AbstractProcessingStep
      **************************************************************************/
     public static final int STATUS_COMPLETE = 0;
 
+    public static final int NEW_DOC_TYPE = 1;
+
     /** Maps each status/error flag to a textual, human understandable message * */
     private Map<Integer, String> errorMessages = null;
 

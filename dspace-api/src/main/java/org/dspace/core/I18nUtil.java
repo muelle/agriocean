@@ -230,7 +230,7 @@ public class I18nUtil
     {
         /** Name of the form definition XML file */
         String fileName = "";
-        final String FORM_DEF_FILE = "input-forms";
+        final String FORM_DEF_FILE = "input-forms-extended";
         final String FILE_TYPE = ".xml";
         String defsFilename = ConfigurationManager.getProperty("dspace.dir")
                 + File.separator + "config" + File.separator + FORM_DEF_FILE;
