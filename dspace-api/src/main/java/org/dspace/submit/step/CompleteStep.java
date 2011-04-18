@@ -101,7 +101,8 @@ public class CompleteStep extends AbstractProcessingStep
                  {
                      String issn = titles[0].authority;
                      item.clearMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY);
-                     item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY, issn);
+                     if (issn != null && !"".equals(issn))
+                        item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY, issn);
                      item.update();
                  }
 
