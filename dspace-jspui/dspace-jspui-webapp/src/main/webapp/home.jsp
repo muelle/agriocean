@@ -151,17 +151,14 @@ for (int i = supportedLocales.length-1; i >= 0; i--)
 	    		if ("rss_1.0".equals(fmts[j]))
 	    		{
 	    		   icon = "rss1.gif";
-	    		   width = 80;
 	    		}
 	    		else if ("rss_2.0".equals(fmts[j]))
 	    		{
 	    		   icon = "rss2.gif";
-	    		   width = 80;
 	    		}
 	    		else
 	    	    {
 	    	       icon = "rss.gif";
-	    	       width = 36;
 	    	    }
 	%>
 	    <a href="<%= request.getContextPath() %>/feed/<%= fmts[j] %>/site"><img src="<%= request.getContextPath() %>/image/<%= icon %>" alt="RSS Feed" width="<%= width %>" height="15" vspace="3" border="0" /></a>

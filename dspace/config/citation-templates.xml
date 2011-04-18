@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+    Document   : citation-templates.xml
+    Created on : 10 Feb 2011
+    Author     : Denys SLIPETSKYY, Marc Goovaerts
+    Description:
+        templates for citation field.
+-->
+
+<citation>
+    <type name="Journal Contribution">
+        <!--<template lang="en" name="default">$BibliographicCitation.title$, $BibliographicCitation.volume$($BibliographicCitation.issue$) p. $BibliographicCitation.stpage$-$BibliographicCitation.endpage$.</template>-->
+        <template lang="en" name="default"><g>$bibliographicCitation.title$,</g><g> $bibliographicCitation.volume$</g><g>($bibliographicCitation.issue$).</g><g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+	<template lang="en" name="agscitationNumber"><g>vol. $bibliographicCitation.volume$, </g><g>issue: $bibliographicCitation.issue$, </g><g> p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    </type>
+    <type name="Proceedings - published">
+        <template lang="en" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g> <g>$bibliographicCitation.booktitle$, </g> <g>$publisher$,</g> <g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    </type>
+    <type name="Proceedings - unpublished">
+        <template lang="en" name="default"><g>$bibliographicCitation.cconferencename$, </g><g> $bibliographicCitation.cconferenceplace$, </g> <g> $bibliographicCitation.cconferencedate$</g>.</template>
+    </type>
+    <type name="Book item">
+        <template lang="en" name="default"><g>$bibliographicCitation.bauthors$ (Ed.). </g><g>$bibliographicCitation.booktitle$, </g><g>$publisher$,</g><g> p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    </type>
+</citation>

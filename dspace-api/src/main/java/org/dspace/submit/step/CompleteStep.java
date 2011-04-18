@@ -94,6 +94,7 @@ public class CompleteStep extends AbstractProcessingStep
                  //add citation and AGRIS number to item
                  CitationManager cm = new CitationManager();
                  String cit = cm.updateCitationString(item);
+
                  //update ISSN field
                  DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", Item.ANY);
                  if (titles.length >0)
