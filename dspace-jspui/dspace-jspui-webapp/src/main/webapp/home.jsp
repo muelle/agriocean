@@ -7,12 +7,13 @@
     http://www.dspace.org/license/
 
 --%>
+<%@page import="org.dspace.core.Context"%>
 <%--
   - Home page JSP
   -
   - Attributes:
   -    communities - Community[] all communities in DSpace
-  --%>
+--%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
 
@@ -31,143 +32,78 @@
 <%@ page import="org.dspace.core.ConfigurationManager" %>
 <%@ page import="org.dspace.browse.ItemCounter" %>
 
+<%@ page import="proj.oceandocs.components.BrowseAC"%>
+<%@ page import="proj.oceandocs.components.RecentSubm" %>
+
 <%
-    Community[] communities = (Community[]) request.getAttribute("communities");
+            Context context = null;
+            context = UIUtil.obtainContext(request);
 
-    Locale[] supportedLocales = I18nUtil.getSupportedLocales();
-    Locale sessionLocale = UIUtil.getSessionLocale(request);
-    Config.set(request.getSession(), Config.FMT_LOCALE, sessionLocale);
-    String topNews = ConfigurationManager.readNewsFile(LocaleSupport.getLocalizedMessage(pageContext, "news-top.html"));
-    String sideNews = ConfigurationManager.readNewsFile(LocaleSupport.getLocalizedMessage(pageContext, "news-side.html"));
+            Community[] communities = (Community[]) request.getAttribute("communities");
 
-    boolean feedEnabled = ConfigurationManager.getBooleanProperty("webui.feed.enable");
-    String feedData = "NONE";
-    if (feedEnabled)
-    {
-        feedData = "ALL:" + ConfigurationManager.getProperty("webui.feed.formats");
-    }
-    
-    ItemCounter ic = new ItemCounter(UIUtil.obtainContext(request));
+            Locale[] supportedLocales = I18nUtil.getSupportedLocales();
+            Locale sessionLocale = UIUtil.getSessionLocale(request);
+            Config.set(request.getSession(), Config.FMT_LOCALE, sessionLocale);
+            String topNews = ConfigurationManager.readNewsFile(LocaleSupport.getLocalizedMessage(pageContext, "news-top.html"));
+            String sideNews = ConfigurationManager.readNewsFile(LocaleSupport.getLocalizedMessage(pageContext, "news-side.html"));
+
+            boolean feedEnabled = ConfigurationManager.getBooleanProperty("webui.feed.enable");
+            String feedData = "NONE";
+            if (feedEnabled)
+            {
+                feedData = "ALL:" + ConfigurationManager.getProperty("webui.feed.formats");
+            }
+
+            ItemCounter ic = new ItemCounter(UIUtil.obtainContext(request));
 %>
 
-<dspace:layout locbar="nolink" titlekey="jsp.home.title" feedData="<%= feedData %>">
+<dspace:layout locbar="nolink" titlekey="jsp.home.title" feedData="<%= feedData%>">
 
-    <table  width="95%" align="center">
-      <tr align="right">
-        <td align="right">						
-<% if (supportedLocales != null && supportedLocales.length > 1)
-{
-%>
-        <form method="get" name="repost" action="">
-          <input type ="hidden" name ="locale"/>
-        </form>
-<%
-for (int i = supportedLocales.length-1; i >= 0; i--)
-{
-%>
-        <a class ="langChangeOn"
-                  onclick="javascript:document.repost.locale.value='<%=supportedLocales[i].toString()%>';
-                  document.repost.submit();">
-                 <%= supportedLocales[i].getDisplayLanguage(supportedLocales[i])%>
-        </a> &nbsp;
-<%
-}
-}
-%>
-        </td>
-      </tr>
-      <tr>
-            <td class="oddRowEvenCol"><%= topNews %></td>
+    <table  width="95%" align="center" class="miscTable">
+        
+        <tr>
+            <td class="latestLayoutTitle"><%= topNews%></td>
         </tr>
     </table>
     <br/>
-    <form action="<%= request.getContextPath() %>/simple-search" method="get">
+    <form action="<%= request.getContextPath()%>/simple-search" method="get">
         <table class="miscTable" width="95%" align="center">
             <tr>
-                <td class="oddRowEvenCol">
-                  <h3><fmt:message key="jsp.home.search1"/></h3>
-                      <p><label for="tquery"><fmt:message key="jsp.home.search2"/></label></p>
-                      <p><input type="text" name="query" size="20" id="tquery" />&nbsp;
-                         <input type="submit" name="submit" value="<fmt:message key="jsp.general.search.button"/>" /></p>
+                <td class="latestLayoutTitle">
+                    <h3><fmt:message key="jsp.home.search1"/></h3>
+                    <p><label for="tquery"><fmt:message key="jsp.home.search2"/></label></p>
+                    <p><input type="text" name="query" size="20" id="tquery" />&nbsp;
+                        <input type="submit" name="submit" value="<fmt:message key="jsp.general.search.button"/>" /></p>
                 </td>
             </tr>
         </table>
     </form>
+    
     <table class="miscTable" width="95%" align="center">
         <tr>
-            <td class="oddRowEvenCol">
-               <h3><fmt:message key="jsp.home.com1"/></h3>
-                <p><fmt:message key="jsp.home.com2"/></p>
+            <td class="latestLayoutTitle"><fmt:message key="jsp.collection-home.recentsub" /></td>
+        </tr>
+        <tr>
+            <td>
+                <table border="0" cellpadding="2" width="100%">
+                    <tr>
+                        <td>
+                            <table cellspacing="2" width="100%">
+                                <tr>
+                                    <td valign="top" class="latestLayoutTitle"><fmt:message key="itemlist.dc.title" /> - <fmt:message key="metadata.dc.identifier.citation" /> - <fmt:message key="itemlist.dc.contributor.author" /></td>
+                                    <td width="10px" align="right" valign="top" class="latestLayoutTitle"><fmt:message key="itemlist.dc.type" /></td>
+                                </tr>
 
-
-<%
- if (communities.length != 0)
- {
-%>
-    <table border="0" cellpadding="2">
-<% 	                 
-
-    for (int i = 0; i < communities.length; i++)
-    {
-%>                  <tr>
-                        <td class="standard">
-                            <a href="<%= request.getContextPath() %>/handle/<%= communities[i].getHandle() %>"><%= communities[i].getMetadata("name") %></a>
-<%
-        if (ConfigurationManager.getBooleanProperty("webui.strengths.show"))
-        {
-%>
-            [<%= ic.getCount(communities[i]) %>]
-<%
-        }
-
-%>
+                                <%
+                                            // generate the recent submissions
+                                            out.print(RecentSubm.GenerateHTML(context, 5, request.getContextPath()));%>
+                            </table>
                         </td>
-                    </tr>
-<%
-    }
-%>
-    </table>
-<%                
- }
-%>  
 
+                    </tr>
+                </table>
             </td>
         </tr>
     </table>
-    <dspace:sidebar>
-    <%= sideNews %>
-    <%
-    if(feedEnabled)
-    {
-	%>
-	    <center>
-	    <h4><fmt:message key="jsp.home.feeds"/></h4>
-	<%
-	    	String[] fmts = feedData.substring(feedData.indexOf(':')+1).split(",");
-	    	String icon = null;
-	    	int width = 0;
-	    	for (int j = 0; j < fmts.length; j++)
-	    	{
-	    		if ("rss_1.0".equals(fmts[j]))
-	    		{
-	    		   icon = "rss1.gif";
-	    		}
-	    		else if ("rss_2.0".equals(fmts[j]))
-	    		{
-	    		   icon = "rss2.gif";
-	    		}
-	    		else
-	    	    {
-	    	       icon = "rss.gif";
-	    	    }
-	%>
-	    <a href="<%= request.getContextPath() %>/feed/<%= fmts[j] %>/site"><img src="<%= request.getContextPath() %>/image/<%= icon %>" alt="RSS Feed" width="<%= width %>" height="15" vspace="3" border="0" /></a>
-	<%
-	    	}
-	%>
-	    </center>
-	<%
-	    }
-	%>
-    </dspace:sidebar>
+    
 </dspace:layout>

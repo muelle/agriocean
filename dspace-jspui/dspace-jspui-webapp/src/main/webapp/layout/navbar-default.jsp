@@ -35,7 +35,8 @@
     // Is the logged in user an admin
     Boolean admin = (Boolean)request.getAttribute("is.admin");
     boolean isAdmin = (admin == null ? false : admin.booleanValue());
-
+    String sideNews = ConfigurationManager.readNewsFile(LocaleSupport.getLocalizedMessage(pageContext, "news-side.html"));
+    Boolean collectionu = (Boolean) request.getAttribute("collection_pageu");
     // Get the current page, minus query string
     String currentPage = UIUtil.getOriginalURL(request);
     int c = currentPage.indexOf( '?' );
@@ -74,9 +75,6 @@
     }
 %>
 
-<%-- Search Box --%>
-<form method="get" action="<%= request.getContextPath() %>/simple-search">
-
 <%
     if (user != null)
     {
@@ -88,157 +86,29 @@
 <%
     }
 %>
-  <table width="100%" class="searchBox">
-    <tr>
-      <td>
-        <table width="100%" border="0" cellspacing="0" >
-          <tr>
-            <td class="searchBoxLabel"><label for="tequery"><fmt:message key="jsp.layout.navbar-default.search"/></label></td>
-          </tr>
-          <tr>
-            <td class="searchBoxLabelSmall" valign="middle" nowrap="nowrap">
-              <%-- <input type="text" name="query" id="tequery" size="10"/><input type=image border="0" src="<%= request.getContextPath() %>/image/search-go.gif" name="submit" alt="Go" value="Go"/> --%>
-              <input type="text" name="query" id="tequery" size="8"/><input type="submit" name="submit" value="<fmt:message key="jsp.layout.navbar-default.go"/>" />
-              <br/><a href="<%= request.getContextPath() %>/advanced-search"><fmt:message key="jsp.layout.navbar-default.advanced"/></a>
-<%
-			if (ConfigurationManager.getBooleanProperty("webui.controlledvocabulary.enable"))
-			{
-%>        
-              <br/><a href="<%= request.getContextPath() %>/subject-search"><fmt:message key="jsp.layout.navbar-default.subjectsearch"/></a>
-<%
-            }
-%>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
-</form>
-
+  
 <%-- HACK: width, border, cellspacing, cellpadding: for non-CSS compliant Netscape, Mozilla browsers --%>
-<table width="100%" border="0" cellspacing="2" cellpadding="2">
-  <tr class="navigationBarItem">
-    <td>
-      <img alt="" src="<%= request.getContextPath() %>/image/<%= (currentPage.endsWith("/index.jsp") ? "arrow-highlight" : "arrow") %>.gif" width="16" height="16"/>
-    </td>
-
-    <td nowrap="nowrap" class="navigationBarItem">
-      <a href="<%= request.getContextPath() %>/"><fmt:message key="jsp.layout.navbar-default.home"/></a>
-    </td>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <%  if(collectionu != null && collectionu.booleanValue() == false){ %>
+  <dspace:include page="/layout/admintoolscom.jsp" />
+  <% } %>
+   <%  if(collectionu != null && collectionu.booleanValue()){ %>
+  <dspace:include page="/layout/admintoolscol.jsp" />
+  <% } %>
+  <dspace:include page="/layout/communityblock.jsp" />
+    <tr>
+    <td class="navigationBarSpacing" colspan="2">&nbsp;</td>
   </tr>
 
-  <tr>
-    <td colspan="2">&nbsp;</td>
+  <dspace:include page="/layout/rssblock.jsp" />
+      <tr>
+    <td class="navigationBarSpacing" colspan="2">&nbsp;</td>
   </tr>
-
-  <tr>
-    <td nowrap="nowrap" colspan="2" class="navigationBarSublabel"><fmt:message key="jsp.layout.navbar-default.browse"/></td>
-  </tr>
-
-  <tr class="navigationBarItem">
-    <td>
-      <img alt="" src="<%= request.getContextPath() %>/image/<%= ( currentPage.endsWith( "/community-list" ) ? "arrow-highlight" : "arrow" ) %>.gif" width="16" height="16"/>
-    </td>
-    <td nowrap="nowrap" class="navigationBarItem">
-      <a href="<%= request.getContextPath() %>/community-list"><fmt:message key="jsp.layout.navbar-default.communities-collections"/></a>
-    </td>
-  </tr>
-
-
-<%-- Insert the dynamic browse indices here --%>
-
-<%
-	for (int i = 0; i < bis.length; i++)
-	{
-		BrowseIndex bix = bis[i];
-		String key = "browse.menu." + bix.getName();
-	%>
-		<tr class="navigationBarItem">
-    		<td>
-      			<img alt="" src="<%= request.getContextPath() %>/image/<%= ( browseCurrent.equals(bix.getName()) ? "arrow-highlight" : "arrow" ) %>.gif" width="16" height="16"/>
-    		</td>
-    		<td nowrap="nowrap" class="navigationBarItem">
-      			<a href="<%= request.getContextPath() %>/browse?type=<%= bix.getName() %>"><fmt:message key="<%= key %>"/></a>
-    		</td>
-  		</tr>
-	<%	
-	}
-%>
-
-<%-- End of dynamic browse indices --%>
-
-  <tr>
-    <td colspan="2">&nbsp;</td>
-  </tr>
-
-  <tr>
-    <td nowrap="nowrap" colspan="2" class="navigationBarSublabel"><fmt:message key="jsp.layout.navbar-default.sign"/></td>
-  </tr>
-
-  <tr class="navigationBarItem">
-    <td>
-      <img alt="" src="<%= request.getContextPath() %>/image/<%= ( currentPage.endsWith( "/subscribe" ) ? "arrow-highlight" : "arrow" ) %>.gif" width="16" height="16"/>
-    </td>
-    <td nowrap="nowrap" class="navigationBarItem">
-      <a href="<%= request.getContextPath() %>/subscribe"><fmt:message key="jsp.layout.navbar-default.receive"/></a>
-    </td>
-  </tr>
-
-  <tr class="navigationBarItem">
-    <td>
-      <img alt="" src="<%= request.getContextPath() %>/image/<%= ( currentPage.endsWith( "/mydspace" ) ? "arrow-highlight" : "arrow" ) %>.gif" width="16" height="16"/>
-    </td>
-    <td nowrap="nowrap" class="navigationBarItem">
-      <a href="<%= request.getContextPath() %>/mydspace"><fmt:message key="jsp.layout.navbar-default.users"/></a><br/>
-      <fmt:message key="jsp.layout.navbar-default.users-authorized" />
-    </td>
-  </tr>
-
-  <tr class="navigationBarItem">
-    <td>
-      <img alt="" src="<%= request.getContextPath() %>/image/<%= ( currentPage.endsWith( "/profile" ) ? "arrow-highlight" : "arrow" ) %>.gif" width="16" height="16"/>
-    </td>
-    <td nowrap="nowrap" class="navigationBarItem">
-      <a href="<%= request.getContextPath() %>/profile"><fmt:message key="jsp.layout.navbar-default.edit"/></a>
-    </td>
-  </tr>
-
-<%
-  if (isAdmin)
-  {
-%>  
-  <tr class="navigationBarItem">
-    <td>
-      <img alt="" src="<%= request.getContextPath() %>/image/<%= ( currentPage.endsWith( "/dspace-admin" ) ? "arrow-highlight" : "arrow" ) %>.gif" width="16" height="16"/>
-    </td>
-    <td nowrap="nowrap" class="navigationBarItem">
-      <a href="<%= request.getContextPath() %>/dspace-admin"><fmt:message key="jsp.administer"/></a>
-    </td>
-  </tr>
-<%
-  }
-%>
-
-  <tr>
-    <td colspan="2">&nbsp;</td>
-  </tr>
-
-  <tr class="navigationBarItem">
-    <td>
-      <img alt="" src="<%= request.getContextPath() %>/image/<%= ( currentPage.endsWith( "/help" ) ? "arrow-highlight" : "arrow" ) %>.gif" width="16" height="16"/>
-    </td>
-    <td nowrap="nowrap" class="navigationBarItem">
-            <dspace:popup page="<%= LocaleSupport.getLocalizedMessage(pageContext, \"help.index\")%>"><fmt:message key="jsp.layout.navbar-default.help"/></dspace:popup>
-    </td>
-  </tr>
-
-  <tr class="navigationBarItem">
-    <td>
-      <img alt="" src="<%= request.getContextPath() %>/image/<%= ( currentPage.endsWith( "/about" ) ? "arrow-highlight" : "arrow" ) %>.gif" width="16" height="16"/>
-    </td>
-    <td nowrap="nowrap" class="navigationBarItem">
-      <a href="http://www.dspace.org/"><fmt:message key="jsp.layout.navbar-default.about"/></a>
-    </td>
-  </tr>
+  <%-- om het mailto adres aan te melden --%>
+  <% String admini = ConfigurationManager.getProperty("mail.mainpage.contact"); %>
+  <tr><td class="navigatiobarTitle">Contact:</td></tr>
+  <tr><td class="navigatiobarRow"><a href="mailto:<% out.print(admini); %>"><br/><fmt:message key="jsp.layout.navbar.contact.admin" /></a><br/><br/></td></tr>
+  <tr><td>
+  <%= sideNews %>
+  </td></tr>
 </table>

@@ -48,22 +48,19 @@
                 <td colspan="<%= overallColSpan %>" class="pageFootnote">
                     <table class="pageFooterBar" width="100%">
                         <tr>
-                            <td>
-                                <a href="http://validator.w3.org/check?uri=referer"><img
-                                    src="<%= request.getContextPath() %>/image/valid-xhtml10.png"
-                                    alt="Valid XHTML 1.0!" height="31" width="88" /></a>
+                            <td align="left" width ="147">
+							<a href="http://iode.org"><img src="<%= request.getContextPath() %>/image/footer.png" width="147" height="32" border="0"/></a>
                             </td>
                             <td class="pageFootnote">
-                                <fmt:message key="jsp.layout.footer-default.text"/>&nbsp;-
-                                <a target="_blank" href="<%= request.getContextPath() %>/feedback"><fmt:message key="jsp.layout.footer-default.feedback"/></a>
-                                <a href="<%= request.getContextPath() %>/htmlmap"></a>
+							Integovemmental Oceanographic Commission of UNESCO <br/>
+							International Oceanographic Data and Information Exchange
                             </td>
-                            <td nowrap="nowrap" valign="middle"> <%-- nowrap, valign for broken NS 4.x --%>
-                            </td>
+
                         </tr>
                     </table>
                 </td>
             </tr>
         </table>
+        </div> <!-- ds-main -->
     </body>
 </html>

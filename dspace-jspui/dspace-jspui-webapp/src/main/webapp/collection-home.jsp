@@ -37,15 +37,24 @@
 <%@ page import="org.dspace.eperson.Group"     %>
 <%@ page import="javax.servlet.jsp.jstl.fmt.LocaleSupport" %>
 
+<%@ page import="org.dspace.core.Context"%>
+<%@ page import="org.dspace.content.ItemIterator"%>
+<%@ page import="org.dspace.content.Item"%>
+<%@ page import="java.util.Map"%>
+<%@ page import="java.util.Iterator"%>
+<%@ page import="java.util.GregorianCalendar"%>
+<%@page import="org.dspace.app.webui.servlet.MyDSpaceServlet"%>
 
 <%
+Context context = null;
+context = UIUtil.obtainContext(request);
     // Retrieve attributes
     Collection collection = (Collection) request.getAttribute("collection");
     Community  community  = (Community) request.getAttribute("community");
     Group      submitters = (Group) request.getAttribute("submitters");
 
     RecentSubmissions rs = (RecentSubmissions) request.getAttribute("recently.submitted");
-    
+
     boolean loggedIn =
         ((Boolean) request.getAttribute("logged.in")).booleanValue();
     boolean subscribed =
@@ -84,21 +93,23 @@
     String communityLink = "/handle/" + community.getHandle();
 
     Bitstream logo = collection.getLogo();
-    
+
     boolean feedEnabled = ConfigurationManager.getBooleanProperty("webui.feed.enable");
     String feedData = "NONE";
     if (feedEnabled)
     {
         feedData = "coll:" + ConfigurationManager.getProperty("webui.feed.formats");
     }
-    
+
     ItemCounter ic = new ItemCounter(UIUtil.obtainContext(request));
 %>
 
-<%@page import="org.dspace.app.webui.servlet.MyDSpaceServlet"%>
-<dspace:layout locbar="commLink" title="<%= name %>" feedData="<%= feedData %>">
 
-  <table border="0" cellpadding="5" width="100%">
+<dspace:layout locbar="commLink" title="<%= name %>" feedData="<%= feedData %>">
+<table>
+        <tr>
+            <td valign="top">
+                <table border="0" cellpadding="5" width="100%">
     <tr>
       <td width="100%">
         <h1><%= name %>
@@ -148,7 +159,7 @@
        </tr>
             <tr>
               <td align="center" class="standard" valign="middle">
-                <small><fmt:message key="jsp.general.orbrowse"/>&nbsp;</small>
+                  <div style="float: left"><small><fmt:message key="jsp.general.orbrowse"/>&nbsp;</small></div>
 				<%-- Insert the dynamic list of browse options --%>
 <%
 	for (int i = 0; i < bis.length; i++)
@@ -162,7 +173,7 @@
 		<input type="submit" name="submit_browse" value="<fmt:message key="<%= key %>"/>"/>
 	</form>
 	</div>
-<%	
+<%
 	}
 %>
 	      </td>
@@ -220,16 +231,19 @@
   <%= intro %>
 
   <p class="copyrightText"><%= copyright %></p>
-
-  <dspace:sidebar>
-<% if(admin_button || editor_button ) { %>
+    <%= intro %>
+    <%-- Added by Dimitri Surinx --%>
+    <%--<dspace:include page="overviewcol.jsp" /> --%>
+            </td>
+            <td width="20%" valign="top">
+                <% if(admin_button || editor_button ) { %>
     <table class="miscTable" align="center">
       <tr>
 	    <td class="evenRowEvenCol" colspan="2">
 	     <table>
             <tr>
               <th id="t1" class="standard">
-                 <strong><fmt:message key="jsp.admintools"/></strong>                
+                 <strong><fmt:message key="jsp.admintools"/></strong>
               </th>
             </tr>
 
@@ -251,7 +265,7 @@
               <td headers="t1" class="standard" align="center">
                  <form method="post" action="<%=request.getContextPath()%>/tools/itemmap">
                   <input type="hidden" name="cid" value="<%= collection.getID() %>" />
-				  <input type="submit" value="<fmt:message key="jsp.collection-home.item.button"/>" />                  
+				  <input type="submit" value="<fmt:message key="jsp.collection-home.item.button"/>" />
                 </form>
               </td>
             </tr>
@@ -352,9 +366,9 @@
     	    {
     	       icon = "rss.gif";
     	    }
-%>
-    <a href="<%= request.getContextPath() %>/feed/<%= fmts[j] %>/<%= collection.getHandle() %>"><img src="<%= request.getContextPath() %>/image/<%= icon %>" alt="RSS Feed" width="<%= width %>" height="15" vspace="3" border="0" /></a>
-<%
+%> <a href="<%= request.getContextPath() %>/feed/<%= fmts[j] %>/<%= collection.getHandle() %>">
+    <img src="<%= request.getContextPath() %>/image/<%= icon %>" alt="RSS Feed" vspace="2" border="0" /></a>
+		<%
     	}
 %>
     </center>
@@ -362,7 +376,9 @@
     }
 %>
     <%= sidebar %>
-  </dspace:sidebar>
+            </td>
+        </tr>
+</table>
 
 </dspace:layout>
 

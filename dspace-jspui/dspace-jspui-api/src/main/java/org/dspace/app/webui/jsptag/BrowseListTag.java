@@ -389,10 +389,15 @@ public class BrowseListTag extends TagSupport
                 String message = "itemlist." + field;
 
                 // output the header
-                out.print("<th id=\"" + id +  "\" class=\"" + css + "\">"
+                // START Code Dimitri Surinx
+                if (!field.equals("dc.identifier.citation") && !field.equals("dc.contributor.*"))
+                {
+                    out.print("<th id=\"" + id + "\" class=\"latestLayoutTitle\">"
                         + (emph[colIdx] ? "<strong>" : "")
                         + LocaleSupport.getLocalizedMessage(pageContext, message)
                         + (emph[colIdx] ? "</strong>" : "") + "</th>");
+            }
+                // END Code Dimitri Surinx
             }
 
             if (linkToEdit)
@@ -412,6 +417,9 @@ public class BrowseListTag extends TagSupport
             // now output each item row
             for (int i = 0; i < items.length; i++)
             {
+                // START Code Dimitri Surinx
+                String bufferConc = "";
+                // END Code Dimitri Surinx
             	out.print("<tr>"); 
                 // now prepare the XHTML frag for this division
                 String rOddOrEven;
@@ -469,7 +477,7 @@ public class BrowseListTag extends TagSupport
                     }
 
                     // now prepare the content of the table division
-                    String metadata = "-";
+                    String metadata = "";
                     if (field.equals("thumbnail"))
                     {
                         metadata = getThumbMarkup(hrq, items[i]);
@@ -579,10 +587,38 @@ public class BrowseListTag extends TagSupport
                     }
 
                     String id = "t" + Integer.toString(colIdx + 1);
+                    // START Code Dimitri Surinx
+
+                    if (field.equals("dc.identifier.citation"))
+                    {
+                        if (!"".equals(metadata))
+                            bufferConc = bufferConc + "<br/>" + metadata;
+                        else
+                            bufferConc = bufferConc + metadata;
+
+                    }
+                    else if (field.equals("dc.contributor.*"))
+                    {
+                        out.print(bufferConc + "<br/>" + metadata + "</td>");
+                    }
+                    else if (!field.equals(titleField))
+                    {
+                        out.print("<td width=\"10px\" headers=\"" + id + "\" valign=\"top\" class=\"latestLayout\">"
+                            + (emph[colIdx] ? "<strong>" : "") + metadata + (emph[colIdx] ? "</strong>" : "")
+                            + "</td>");
+                    }
+                    else if (field.equals(titleField))
+                    {
+                        bufferConc = "<td headers=\"" + id + "\" valign=\"top\" class=\"latestLayout\">"
+                            + (emph[colIdx] ? "<strong>" : "") + metadata + (emph[colIdx] ? "</strong>" : "");
+                    } // end Code Dimitri surinx end
+                    else
+                    {
                     out.print("<td headers=\"" + id + "\" class=\""
                     	+ rOddOrEven + "Row" + cOddOrEven[colIdx] + "Col\" " + extras + ">"
                     	+ (emph[colIdx] ? "<strong>" : "") + metadata + (emph[colIdx] ? "</strong>" : "")
                     	+ "</td>");
+                }
                 }
 
                 // Add column for 'edit item' links

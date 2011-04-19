@@ -861,8 +861,13 @@
             }
             else
             {
-                // put a blank if nothing else
-                sb.append("<td>&nbsp;</td>");
+                if (askLang)
+                {
+                    String fieldNameLang = fieldName + "_lang";
+                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                }
+                else
+                    sb.append("<td>&nbsp;</td>");
             } // put language selection list if neccessary (for the dc lang attribute)
             sb.append("</tr>");
         }
@@ -1666,7 +1671,7 @@
 
                                                                                                                         if (si.getMoreBoxesFor() != null && si.getMoreBoxesFor().equals(fieldName))
                                                                                                                         {
-                                                                                                                            fieldCountIncr = 2;
+                                                                                                                            fieldCountIncr = 1;
 
 
                                                                                                                         }

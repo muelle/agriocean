@@ -140,14 +140,14 @@
             </tr>
             <tr>
               <td align="center" class="standard" valign="middle">
-                <small><fmt:message key="jsp.general.orbrowse"/>&nbsp;</small>
+                <div style="float: left"><small><fmt:message key="jsp.general.orbrowse"/>&nbsp;</small></div>
    				<%-- Insert the dynamic list of browse options --%>
 <%
 	for (int i = 0; i < bis.length; i++)
 	{
 		String key = "browse.menu." + bis[i].getName();
 %>
-	<div class="browse_buttons">
+	<div class="browse_buttons" >
 	<form method="get" action="<%= request.getContextPath() %>/handle/<%= community.getHandle() %>/browse">
 		<input type="hidden" name="type" value="<%= bis[i].getName() %>"/>
 		<%-- <input type="hidden" name="community" value="<%= community.getHandle() %>" /> --%>
@@ -169,29 +169,24 @@
 %>
 
         <%-- <h2>Collections in this community</h2> --%>
-		<h2><fmt:message key="jsp.community-home.heading2"/></h2>  
-        <ul class="collectionListItem">
+	<h2><fmt:message key="jsp.community-home.heading2"/></h2>  
+        <div style="float: none">
 <%
         for (int i = 0; i < collections.length; i++)
         {
 %>
-    <li>
-	    <table>
-	    <tr>
-	    <td>
-	      <a href="<%= request.getContextPath() %>/handle/<%= collections[i].getHandle() %>">
-	      <%= collections[i].getMetadata("name") %></a>
+            <div style="float: left"><img src="<%= request.getContextPath() %>/image/blue_arrow.png" /></div>
+            <div style="float: left"><a href="<%= request.getContextPath() %>/handle/<%= collections[i].getHandle() %>"> <%= collections[i].getMetadata("name") %></a></div>
 <%
             if(ConfigurationManager.getBooleanProperty("webui.strengths.show"))
             {
 %>
-                [<%= ic.getCount(collections[i]) %>]
+<div style="float: left">[<%= ic.getCount(collections[i]) %>]</div>
 <%
             }
 %>
-	    </td>
 	    <% if (remove_button) { %>
-	    <td>
+            <div style="float: left">
 	      <form method="post" action="<%=request.getContextPath()%>/tools/edit-communities">
 	          <input type="hidden" name="parent_community_id" value="<%= community.getID() %>" />
 	          <input type="hidden" name="community_id" value="<%= community.getID() %>" />
@@ -199,66 +194,54 @@
 	          <input type="hidden" name="action" value="<%=EditCommunitiesServlet.START_DELETE_COLLECTION%>" />
 	          <input type="image" src="<%= request.getContextPath() %>/image/remove.gif" />
 	      </form>
-	    </td>
+              </div>
 	    <% } %>
-	    </tr>
-	    </table>
-      <p class="collectionDescription"><%= collections[i].getMetadata("short_description") %></p>
-    </li>
+            <div><p>&nbsp; <%= collections[i].getMetadata("short_description") %></p></div>
 <%
         }
 %>
-  </ul>
+        </div>
 <%
     }
 %>
-
 <%
     if (subcommunities.length != 0)
     {
 %>
         <%--<h2>Sub-communities within this community</h2>--%>
-		<h2><fmt:message key="jsp.community-home.heading3"/></h2>
-   
-        <ul class="collectionListItem">
+        <h2><fmt:message key="jsp.community-home.heading3"/></h2>
+        <div style="float: none">
 <%
         for (int j = 0; j < subcommunities.length; j++)
         {
 %>
-            <li>
-			    <table>
-			    <tr>
-			    <td>
-	                <a href="<%= request.getContextPath() %>/handle/<%= subcommunities[j].getHandle() %>">
-	                <%= subcommunities[j].getMetadata("name") %></a>
+			<div style="float: left"><img src="<%= request.getContextPath() %>/image/blue_arrow.png" /></div>
+	                <div style="float: left"><a href="<%= request.getContextPath() %>/handle/<%= subcommunities[j].getHandle() %>">
+                                <%= subcommunities[j].getMetadata("name") %></a></div>
 <%
                 if (ConfigurationManager.getBooleanProperty("webui.strengths.show"))
                 {
 %>
-                    [<%= ic.getCount(subcommunities[j]) %>]
+                        <div style="float: left">[<%= ic.getCount(subcommunities[j]) %>]</div>
 <%
                 }
 %>
-			    </td>
 	    		<% if (remove_button) { %>
-			    <td>
+                        <div style="float: left">
 	                <form method="post" action="<%=request.getContextPath()%>/tools/edit-communities">
 			          <input type="hidden" name="parent_community_id" value="<%= community.getID() %>" />
 			          <input type="hidden" name="community_id" value="<%= subcommunities[j].getID() %>" />
 			          <input type="hidden" name="action" value="<%=EditCommunitiesServlet.START_DELETE_COMMUNITY%>" />
 	                  <input type="image" src="<%= request.getContextPath() %>/image/remove.gif" />
 	                </form>
-			    </td>
+                        </div>
 	    		<% } %>
-			    </tr>
-			    </table>
-                <p class="collectionDescription"><%= subcommunities[j].getMetadata("short_description") %></p>
-            </li>
-<%
+                        <div><p>&nbsp; <%= subcommunities[j].getMetadata("short_description") %></p></div>
+        <%
         }
-%>
-        </ul>
-<%
+        %>
+        </div>
+        <%
     }
 %>
 
@@ -390,7 +373,9 @@
     	       icon = "rss.gif";
     	    }
 %>
-    <a href="<%= request.getContextPath() %>/feed/<%= fmts[j] %>/<%= community.getHandle() %>"><img src="<%= request.getContextPath() %>/image/<%= icon %>" alt="RSS Feed" width="<%= width %>" height="15" vspace="3" border="0" /></a>
+    <a href="<%= request.getContextPath() %>/feed/<%= fmts[j] %>/<%= community.getHandle() %>">
+        <img src="<%= request.getContextPath() %>/image/<%= icon %>" alt="RSS Feed" vspace="2" border="0" />
+    </a>
 <%
     	}
 %>

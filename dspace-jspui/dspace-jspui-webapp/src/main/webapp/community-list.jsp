@@ -161,7 +161,7 @@
 <% if (communities.length != 0)
 {
 %>
-    <ul>
+    <ul style="list-style-type: none">
 <%
     if (showAll)
     {

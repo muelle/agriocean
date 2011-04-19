@@ -96,7 +96,7 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
 
 .stripe
 {
-    background: #336699;
+    background: #5970b2;
     color: #ffffff
 }
 
@@ -217,7 +217,13 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
 
 .communityLink { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                  font-size: 14pt;
-                 font-weight: bold }
+                 font-weight: bold;
+                 background-image: url(./image/blue_arrow.png);
+                 background-repeat: no-repeat;
+                 background-position: 0 .4em;
+                 padding-left: 1em;
+                 list-style-type: none;
+ }
 
 .communityStrength {
     font-family: "verdana", "Arial", "Helvetica", sans-serif;
@@ -864,102 +870,6 @@ input.ds-authority-lock.is-unlocked
     list-style-type: none;
 }
 
-#sddm
-{
-    margin: 0;
-    padding: 0;
-}
-
-#sddm li
-{
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    float: left;
-    font: bold 11px arial
-}
-
-
-#sddm li a
-{
-    display: block;
-    margin: 0 1px 0 0;
-    padding: 5px 10px;
-    width: 110px;
-    background: #5970B2;
-    color: #FFF;
-    text-align: center;
-    text-decoration: none
-}
-
-#sddm ti a
-{
-    display: block;
-    margin: 0 1px 0 0;
-    padding: 5px 10px;
-    width: 130px;
-    background: #5970B2;
-    color: #FFF;
-    text-align: center;
-    text-decoration: none
-}
-
-#searchform
-{
-    text-align: center;
-}
-
-#sddm li a:hover
-{
-    background: #49A3FF
-}
-
-.bla
-{
-    text-align: center;
-}
-
-#sddm div
-{
-    position: absolute;
-    visibility: hidden;
-    margin: 0;
-    border-left: 0.1px solid #FFFFFF;
-    border-right: 0.1px solid #FFFFFF;
-    border-top: 0.1px solid #FFFFFF;
-    padding: 0;	background: #0198E1;
-    width: 150px;
-}
-
-#sddm div a
-{
-    position: relative;
-    display: block;
-    margin: 0px;
-    padding: 2px 2px;
-    width: 146px;
-    white-space: nowrap;
-    text-align: left;
-    text-decoration: none;
-    border-bottom: 0.1px solid #FFFFFF;
-    background: #0198E1;
-    color: #FFFFFF;
-    font: 11px arial
-}
-
-
-#sddm div a:hover
-{
-    background: #49A3FF;
-    color: #FFF
-}
-
-div#ds-main
-{
-    position: relative; width: 917px; color:
-        inherit; background-color: white; margin-left: auto; margin-right: auto;
-    text-align: left; padding: 0;
-}
 
 .borderBanner
 {
@@ -1052,4 +962,101 @@ div#ds-main
     color: #FFFFFF;
     margin-left: 10px;
     background: #5970B2
+}
+
+#sddm
+{
+    margin: 0;
+    padding: 0;
+}
+
+#sddm li
+{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    float: left;
+    font: bold 11px arial
+}
+
+
+#sddm li a
+{
+    display: block;
+    margin: 0 1px 0 0;
+    padding: 5px 10px;
+    width: 110px;
+    background: #5970B2;
+    color: #FFF;
+    text-align: center;
+    text-decoration: none
+}
+
+#sddm ti a
+{
+    display: block;
+    margin: 0 1px 0 0;
+    padding: 5px 10px;
+    width: 130px;
+    background: #5970B2;
+    color: #FFF;
+    text-align: center;
+    text-decoration: none
+}
+
+#searchform
+{
+    text-align: center;
+}
+
+#sddm li a:hover
+{
+    background: #49A3FF
+}
+
+.bla
+{
+    text-align: center;
+}
+
+#sddm div
+{
+    position: absolute;
+    visibility: hidden;
+    margin: 0;
+    border-left: 0.1px solid #FFFFFF;
+    border-right: 0.1px solid #FFFFFF;
+    border-top: 0.1px solid #FFFFFF;
+    padding: 0;	background: #0198E1;
+    width: 150px;
+}
+
+#sddm div a
+{
+    position: relative;
+    display: block;
+    margin: 0px;
+    padding: 2px 2px;
+    width: 146px;
+    white-space: nowrap;
+    text-align: left;
+    text-decoration: none;
+    border-bottom: 0.1px solid #FFFFFF;
+    background: #0198E1;
+    color: #FFFFFF;
+    font: 11px arial
+}
+
+
+#sddm div a:hover
+{
+    background: #49A3FF;
+    color: #FFF
+}
+
+div#ds-main
+{
+    position: relative; width: 977px; color:
+        inherit; background-color: white; margin-left: auto; margin-right: auto;
+    text-align: left; padding: 0;
 }
