@@ -592,14 +592,14 @@ public class BrowseListTag extends TagSupport
                     if (field.equals("dc.identifier.citation"))
                     {
                         if (!"".equals(metadata))
-                            bufferConc = bufferConc + "<br/>" + metadata;
+                            bufferConc = bufferConc + "<div>" + metadata + "</div>";
                         else
                             bufferConc = bufferConc + metadata;
 
                     }
                     else if (field.equals("dc.contributor.*"))
                     {
-                        out.print(bufferConc + "<br/>" + metadata + "</td>");
+                        out.print(bufferConc + "<div style=\"margin-left: 0px\">" + metadata + "</div>" + "</td>");
                     }
                     else if (!field.equals(titleField))
                     {

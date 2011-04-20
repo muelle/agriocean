@@ -934,11 +934,11 @@ input.ds-authority-lock.is-unlocked
 
 .latestLayout{
     border: 0px solid #000000;
-    margin: 25px;
+    /*margin: 25px;*/
     font-size: 10pt;
     color: #000000;
     background: #E0E9F2;
-    padding: 2px 10px
+    padding: 2px 2px
 }
 .latestLayout a
 {
@@ -952,7 +952,7 @@ input.ds-authority-lock.is-unlocked
 .latestLayoutTitle{
     border-bottom: 1px solid #000000;
     font-size: 11pt;
-    padding: 2px 5px;
+    padding: 2px 10px;
     font-weight:bold
 }
 .latestLayoutType{
@@ -961,6 +961,14 @@ input.ds-authority-lock.is-unlocked
     font-size: 11pt;
     padding: 2px 10px;
     font-weight:bold
+}
+
+.latestLayout div {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+    font-family: "verdana", "Arial", "Helvetica", sans-serif;
+    font-size: 10pt;
 }
 .navigatiobarRow
 {
