@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <input-forms>
 
      <collection-type>
@@ -31,66 +31,69 @@
         <form name="basic">
             <page number="3">
                 <fieldgroup>
-                    <label>Subject</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <label>Subjects</label>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>subject</dc-element>
                             <dc-qualifier>asfa</dc-qualifier>
                             <label>ASFA Terms</label>
-                            <input-type size="75">onebox</input-type>
+                            <input-type size="69">onebox</input-type>
                            <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://www4.fao.org/asfa/asfa.htm" target="_blank"&gt;ASFA website&lt;/a&gt;</hint>
                             <repeatable>true</repeatable>
                             <required></required>
-			</field>
+						</field>
                     </fieldrow>
-		    <fieldrow>
-			<field>
-			  <dc-schema>dc</dc-schema>
-			  <dc-element>subject</dc-element>
-			  <dc-qualifier>agrovoc</dc-qualifier>
-			  <label>Agrovoc Terms</label>
-			  <input-type size="75">onebox</input-type>
-			  <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://aims.fao.org/website/Search-Terms/sub" target="_blank"&gt;Agrovoc website&lt;/a&gt;</hint>	
-			  <repeatable>true</repeatable>
-			  <required></required>
-			</field>
-		    </fieldrow>
-		    <fieldrow>
+					<fieldrow>
+						<field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>subject</dc-element>
+							<dc-qualifier>agrovoc</dc-qualifier>
+							<label>AGROVOC Terms</label>
+							<input-type size="69">onebox</input-type>
+							<hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://aims.fao.org/website/Search-Terms/sub" target="_blank"&gt;Agrovoc website&lt;/a&gt;</hint>	
+							<repeatable>true</repeatable>
+							<required></required>
+						</field>
+					</fieldrow>
+					<fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>other</dc-qualifier>
                             <label>Free Keywords</label>
-                            <input-type  size="75">onebox</input-type>
+                            <hint>Enter here any keywords that will help searchers to find your deposit.</hint>
+                            <input-type  size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-			</field> 
-		    </fieldrow>
-		    <fieldrow>
-		      <field>
-			<dc-schema>dc</dc-schema>
-			<dc-element>coverage</dc-element>
-			<dc-qualifier>spatial</dc-qualifier>
-			<label>Geographical Terms</label>
-			<input-type size="75">onebox</input-type>
-			<repeatable>true</repeatable>
-			<required></required>
-		      </field>
-		    </fieldrow>
-		</fieldgroup>
+						</field> 
+					</fieldrow>
+					<fieldrow>
+						<field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>coverage</dc-element>
+							<dc-qualifier>spatial</dc-qualifier>
+							<label>Geographical Terms</label>
+							<hint>Select the geographical terms your deposit covers. </hint>
+							<input-type size="69">onebox</input-type>
+							<repeatable>true</repeatable>
+							<required></required>
+						</field>
+					</fieldrow>
+				</fieldgroup>
                 <fieldgroup>
                     <label>Description of Content</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>abstract</dc-qualifier>
                             <label>Abstract</label>
-                            <input-type>textarea</input-type>
+                            <hint>Enter here the abstract, a short summary of the content of your deposit.</hint>
+                            <input-type size="69">textarea</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
@@ -102,7 +105,8 @@
                             <dc-element>description</dc-element>
                             <dc-qualifier>notes</dc-qualifier>
                             <label>Notes</label>
-                            <input-type>textarea</input-type>
+                            <hint>Enter here any additional information about your deposit.</hint>
+                            <input-type size="69">textarea</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
@@ -113,34 +117,41 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>references</dc-qualifier>
-                            <label>Bibliography</label> 
-                            <input-type>textarea</input-type>
+                            <label>Bibliography</label>
+                            <hint>You are strongly encouraged to paste the citations present in your deposit into the box below.</hint>	
+                            <input-type size="69">textarea</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
 				</fieldgroup>
                 <fieldgroup>
-                    <label>Additional Information</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <label>Intellectual Property</label>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>rights</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Intellectual Property: Description of copyright</label>
-                            <input-type>textarea</input-type>
+                            <label>Description of copyright</label>
+                            <hint>Enter here any indication about the restriction on access, use and reproduction of your deposit.</hint>	
+                            <input-type size="69">textarea</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field> 
-                    </fieldrow>					
+                    </fieldrow>
+                  </fieldgroup>
+                 <fieldgroup>
+                    <label>Funding organization</label>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>				
 					<fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>sponsorship</dc-qualifier>
-							<label>Funding organization</label>
-                            <input-type>textarea</input-type>
+							<label>Funders</label>
+							<hint>Enter here the names of the corporate bodies/people who have funded your deposit.</hint>	
+                            <input-type size="69">textarea</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
@@ -153,7 +164,7 @@
             <page  number="1">
 				<fieldgroup>
                     <label>Type</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                    <fieldrow>
 						<field>
                             <dc-schema>dc</dc-schema>
@@ -168,14 +179,15 @@
 				</fieldgroup>
 				<fieldgroup>
                     <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
                             <label>Personal Authors</label>
-                            <input-type>name</input-type>
+                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -186,7 +198,8 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -194,18 +207,20 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title Information</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Title *</label>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>			    
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
-			</field>
+                            <ask-language>true</ask-language>
+						</field>
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -213,7 +228,8 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -221,15 +237,16 @@
                     </fieldrow>
                 </fieldgroup>
                  <fieldgroup>
-                    <label>Refererence</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <label>Reference</label>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
 						<field>
 							<dc-schema>dc</dc-schema>
 							<dc-element>bibliographicCitation</dc-element>
 							<dc-qualifier>title</dc-qualifier>
-							<label>Journal Title</label>
-							<input-type size="50">onebox</input-type>
+							<label>Journal Title *</label>
+							<hint>Enter the title of the journal your deposit belongs to.</hint>
+							<input-type size="69">onebox</input-type>
 							<repeatable>false</repeatable>
 							<required>Enter a (part of) the keyword and choose from the list</required>
 						</field>
@@ -286,8 +303,8 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Place - Publisher</label>
-                            <input-type>series</input-type>
+                            <label>Publisher and Place of Publication</label>
+                            <input-type size="35">series</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
@@ -297,7 +314,7 @@
 			<page number="2">
 					<fieldgroup>
                     <label>Links</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                      <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -315,6 +332,7 @@
                             <dc-element>relation</dc-element>
                             <dc-qualifier>uri</dc-qualifier>
                             <label>Alternative Locations (URL)</label>
+                            <hint>If your deposit is available from other sites, enter those URLs here.</hint>
                             <input-type>onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -323,16 +341,17 @@
 					</fieldgroup>
 					<fieldgroup>
                     <label>Characteristics</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
 					<fieldrow>
 						<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-			    <input-type>date</input-type>
+                            <label>Publication Date *</label>
+                            <hint>Enter here the date your deposit was submitted to a publisher or published.</hint>
+							<input-type>date</input-type>
                             <repeatable>false</repeatable>
-                            <required>You must enter only the year (YYYY).</required>
+                            <required>The year is mandatory (YYYY).</required>
                         </field>
 					</fieldrow>
                      <fieldrow>
@@ -340,30 +359,35 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
+                            <label>Status *</label>
+                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
                             <input-type value-pairs-name="status">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter the status.</required>
                         </field>
+                     </fieldrow>
+                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>refereed</dc-qualifier>
-                            <label>Refereed</label>
+                            <label>Refereed *</label>
+                            <hint>Please indicate here if your deposit has been refereed.</hint>
                             <input-type value-pairs-name="refereed">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter whether the item been refereed or not.</required>
                         </field>
                     </fieldrow>
-                   <fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>language</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
                             <repeatable>true</repeatable>
-                            <required></required>
+                            <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
  				</fieldgroup>
@@ -373,14 +397,27 @@
             <page number="1">
                 <fieldgroup>
                     <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
-                            <label>Authors</label>
-                            <input-type>name</input-type>
+                            <label>Personal Authors</label>
+                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="33">name</input-type>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>contributor</dc-element>
+                            <dc-qualifier>corpauthor</dc-qualifier>
+                            <label>Corporate Authors</label>
+                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -392,21 +429,23 @@
                             <dc-qualifier>editor</dc-qualifier>
                             <repeatable>true</repeatable>
                             <label>Editors</label>
-                            <input-type>name</input-type>
+                            <hint>Enter the personal name of the editor(s) of the book.</hint>
+                            <input-type size="33">name</input-type>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Title *</label>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>			    
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
@@ -417,17 +456,64 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
-                            <label>Alternative titles</label>
-                            <input-type>onebox</input-type>
+                            <label>Alternative Titles</label>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
-			    <repeatable>true</repeatable>
+							<repeatable>true</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
                     <label>Reference</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseries</dc-qualifier>
+                            <label>Series Name and Number</label>
+                            <hint>Enter the title of the series of the book.</hint>
+                            <input-type size="33">series</input-type>
+                            <ask-language>true</ask-language>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+				</fieldgroup>
+			</page>
+			<page  number="2">
+					<fieldgroup>
+                    <label>Links</label>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                     <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>doi</dc-qualifier>
+                            <label>DOI of published version</label>
+                            <input-type>onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+					 </fieldrow>
+ 					 <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>uri</dc-qualifier>
+                            <label>Alternative Locations (URL)</label>
+                            <hint>If your deposit is available from other sites, enter those URLs here.</hint>
+                            <input-type>onebox</input-type>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                        </field>
+                     </fieldrow>
+					</fieldgroup>                 
+					<fieldgroup>
+                    <label>Characteristics</label>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -442,55 +528,24 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Place - Publisher</label>
-                            <input-type>series</input-type>
+                            <label>Publisher and Place of Publication</label>
+                            <input-type size="35">series</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
+                    </fieldrow>                    
+					<fieldrow>
+						<field>
                             <dc-schema>dc</dc-schema>
-                            <dc-element>relation</dc-element>
-                            <dc-qualifier>ispartofseries</dc-qualifier>
-                            <label>Serie + No</label>
-                            <input-type>series</input-type>
-                            <ask-language>true</ask-language>
+                            <dc-element>date</dc-element>
+                            <dc-qualifier>issued</dc-qualifier>
+                            <label>Publication Date *</label>
+                            <hint>Enter here the date your deposit was submitted to a publisher or published.</hint>
+							<input-type>date</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>The year is mandatory (YYYY).</required>
                         </field>
-                    </fieldrow>
-				</fieldgroup>
-			</page>
-			<page  number="2">
-					<fieldgroup>
-                    <label>Links</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
-                     <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>relation</dc-element>
-                            <dc-qualifier>doi</dc-qualifier>
-                            <label>DOI of published version</label>
-                            <input-type>onebox</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-					 </fieldrow>
- 					 <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>relation</dc-element>
-                            <dc-qualifier>uri</dc-qualifier>
-                            <label>Alternative Locations (URL)</label>
-                            <input-type>onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                     </fieldrow>
-					</fieldgroup>                 <fieldgroup>
-                    <label>Characteristics</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+					</fieldrow>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -502,35 +557,28 @@
                             <required></required>
                         </field>
                     </fieldrow>
-					<fieldrow>
-						<field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>date</dc-element>
-                            <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-			    <input-type>date</input-type>
-                            <repeatable>false</repeatable>
-                            <required>You must enter only the year (YYYY).</required>
-                        </field>
-					</fieldrow>
                      <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
+                            <label>Status *</label>
+                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
                             <input-type value-pairs-name="status">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter the status.</required>
                         </field>
+                     </fieldrow>
+                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>refereed</dc-qualifier>
-                            <label>Refereed</label>
+                            <label>Refereed *</label>
+                            <hint>Please indicate here if your deposit has been refereed.</hint>
                             <input-type value-pairs-name="refereed">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter whether the item been refereed or not.</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -538,28 +586,30 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>language</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
                             <repeatable>true</repeatable>
-                            <required></required>
+                            <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
             </page>
         </form>
 
-		        <form name="Book Section" baseForm="basic">
+		<form name="Book Section" baseForm="basic">
             <page number="1">
                <fieldgroup >
                     <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
-                            <label>Authors</label>
-                            <input-type>name</input-type>
+                            <label>Personal Authors</label>
+                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -570,7 +620,8 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -578,14 +629,15 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Title *</label>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
@@ -597,7 +649,8 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -606,14 +659,15 @@
                 </fieldgroup>
                  <fieldgroup>
                     <label>Reference</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>authors</dc-qualifier>
                             <label>Editors</label>
-                            <input-type>name</input-type>
+                            <hint>Enter the personal name of the editor(s) of the book.</hint>
+                            <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -623,17 +677,19 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>booktitle</dc-qualifier>
-                            <label>Book Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Book Title *</label>
+                            <hint>Enter the complete title of the book your deposit is a part of. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>false</repeatable>
-                            <required>You must enter a title for this book.</required>
+                            <required>You must enter the title  title of the book your deposit is a part of.</required>
                         </field>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>edition</dc-qualifier>
                             <label>Edition</label>
+                            <hint>   </hint>
                             <input-type size="4">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
@@ -658,23 +714,23 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					</fieldrow>
+			<field>
+				<dc-schema>dc</dc-schema>
+				<dc-element>identifier</dc-element>
+				<dc-qualifier>isbn</dc-qualifier>
+				<label>ISBN</label>
+				<input-type size="15">onebox</input-type>
+				<repeatable>false</repeatable>
+				<required></required>
+			</field>    
+		    </fieldrow>
                     <fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>identifier</dc-element>
-							<dc-qualifier>isbn</dc-qualifier>
-							<label>ISBN</label>
-							<input-type size="15">onebox</input-type>
-							<repeatable>false</repeatable>
-							<required></required>
-						</field>    
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Place - Publisher</label>
-                            <input-type>series</input-type>
+                            <label>Publisher and Place of Publication</label>
+                            <input-type size="35">series</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
@@ -684,8 +740,9 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>ispartofseries</dc-qualifier>
-                            <label>Series Name + No</label>
-                            <input-type size="60">series</input-type>
+                            <label>Series Name and Number</label>
+                            <hint>Enter the title of the series of the book.</hint>
+                            <input-type size="50">series</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>false</repeatable>
                             <required></required>
@@ -696,7 +753,7 @@
 			<page  number="2">
 					<fieldgroup>
                     <label>Links</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                      <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -714,6 +771,7 @@
                             <dc-element>relation</dc-element>
                             <dc-qualifier>uri</dc-qualifier>
                             <label>Alternative Locations (URL)</label>
+                            <hint>If your deposit is available from other sites, enter those URLs here.</hint>
                             <input-type>onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -722,16 +780,17 @@
 					</fieldgroup>
 					<fieldgroup>
                     <label>Characteristics</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
 					<fieldrow>
 						<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-			    <input-type>date</input-type>
+                            <label>Publication Date *</label>
+                            <hint>Enter here the date your deposit was submitted to a publisher or published.</hint>
+							<input-type>date</input-type>
                             <repeatable>false</repeatable>
-                            <required>You must enter only the year (YYYY).</required>
+                            <required>The year is mandatory (YYYY).</required>
                         </field>
 					</fieldrow>
                      <fieldrow>
@@ -739,19 +798,23 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
+                            <label>Status *</label>
+                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
                             <input-type value-pairs-name="status">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter the status.</required>
                         </field>
+                     </fieldrow>
+                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>refereed</dc-qualifier>
-                            <label>Refereed</label>
+                            <label>Refereed *</label>
+                            <hint>Please indicate here if your deposit has been refereed.</hint>
                             <input-type value-pairs-name="refereed">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter whether the item been refereed or not.</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -759,10 +822,11 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>language</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
                             <repeatable>true</repeatable>
-                            <required></required>
+                            <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
                </fieldgroup>
@@ -772,14 +836,15 @@
             <page number="1">
                 <fieldgroup >
                     <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
-                            <label>Authors</label>
-                            <input-type>name</input-type>
+                            <label>Personal Authors</label>
+                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -790,7 +855,8 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type  size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -798,14 +864,15 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Title *</label>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
@@ -817,7 +884,8 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -826,14 +894,15 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Conference description</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>conferencename</dc-qualifier>
-                            <label>Conference Name</label>
-                            <input-type>onebox</input-type>
+                            <label>Conference Name *</label>
+                            <hint>Enter the full name of the conference.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required>You must enter a conference name for this citation.</required>
                             <ask-language>true</ask-language>
@@ -845,7 +914,8 @@
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>conferenceplace</dc-qualifier>
                             <label>Conference Place</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter the place where the conference took place - City (State), Country.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
@@ -855,8 +925,9 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>conferencedate</dc-qualifier>
-                            <label>Start - End date (incl. year) </label>
-                            <input-type>onebox</input-type>
+                            <label>Conference Date</label>
+                            <hint>Enter the date the conference took place (starting-ending date including year) .</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
@@ -864,14 +935,15 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Reference</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>authors</dc-qualifier>
                             <label>Editors</label>
-                            <input-type>name</input-type>
+                            <hint>Enter the personal name of the editor(s) of the book.</hint>
+                            <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -881,13 +953,38 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>proceedingstitle</dc-qualifier>
-                            <label>Proceedings Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Proceedings Title *</label>
+                            <hint>Enter here the full title that is given to the proceedings publication of which your paper is a part.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required>You must enter a proceedings title for this conference paper.</required>
                             <ask-language>true</ask-language>
                         </field>
 					</fieldrow>
+                     <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseries</dc-qualifier>
+                            <label>Series Name and Number</label>
+                            <hint>Enter the title of the series and number.</hint>
+                            <input-type  size="50">series</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+                        </field>
+                    </fieldrow>
+					 <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier></dc-qualifier>
+                            <label>Publisher and Place of Publication</label>
+                            <input-type  size="35">series</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                     </fieldrow>
 					<fieldrow>
 						<field>
 							<dc-schema>dc</dc-schema>
@@ -926,35 +1023,12 @@
 							<required></required>
 						</field>
 					</fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>publisher</dc-element>
-                            <dc-qualifier></dc-qualifier>
-                            <label>Place - Publisher</label>
-                            <input-type>series</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-                     </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>relation</dc-element>
-                            <dc-qualifier>ispartofseries</dc-qualifier>
-                            <label>Series Name - No</label>
-                            <input-type>series</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                            <ask-language>true</ask-language>
-                        </field>
-                    </fieldrow>
  				</fieldgroup>
 			</page>
 			<page  number="2">
 					<fieldgroup>
                     <label>Links</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                      <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -972,6 +1046,7 @@
                             <dc-element>relation</dc-element>
                             <dc-qualifier>uri</dc-qualifier>
                             <label>Alternative Locations (URL)</label>
+                            <hint>If your deposit is available from other sites, enter those URLs here.</hint>
                             <input-type>onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -980,16 +1055,17 @@
 					</fieldgroup>
 					<fieldgroup>
                     <label>Characteristics</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
 					<fieldrow>
 						<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-			    <input-type>date</input-type>
+                            <label>Publication Date *</label>
+                            <hint>Enter here the date your deposit was submitted to a publisher or published.</hint>
+							<input-type>date</input-type>
                             <repeatable>false</repeatable>
-                            <required>You must enter only the year (YYYY).</required>
+                            <required>The year is mandatory (YYYY).</required>
                         </field>
 					</fieldrow>
                      <fieldrow>
@@ -997,19 +1073,23 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
+                            <label>Status *</label>
+                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
                             <input-type value-pairs-name="status">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter the status.</required>
                         </field>
+                     </fieldrow>
+                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>refereed</dc-qualifier>
-                            <label>Refereed</label>
+                            <label>Refereed *</label>
+                            <hint>Please indicate here if your deposit has been refereed.</hint>
                             <input-type value-pairs-name="refereed">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter whether the item been refereed or not.</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -1017,10 +1097,11 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>language</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
                             <repeatable>true</repeatable>
-                            <required></required>
+                            <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
                </fieldgroup>
@@ -1030,7 +1111,7 @@
             <page number="1">
  				<fieldgroup>
                     <label>Type</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                   <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1045,14 +1126,15 @@
                 </fieldgroup>
 				<fieldgroup>
                     <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
-                            <label>Authors</label>
-                            <input-type>name</input-type>
+                            <label>Personal Authors</label>
+                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -1063,7 +1145,8 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -1071,14 +1154,15 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Title *</label>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
                             <ask-language>true</ask-language>
@@ -1090,7 +1174,8 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1100,14 +1185,15 @@
 				</fieldgroup>
                 <fieldgroup>
                     <label>Conference Description</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>conferencename</dc-qualifier>
-                            <label>Conference Name</label>
-                            <input-type>onebox</input-type>
+                            <label>Conference Name *</label>
+                            <hint>Enter the full name of the conference.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required>You must enter a conference name for this citation.</required>
                             <ask-language>true</ask-language>
@@ -1118,17 +1204,21 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>conferenceplace</dc-qualifier>
-                            <label>Conference Location (City, Country)</label>
-                            <input-type size='35'>onebox</input-type>
+                            <label>Conference Place</label>
+                            <hint>Enter the place where the conference took place - City (State), Country.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-                        <field>
+                    </fieldrow>
+                    <fieldrow>
+		      <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>conferencedate</dc-qualifier>
-                            <label>Conference Dates (Start - End)</label>
-                            <input-type size='35'>onebox</input-type>
+                            <label>Conference Date</label>
+                            <hint>Enter the date the conference took place (starting-ending date including year) .</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
@@ -1139,13 +1229,14 @@
 			<page  number="2">
                <fieldgroup>
                     <label>Links</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
  					<fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>uri</dc-qualifier>
                             <label>Alternative Locations (URL)</label>
+                            <hint>If your deposit is available from other sites, enter those URLs here.</hint>
                             <input-type>onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1154,16 +1245,16 @@
 		</fieldgroup>
 		<fieldgroup>
                     <label>Characteristics</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
 					<fieldrow>
 						<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-			    <input-type>date</input-type>
+                            <label>Publication Date *</label>
+							<input-type>date</input-type>
                             <repeatable>false</repeatable>
-                            <required>You must enter only the year (YYYY).</required>
+                            <required>The year is mandatory (YYYY).</required>
                         </field>
 					</fieldrow>
                      <fieldrow>
@@ -1171,19 +1262,23 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
+                            <label>Status *</label>
+                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
                             <input-type value-pairs-name="status">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter the status.</required>
                         </field>
+                     </fieldrow>
+                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>refereed</dc-qualifier>
-                            <label>Refereed</label>
+                            <label>Refereed *</label>
+                            <hint>Please indicate here if your deposit has been refereed.</hint>
                             <input-type value-pairs-name="refereed">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter whether the item been refereed or not.</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -1191,10 +1286,11 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>language</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
                             <repeatable>true</repeatable>
-                            <required></required>
+                            <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
                </fieldgroup>
@@ -1205,14 +1301,15 @@
             <page number="1">
                <fieldgroup >
                     <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
-                            <label>Authors</label>
-                            <input-type>name</input-type>
+                            <label>Personal Authors</label>
+                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -1223,7 +1320,8 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type  size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -1231,14 +1329,15 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Title *</label>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type  size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
                             <ask-language>true</ask-language>
@@ -1250,7 +1349,8 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1259,28 +1359,29 @@
                 </fieldgroup>
                  <fieldgroup>
                     <label>Reference</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>relation</dc-element>
-                            <dc-qualifier>ispartofseries</dc-qualifier>
-                            <label>Series Name + No</label>
-                            <input-type>series</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                            <ask-language>true</ask-language>
-                        </field>
-                    </fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Place + Publisher</label>
-                            <input-type>series</input-type>
+                            <label>Publisher and Place of Publication</label>
+                            <input-type size="35">series</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseries</dc-qualifier>
+                            <label>Series Name and Number</label>
+                            <hint>Enter the title of the series of the book.</hint>
+                            <input-type size="50">series</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
                         </field>
                     </fieldrow>
 				</fieldgroup>
@@ -1288,7 +1389,7 @@
 			<page  number="2">
 					<fieldgroup>
                     <label>Links</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                      <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1306,6 +1407,7 @@
                             <dc-element>relation</dc-element>
                             <dc-qualifier>uri</dc-qualifier>
                             <label>Alternative Locations (URL)</label>
+                            <hint>If your deposit is available from other sites, enter those URLs here.</hint>
                             <input-type>onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1314,16 +1416,17 @@
 					</fieldgroup>
 					<fieldgroup>
                     <label>Characteristics</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
 					<fieldrow>
 						<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-			    <input-type>date</input-type>
+                            <label>Publication Date *</label>
+                            <hint>Enter here the date your deposit was submitted to a publisher or published.</hint>
+							<input-type>date</input-type>
                             <repeatable>false</repeatable>
-                            <required>You must enter only the year (YYYY).</required>
+                            <required>The year is mandatory (YYYY).</required>
                         </field>
 					</fieldrow>
                     <fieldrow>
@@ -1342,19 +1445,23 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
+                            <label>Status *</label>
+                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
                             <input-type value-pairs-name="status">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter the status.</required>
                         </field>
+                     </fieldrow>
+                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>refereed</dc-qualifier>
-                            <label>Refereed</label>
+                            <label>Refereed *</label>
+                            <hint>Please indicate here if your deposit has been refereed.</hint>
                             <input-type value-pairs-name="refereed">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter whether the item been refereed or not.</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -1362,10 +1469,11 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>language</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
                             <repeatable>true</repeatable>
-                            <required></required>
+                            <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
                </fieldgroup>
@@ -1376,32 +1484,32 @@
             <page number="1">
                 <fieldgroup>
                     <label>Type</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
 					<fieldrow>
 						<field>
 							<dc-schema>dc</dc-schema>
 							<dc-element>type</dc-element>
 							<dc-qualifier>specified</dc-qualifier>
-							<label>Thesis Type</label>
+							<label>Thesis Type *</label>
 							<input-type  value-pairs-name="type_thesis">dropdown</input-type>
 							<repeatable>false</repeatable>
-							<required></required>
+							<required>You must enter the thesis type.</required>
 						</field>
 					</fieldrow>
                 </fieldgroup>
                 <fieldgroup>
                     <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
-                            <label>Author</label>
-                            <input-type>name</input-type>
+                            <label>Personal Authors</label>
+                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
-                            <ask-language>true</ask-language>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -1411,7 +1519,7 @@
                             <dc-qualifier>advisor</dc-qualifier>
                             <repeatable>true</repeatable>
                             <label>Theses Lectors/Promotors</label>
-                            <input-type>name</input-type>
+                            <input-type size="33">name</input-type>
                             <required></required>
                         </field>
                     </fieldrow>
@@ -1421,7 +1529,8 @@
 							<dc-element>contributor</dc-element>
 							<dc-qualifier>corpauthor</dc-qualifier>
 							<label>University/Institute</label>
-							<input-type>onebox</input-type>
+							<hint>Enter the institution from which the author obtained his degree.</hint>
+							<input-type size="69">onebox</input-type>
 							<repeatable>true</repeatable>
 							<required></required>
 						</field>
@@ -1429,14 +1538,15 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Title *</label>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
                             <ask-language>true</ask-language>
@@ -1447,8 +1557,9 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
-                            <label>Alternative titles</label>
-                            <input-type>onebox</input-type>
+                            <label>Alternative Titles</label>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
@@ -1459,7 +1570,7 @@
 			<page  number="2">
 					<fieldgroup>
                     <label>Links</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                      <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1477,6 +1588,7 @@
                             <dc-element>relation</dc-element>
                             <dc-qualifier>uri</dc-qualifier>
                             <label>Alternative Locations (URL)</label>
+                            <hint>If your deposit is available from other sites, enter those URLs here.</hint>
                             <input-type>onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1485,19 +1597,44 @@
 					</fieldgroup>
                   <fieldgroup>
                     <label>Characteristics</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
 					<fieldrow>
 						<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-			    <input-type>date</input-type>
+                            <label>Publication Date *</label>
+                            <hint>Enter here the date your deposit was submitted to a publisher or published.</hint>
+							<input-type>date</input-type>
                             <repeatable>false</repeatable>
-                            <required>You must enter only the year (YYYY).</required>
+                            <required>The year is mandatory (YYYY).</required>
                         </field>
 					</fieldrow>
+                     <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>status</dc-qualifier>
+                            <label>Status *</label>
+                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
+                            <input-type value-pairs-name="status">dropdown</input-type>
+                            <repeatable>false</repeatable>
+                            <required>You must enter the status.</required>
+                        </field>
+                     </fieldrow>
                     <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>language</dc-element>
+                            <dc-qualifier>iso</dc-qualifier>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
+                            <input-type value-pairs-name="common_iso_languages">list</input-type>
+                            <repeatable>true</repeatable>
+                            <required>You must enter the language of the item</required>
+                        </field>
+                    </fieldrow>
+                     <fieldrow>
 						<field>
 							<dc-schema>dc</dc-schema>
 							<dc-element>identifier</dc-element>
@@ -1517,28 +1654,6 @@
                             <required></required>
                         </field>
                     </fieldrow>
-                     <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>description</dc-element>
-                            <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
-                            <input-type value-pairs-name="status">dropdown</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>language</dc-element>
-                            <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
-                            <input-type value-pairs-name="common_iso_languages">list</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
                </fieldgroup>
             </page>
         </form>
@@ -1547,14 +1662,15 @@
             <page number="1">
                <fieldgroup>
                     <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
-                            <label>Authors</label>
-                            <input-type>name</input-type>
+                            <label>Personal Authors</label>
+                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -1565,7 +1681,8 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -1573,14 +1690,15 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
-                            <input-type>onebox</input-type>
+                            <label>Title *</label>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
                             <ask-language>true</ask-language>
@@ -1592,7 +1710,8 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <input-type>onebox</input-type>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1604,13 +1723,14 @@
 			<page  number="2">
                <fieldgroup>
                     <label>Links</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
  					<fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>uri</dc-qualifier>
                             <label>Alternative Locations (URL)</label>
+                            <hint>If your deposit is available from other sites, enter those URLs here.</hint>
                             <input-type>onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1619,16 +1739,17 @@
 				</fieldgroup>
                   <fieldgroup>
                     <label>Characteristics</label>
-                    <hint>&lt;a href="javascript:newPopup('/agri3/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <hint>&lt;a href="javascript:newPopup('/ocean/help/index.html');"&gt;Help&lt;/a&gt;</hint>
 					<fieldrow>
 						<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-			    <input-type>date</input-type>
+                            <label>Publication Date *</label>
+                            <hint>Enter here the date your deposit was submitted to a publisher or published.</hint>
+							<input-type>date</input-type>
                             <repeatable>false</repeatable>
-                            <required>You must enter only the year (YYYY).</required>
+                            <required>The year is mandatory (YYYY).</required>
                         </field>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1645,21 +1766,23 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
+                            <label>Status *</label>
+                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
                             <input-type value-pairs-name="status">dropdown</input-type>
                             <repeatable>false</repeatable>
-                            <required></required>
+                            <required>You must enter the status.</required>
                         </field>
-                    </fieldrow>
+                     </fieldrow>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>language</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
                             <repeatable>true</repeatable>
-                            <required></required>
+                            <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
                </fieldgroup>
@@ -1734,6 +1857,11 @@
                 </pair>
         </value-pairs>
         <value-pairs value-pairs-name="type_conference" dc-term="type_specified">
+                <pair>
+                        <displayed-value>Paper</displayed-value>
+                        <stored-value>Paper</stored-value>
+                </pair>
+ 
                 <pair>
                         <displayed-value>Presentation</displayed-value>
                         <stored-value>Presentation</stored-value>

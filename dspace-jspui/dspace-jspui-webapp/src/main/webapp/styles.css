@@ -216,7 +216,7 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
 }
 
 .communityLink { font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                 font-size: 14pt;
+                 /*font-size: 10pt;*/
                  font-weight: bold;
                  background-image: url(./image/blue_arrow.png);
                  background-repeat: no-repeat;
@@ -238,7 +238,7 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                         list-style-type: none }
 
 .collectionListItem { font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                      font-size: 12pt;
+                      /*font-size: 12pt;*/
                       font-weight: normal }
 
 .collectionDescription { margin-left: 20px;
@@ -889,16 +889,26 @@ input.ds-authority-lock.is-unlocked
     margin-left: 10px;
     background: #5970B2
 }
-.navigatiobarTitle
+
+.navigatiobarRow
 {
     font-size: 10pt;
     border-left: 1px solid #000000;
     border-right: 1px solid #000000;
-    padding: 2px 5px;
+    padding: 2px 20px;
     margin-left: 10px;
     color: #FFFFFF;
     margin-left: 10px;
     background: #5970B2
+}
+.adminNavigatiobarRow
+{
+    font-size: 10pt;
+    padding: 2px 5px;
+    margin-left: 10px;
+    color: #5970B2;
+    margin-left: 10px;
+    background: #FFFFFF;
 }
 
 .navigatiobarRow a
@@ -987,7 +997,7 @@ input.ds-authority-lock.is-unlocked
     padding: 5px 10px;
     width: 110px;
     background: #5970B2;
-    color: #FFF;
+    color: #FFFFFF;
     text-align: center;
     text-decoration: none
 }
@@ -999,7 +1009,7 @@ input.ds-authority-lock.is-unlocked
     padding: 5px 10px;
     width: 130px;
     background: #5970B2;
-    color: #FFF;
+    color: #FFFFFF;
     text-align: center;
     text-decoration: none
 }
