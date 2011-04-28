@@ -592,6 +592,13 @@
         <qualifier>asfa</qualifier>
         <scope_note>ASFA Keywords</scope_note>
     </dc-type>
+    
+    <dc-type>
+        <schema>dc</schema>
+        <element>subject</element>
+        <qualifier>asfa-uri</qualifier>
+        <scope_note>ASFA Keywords URI</scope_note>
+    </dc-type>
 
     <dc-type>
         <schema>dc</schema>
@@ -690,7 +697,14 @@
         <element>subject</element>
         <qualifier>agrovoc</qualifier>
     </dc-type>
-
+    
+    <dc-type>
+        <schema>dc</schema>
+        <element>subject</element>
+        <qualifier>agrovoc-uri</qualifier>
+	<scope_note>Agrovoc Keywords URI</scope_note>
+    </dc-type>
+    
     <dc-type>
         <schema>dc</schema>
         <element>description</element>

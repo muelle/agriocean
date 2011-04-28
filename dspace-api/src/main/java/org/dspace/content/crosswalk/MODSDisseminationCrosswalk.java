@@ -321,7 +321,30 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
     {
         Element root = new Element("mods", MODS_NS);
         root.setAttribute("schemaLocation", schemaLocation, XSI_NS);
-        root.addContent(disseminateListInternal(dso,false));
+
+        // Added by Kemal Taskin 20060906
+        Iterator it = disseminateListInternal(dso, false).iterator();
+
+        while(it.hasNext())
+        {
+        	Element em = (Element) it.next();
+
+        	Element isChildOfRoot = giveMeTheChild(root,em); //root.getChild(em.getName(), MODS_NS);
+
+        	//the element "em" will be added for the first time
+        	if(isChildOfRoot == null)
+        	{
+        		root.addContent(em);
+        	}
+        	//insert the children of element "em" inside "isChildOfRoot"
+        	else
+        	{
+       			insert(em, isChildOfRoot);
+        	}
+        }
+
+        //root.addContent(disseminateListInternal(dso,false));
+
         return root;
     }
 
@@ -643,6 +666,172 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
             }
             return result.toString();
         }
+    }
+
+    //=====================
+
+     // Added by Kemal Taskin 20060906
+    private boolean sameAttributes(Element e1, Element e2)
+    {
+    	// check attributes
+		List l1 = e1.getAttributes();
+		List l2 = e2.getAttributes();
+
+		Attribute e1Attribute = l1.size() > 0 ? (Attribute) l1.get(0) : null;
+		Attribute e2Attribute = l2.size() > 0 ? (Attribute) l2.get(0) : null;
+
+		if(e1Attribute != null && e2Attribute != null)
+		{
+			if((e1Attribute.getName() == e2Attribute.getName()))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+		else if(e1Attribute == null && e2Attribute == null)
+			return true; //no attributes = the same element
+		else
+			return false;
+    }
+
+    // Added by Kemal Taskin 20060907
+    // in this function we assume that both elements have Attributes with the same name
+    private boolean sameAttributeValues(Element e1, Element e2)
+    {
+    	// check attributes
+		List l1 = e1.getAttributes();
+		List l2 = e2.getAttributes();
+
+		Attribute e1Attribute = (Attribute) l1.get(0);
+		Attribute e2Attribute = (Attribute) l2.get(0);
+
+		if(e1Attribute.getValue().equals(e2Attribute.getValue()))
+			return true;
+
+		return false;
+    }
+
+    // Added by Kemal Taskin 20060906
+    private void copyChildren(Element from, Element to)
+    {
+    	Iterator it = from.getChildren().iterator();
+
+		while(it.hasNext())
+		{
+			Element cur = (Element) ((Element) it.next()).clone();
+			to.addContent(cur);
+		}
+    }
+
+    //Added by Kemal Taskin 20060906
+    private void copyElement(Element child, Element to)
+    {
+    	to.addContent((Element) child.clone());
+    }
+
+    // Added by Kemal Taskin 20060906
+    private void insert(Element em, Element to)
+    {
+    	if(em.getChildren().size() == 0)
+    		copyElement(em, to.getParentElement());
+    	else
+    	{
+    		if(!sameAttributes(em, to))
+    		{
+    			log.info("NOT SAME ATTRIBUTES: " + em.toString());
+    			copyElement(em, to.getParentElement());
+    		}
+    		else
+    			insertChildren(em.getChildren(), to);
+    	}
+
+    }
+
+    // Added by Kemal Taskin 20060906
+    private void insertChildren(List children, Element to)
+    {
+    	Iterator it = children.iterator();
+
+    	while(it.hasNext())
+    	{
+    		Element el = (Element) it.next();
+    		int size = el.getChildren().size();
+
+    		if(size == 0)
+    		{
+    			Element temp = giveMeTheChild(to, el); //to.getChild(el.getName(), MODS_NS);
+
+    			if(temp != null)
+    			{
+    				if(el.getAttributes().size() != 0)
+    				{
+    					if(!sameAttributes(el, temp))
+    						copyElement(el, to);
+    				}
+    				else
+    					copyElement(el, to);
+    			}
+    			else
+    			{
+    				log.info("ELEMENT: " + el.toString() + " PARENT: " + to.toString());
+    				copyElement(el, to);
+    			}
+    		}
+    		else
+    		{
+    			Element temp = giveMeTheChild(to, el);
+
+    			if(temp != null)
+    			{
+    				if(el.getAttributes().size() != 0)
+    				{
+    					if(!sameAttributes(el, temp))
+    						copyElement(el, to);
+    					else if(!sameAttributeValues(el, temp))
+    						copyElement(el, to);
+    					else
+    						insertChildren(el.getChildren(), temp);
+    				}
+    				else
+    					insertChildren(el.getChildren(), temp);
+    			}
+    			else
+    			{
+    				copyElement(el, to);
+    			}
+    		}
+    	}
+    }
+
+    // get the child with the same attribute if present
+    private Element giveMeTheChild(Element parent, Element child)
+    {
+    	if(child.getAttributes().size() == 0)
+    	{
+    		return parent.getChild(child.getName(), MODS_NS);
+    	}
+    	else
+    	{
+    		Iterator it = parent.getChildren().iterator();
+
+        	while(it.hasNext())
+        	{
+        		Element el = (Element) it.next();
+
+        		if(el.getName() == child.getName() && el.getAttributes().size() != 0)
+        		{
+        			if(sameAttributes(el, child))
+        			{
+        				return el;
+        			}
+        		}
+        	}
+
+        	return null;
+    	}
     }
 
 }

@@ -47,6 +47,7 @@ import proj.oceandocs.citation.CitationManager;
  */
 public class CompleteStep extends AbstractProcessingStep
 {
+
     /** log4j logger */
     private static Logger log = Logger.getLogger(CompleteStep.class);
 
@@ -74,48 +75,37 @@ public class CompleteStep extends AbstractProcessingStep
      *         no errors occurred!)
      */
     public int doProcessing(Context context, HttpServletRequest request,
-            HttpServletResponse response, SubmissionInfo subInfo)
-            throws ServletException, IOException, SQLException,
-            AuthorizeException
+                            HttpServletResponse response, SubmissionInfo subInfo)
+        throws ServletException, IOException, SQLException,
+        AuthorizeException
     {
         // The Submission is COMPLETE!!
         log.info(LogManager.getHeader(context, "submission_complete",
-                "Completed submission with id="
-                        + subInfo.getSubmissionItem().getID()));
+                                      "Completed submission with id="
+            + subInfo.getSubmissionItem().getID()));
 
         // Start the workflow for this Submission
         boolean success = false;
         try
         {
-        WorkflowManager.start(context, (WorkspaceItem) subInfo
-                .getSubmissionItem());
+            WorkflowManager.start(context, (WorkspaceItem) subInfo.getSubmissionItem());
 
-                 Item item = subInfo.getSubmissionItem().getItem();
-                 //add citation and AGRIS number to item
-                 CitationManager cm = new CitationManager();
-                 String cit = cm.updateCitationString(item);
+            Item item = subInfo.getSubmissionItem().getItem();
 
-                 //update ISSN field
-                 DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", Item.ANY);
-                 if (titles.length >0)
-                 {
-                     String issn = titles[0].authority;
-                     item.clearMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY);
-                     if (issn != null && !"".equals(issn))
-                        item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY, issn);
-                     item.update();
-                 }
+            item.updateCitationString();
+            item.updateISSN();
+            item.updateSubjectFields();
 
             success = true;
         }
         catch (Exception e)
         {
-            log.error("Caught exception in submission step: ",e);
+            log.error("Caught exception in submission step: ", e);
             throw new ServletException(e);
         }
         finally
         {
-        // commit changes to database
+            // commit changes to database
             if (success)
             {
                 context.commit();
@@ -151,7 +141,7 @@ public class CompleteStep extends AbstractProcessingStep
      * @return the number of pages in this step
      */
     public int getNumberOfPages(HttpServletRequest request,
-            SubmissionInfo subInfo) throws ServletException
+                                SubmissionInfo subInfo) throws ServletException
     {
         // This class represents the non-interactive processing step
         // that occurs just *before* the final confirmation page!

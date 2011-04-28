@@ -48,7 +48,7 @@ public class SubmissionConfigReader
     public static final String DEFAULT_COLLECTION = "default";
 
     /** Prefix of the item submission definition XML file */
-    static final String SUBMIT_DEF_FILE_PREFIX = "item-submission";
+    static final String SUBMIT_DEF_FILE_PREFIX = "item-submission-ext";
     
     /** Suffix of the item submission definition XML file */
     static final String SUBMIT_DEF_FILE_SUFFIX = ".xml";
