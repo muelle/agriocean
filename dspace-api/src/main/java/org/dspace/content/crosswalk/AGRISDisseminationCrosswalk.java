@@ -390,7 +390,7 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
         while (itr.hasNext())
         {
             child = (Element) itr.next();
-            if ((child.getNamespacePrefix() + ":" + child.getName()).equals(tag.getNamespacePrefix() + ":" + tag.getName()))
+            if (child.getNamespacePrefix().equals(tag.getNamespacePrefix()) && child.getName().equals(tag.getName()))
             {
                 return true;
             }
