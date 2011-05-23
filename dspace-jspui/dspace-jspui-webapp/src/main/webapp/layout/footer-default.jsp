@@ -17,7 +17,6 @@
 
 <%@ page import="java.net.URLEncoder" %>
 <%@ page import="org.dspace.app.webui.util.UIUtil" %>
-
 <%
     String sidebar = (String) request.getAttribute("dspace.layout.sidebar");
     int overallColSpan = 3;
@@ -29,18 +28,6 @@
                     <%-- End of page content --%>
                     <p>&nbsp;</p>
                 </td>
-
-            <%-- Right-hand side bar if appropriate --%>
-<%
-    if (sidebar != null)
-    {
-%>
-                <td class="sidebar">
-                    <%= sidebar %>
-                </td>
-<%
-    }
-%>
             </tr>
 
             <%-- Page footer --%>
@@ -48,15 +35,24 @@
                 <td colspan="<%= overallColSpan %>" class="pageFootnote">
                     <table class="pageFooterBar" width="100%">
                         <tr>
-                            <td align="left" width ="147">
-							<a href="http://iode.org"><img src="<%= request.getContextPath() %>/image/footer.png" width="147" height="32" border="0"/></a>
+                            <td align="left" width ="80">
+			      <a href="http://www.fao.org"><img src="<%= request.getContextPath() %>/image/fao-footer.jpg" width="44" height="44" border="0"/></a>
                             </td>
-                            <td class="pageFootnote">
-							Integovemmental Oceanographic Commission of UNESCO <br/>
-							International Oceanographic Data and Information Exchange
+                            <td width="200">
+<%--							Integovemmental Oceanographic Commission of UNESCO <br/>
+							International Oceanographic Data and Information Exchange  --%>
+			      <a href="http://iode.org"><img src="<%= request.getContextPath() %>/image/footer.png" width="147" height="32" border="0"/></a>				
+                            </td>
+                        <td align="right">
+<%--							Integovemmental Oceanographic Commission of UNESCO <br/>
+							International Oceanographic Data and Information Exchange  --%>
+				<a href="http://www.dspace.org"><img src="<%= request.getContextPath() %>/image/dspace-blue.gif" width="99" height="39" border="0"/></a>
                             </td>
 
                         </tr>
+                    </table>
+                </td>
+            </tr>
                     </table>
                 </td>
             </tr>

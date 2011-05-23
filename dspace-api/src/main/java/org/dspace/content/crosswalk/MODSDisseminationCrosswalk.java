@@ -79,108 +79,57 @@ import org.jdom.xpath.XPath;
  * @version $Revision: 5844 $
  */
 public class MODSDisseminationCrosswalk extends SelfNamedPlugin
-    implements DisseminationCrosswalk
-{
+        implements DisseminationCrosswalk {
+
     /** log4j category */
     private static Logger log = Logger.getLogger(MODSDisseminationCrosswalk.class);
-
     private static final String CONFIG_PREFIX = "crosswalk.mods.properties.";
-
     /**
      * Fill in the plugin alias table from DSpace configuration entries
      * for configuration files for flavors of MODS crosswalk:
      */
     private static String aliases[] = null;
-    static
-    {
+
+    static {
         List<String> aliasList = new ArrayList<String>();
-        Enumeration<String> pe = (Enumeration<String>)ConfigurationManager.propertyNames();
-        while (pe.hasMoreElements())
-        {
+        Enumeration<String> pe = (Enumeration<String>) ConfigurationManager.propertyNames();
+        while (pe.hasMoreElements()) {
             String key = pe.nextElement();
-            if (key.startsWith(CONFIG_PREFIX))
-            {
+            if (key.startsWith(CONFIG_PREFIX)) {
                 aliasList.add(key.substring(CONFIG_PREFIX.length()));
             }
         }
-        aliases = (String[])aliasList.toArray(new String[aliasList.size()]);
+        aliases = (String[]) aliasList.toArray(new String[aliasList.size()]);
     }
 
-    public static String[] getPluginNames()
-    {
+    public static String[] getPluginNames() {
         return (String[]) ArrayUtils.clone(aliases);
     }
-
     /**
      * MODS namespace.
      */
     public static final Namespace MODS_NS =
-        Namespace.getNamespace("mods", "http://www.loc.gov/mods/v3");
-
+            Namespace.getNamespace("mods", "http://www.loc.gov/mods/v3");
     private static final Namespace XLINK_NS =
-        Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
-
-    private static final Namespace namespaces[] = { MODS_NS, XLINK_NS };
-
+            Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+    private static final Namespace namespaces[] = {MODS_NS, XLINK_NS};
     /**  URL of MODS XML Schema */
     public static final String MODS_XSD =
-        "http://www.loc.gov/standards/mods/v3/mods-3-1.xsd";
-
+            "http://www.loc.gov/standards/mods/v3/mods-3-1.xsd";
     private static final String schemaLocation =
-        MODS_NS.getURI()+" "+MODS_XSD;
-
+            MODS_NS.getURI() + " " + MODS_XSD;
+    final String prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            + "<modsCollection xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
+            + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
+            + "xmlns=\"http://www.loc.gov/mods/v3\" "
+            + "xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd\">";
+    final String postlog = "</modsCollection>";
+    
     private static XMLOutputter outputUgly = new XMLOutputter();
     private static SAXBuilder builder = new SAXBuilder();
+    private Map<String, String> modsMap = null;
 
-    private Map<String, modsTriple> modsMap = null;
-
-    /**
-     * Container for crosswalk mapping: expressed as "triple" of:
-     * 1. QDC field name (really field.qualifier).
-     * 2. XML subtree to add to MODS record.
-     * 3. XPath expression showing places to plug in the value.
-     */
-    static class modsTriple
-    {
-        public String qdc = null;
-        public Element xml = null;
-        public XPath xpath = null;
-
-        /**
-         * Initialize from text versions of QDC, XML and XPath.
-         * The DC stays a string; parse the XML with appropriate
-         * namespaces; "compile" the XPath.
-         */
-        public static modsTriple create(String qdc, String xml, String xpath)
-        {
-            modsTriple result = new modsTriple();
-
-            final String prolog = "<mods xmlns:"+MODS_NS.getPrefix()+"=\""+MODS_NS.getURI()+"\" "+
-                            "xmlns:"+XLINK_NS.getPrefix()+"=\""+XLINK_NS.getURI()+"\">";
-            final String postlog = "</mods>";
-            try
-            {
-                result.qdc = qdc;
-                result.xpath = XPath.newInstance(xpath);
-                result.xpath.addNamespace(MODS_NS.getPrefix(), MODS_NS.getURI());
-                result.xpath.addNamespace(XLINK_NS);
-                Document d = builder.build(new StringReader(prolog+xml+postlog));
-                result.xml = (Element)d.getRootElement().getContent(0);
-            }
-            catch (JDOMException je)
-            {
-                log.error("Error initializing modsTriple(\""+qdc+"\",\""+xml+"\",\""+xpath+"\"): got "+je.toString());
-                return null;
-            }
-            catch (IOException je)
-            {
-                log.error("Error initializing modsTriple(\""+qdc+"\",\""+xml+"\",\""+xpath+"\"): got "+je.toString());
-                return null;
-            }
-            return result;
-        }
-    }
-
+    
     /**
      * Initialize Crosswalk table from a properties file
      * which itself is the value of the DSpace configuration property
@@ -189,98 +138,71 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
      *
      * The MODS crosswalk configuration properties follow the format:
      *
-     *  {field-name} = {XML-fragment} | {XPath}
+     *  {field-name} = {XML-fragment}
      *
      *  1. qualified DC field name is of the form
      *       {MDschema}.{element}.{qualifier}
      *
      *      e.g.  dc.contributor.author
      *
-     *  2. XML fragment is prototype of metadata element, with empty or "%s"
-     *     placeholders for value(s).  NOTE: Leave the %s's in becaue
-     *     it's much easier then to see if something is broken.
-     *
-     *  3. XPath expression listing point(s) in the above XML where
-     *     the value is to be inserted.  Context is the element itself.
-     *
+     *  2. XML fragment is prototype of metadata element, with empty or "%s", "%a", "%l"
+     *     placeholders for value(s), authority value(s), language attribute value(s).  
+     *     
      * Example properties line:
      *
-     *  dc.description.abstract = <mods:abstract>%s</mods:abstract> | text()
+     *  dc.description.abstract = <mods:abstract>%s</mods:abstract>
      *
      */
     private void initMap()
-        throws CrosswalkInternalException
-    {
-        if (modsMap != null)
-        {
+            throws CrosswalkInternalException {
+        if (modsMap != null) {
             return;
         }
         String myAlias = getPluginInstanceName();
-        if (myAlias == null)
-        {
+        if (myAlias == null) {
             log.error("Must use PluginManager to instantiate MODSDisseminationCrosswalk so the class knows its name.");
             return;
         }
-        String cmPropName = CONFIG_PREFIX+myAlias;
+        String cmPropName = CONFIG_PREFIX + myAlias;
         String propsFilename = ConfigurationManager.getProperty(cmPropName);
-        if (propsFilename == null)
-        {
-            String msg = "MODS crosswalk missing "+
-                "configuration file for crosswalk named \""+myAlias+"\"";
+        if (propsFilename == null) {
+            String msg = "MODS crosswalk missing "
+                    + "configuration file for crosswalk named \"" + myAlias + "\"";
             log.error(msg);
             throw new CrosswalkInternalException(msg);
-        }
-        else
-        {
-            String parent = ConfigurationManager.getProperty("dspace.dir") +
-                File.separator + "config" + File.separator;
+        } else {
+            String parent = ConfigurationManager.getProperty("dspace.dir")
+                    + File.separator + "config" + File.separator;
             File propsFile = new File(parent, propsFilename);
             Properties modsConfig = new Properties();
             FileInputStream pfs = null;
-            try
-            {
+            try {
                 pfs = new FileInputStream(propsFile);
                 modsConfig.load(pfs);
-            }
-            catch (IOException e)
-            {
-                log.error("Error opening or reading MODS properties file: "+propsFile.toString()+": "+e.toString());
-                throw new CrosswalkInternalException("MODS crosswalk cannot "+
-                    "open config file: "+e.toString(), e);
-            }
-            finally
-            {
-                if (pfs != null)
-                {
-                    try
-                    {
+            } catch (IOException e) {
+                log.error("Error opening or reading MODS properties file: " + propsFile.toString() + ": " + e.toString());
+                throw new CrosswalkInternalException("MODS crosswalk cannot "
+                        + "open config file: " + e.toString(), e);
+            } finally {
+                if (pfs != null) {
+                    try {
                         pfs.close();
-                    }
-                    catch (IOException ioe)
-                    {
+                    } catch (IOException ioe) {
                     }
                 }
             }
 
-            modsMap = new HashMap<String, modsTriple>();
-            Enumeration<String> pe = (Enumeration<String>)modsConfig.propertyNames();
-            while (pe.hasMoreElements())
-            {
+            modsMap = new HashMap<String, String>();
+            Enumeration<String> pe = (Enumeration<String>) modsConfig.propertyNames();
+            while (pe.hasMoreElements()) {
                 String qdc = pe.nextElement();
                 String val = modsConfig.getProperty(qdc);
                 String pair[] = val.split("\\s+\\|\\s+", 2);
-                if (pair.length < 2)
-                {
-                    log.warn("Illegal MODS mapping in " + propsFile.toString() + ", line = " +
-                            qdc + " = " + val);
-                }
-                else
-                {
-                    modsTriple trip = modsTriple.create(qdc, pair[0], pair[1]);
-                    if (trip != null)
-                    {
-                        modsMap.put(qdc, trip);
-                    }
+                if (pair.length < 1) {
+                    log.warn("Illegal MODS mapping in " + propsFile.toString() + ", line = "
+                            + qdc + " = " + val);
+                } else {
+                    modsMap.put(qdc, pair[0]);
                 }
             }
         }
@@ -289,178 +211,167 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
     /**
      *  Return the MODS namespace
      */
-    public Namespace[] getNamespaces()
-    {
+    @Override
+    public Namespace[] getNamespaces() {
         return (Namespace[]) ArrayUtils.clone(namespaces);
     }
 
     /**
      * Return the MODS schema
      */
-    public String getSchemaLocation()
-    {
+    @Override
+    public String getSchemaLocation() {
         return schemaLocation;
     }
 
     /**
      * Returns object's metadata in MODS format, as List of XML structure nodes.
      */
+    @Override
     public List<Element> disseminateList(DSpaceObject dso)
-        throws CrosswalkException,
-               IOException, SQLException, AuthorizeException
-    {
-        return disseminateListInternal(dso, true);
+            throws CrosswalkException,
+            IOException, SQLException, AuthorizeException {
+        throw new UnsupportedOperationException("MODS dissemination as list of mods tags not applicable.");
     }
 
     /**
      * Disseminate an Item, Collection, or Community to MODS.
      */
+    @Override
     public Element disseminateElement(DSpaceObject dso)
-        throws CrosswalkException,
-               IOException, SQLException, AuthorizeException
-    {
+            throws CrosswalkException,
+            IOException, SQLException, AuthorizeException {
         Element root = new Element("mods", MODS_NS);
         root.setAttribute("schemaLocation", schemaLocation, XSI_NS);
-
-        // Added by Kemal Taskin 20060906
-        Iterator it = disseminateListInternal(dso, false).iterator();
-
-        while(it.hasNext())
-        {
-        	Element em = (Element) it.next();
-
-        	Element isChildOfRoot = giveMeTheChild(root,em); //root.getChild(em.getName(), MODS_NS);
-
-        	//the element "em" will be added for the first time
-        	if(isChildOfRoot == null)
-        	{
-        		root.addContent(em);
-        	}
-        	//insert the children of element "em" inside "isChildOfRoot"
-        	else
-        	{
-       			insert(em, isChildOfRoot);
-        	}
-        }
-
-        //root.addContent(disseminateListInternal(dso,false));
-
-        return root;
-    }
-
-    private List<Element> disseminateListInternal(DSpaceObject dso, boolean addSchema)
-        throws CrosswalkException, IOException, SQLException, AuthorizeException
-    {
+       
+        Document subdoc = null;
+        Element tempRoot = null;
+        Element tempElement = null;
+        Element currentElement = null;
+        
         DCValue[] dcvs = null;
-        if (dso.getType() == Constants.ITEM)
-        {
+        if (dso.getType() == Constants.ITEM) {
             dcvs = item2Metadata((Item) dso);
-        }
-        else if (dso.getType() == Constants.COLLECTION)
-        {
+        } else if (dso.getType() == Constants.COLLECTION) {
             dcvs = collection2Metadata((Collection) dso);
-        }
-        else if (dso.getType() == Constants.COMMUNITY)
-        {
+        } else if (dso.getType() == Constants.COMMUNITY) {
             dcvs = community2Metadata((Community) dso);
-        }
-        else if (dso.getType() == Constants.SITE)
-        {
+        } else if (dso.getType() == Constants.SITE) {
             dcvs = site2Metadata((Site) dso);
-        }
-        else
-        {
+        } else {
             throw new CrosswalkObjectNotSupported(
                     "MODSDisseminationCrosswalk can only crosswalk Items, Collections, or Communities");
         }
         initMap();
 
         List<Element> result = new ArrayList<Element>(dcvs.length);
+        String template = "";
 
-        for(int i=0; i < dcvs.length; i++)
+        for (int i = 0; i < dcvs.length; i++) 
         {
             String qdc = dcvs[i].schema + "." + dcvs[i].element;
-            if (dcvs[i].qualifier != null)
-            {
+            if (dcvs[i].qualifier != null) {
                 qdc += "." + dcvs[i].qualifier;
             }
             String value = dcvs[i].value;
 
-            modsTriple trip = modsMap.get(qdc);
-            if (trip == null)
-            {
+            if (modsMap.containsKey(qdc)) {
+                template = modsMap.get(qdc);
+                if (template.equals(""))
+                {
+                    continue;
+                }
+
+                if (dcvs[i].value != null)
+                {
+                    template = template.replace("%s", dcvs[i].value);
+                }
+                else
+                {
+                    template = template.replace("%s", "");
+                }
+
+                if (dcvs[i].authority != null)
+                {
+                    template = template.replace("%a", dcvs[i].authority);
+                }
+                else
+                {
+                    template = template.replace("%a", "");
+                }
+
+                if (dcvs[i].language != null)
+                {
+                    template = template.replace("%l", dcvs[i].language);
+                }
+                else
+                {
+                    template = template.replace("%l", "");
+                }
+                
+                try 
+                {
+                    subdoc = builder.build(new StringReader(prolog + template + postlog));
+                    if (subdoc != null)
+                    {
+                        if (!subdoc.getRootElement().getChildren().isEmpty())
+                        {
+                            tempRoot = (Element) subdoc.getRootElement().getChildren().get(0);
+                            if (tempRoot.getChildren().isEmpty())
+                            {
+                                root.addContent(tempRoot.detach());
+                            }
+                            else
+                            {
+                                if (tagExist(root, tempRoot))
+                                {
+                                    tempElement = root.getChild(tempRoot.getName(), tempRoot.getNamespace());
+                                    Iterator itr = tempRoot.getChildren().iterator();
+                                    while(itr.hasNext())
+                                    {
+                                        currentElement = (Element) itr.next();
+                                        tempElement.addContent((Element)currentElement.clone());
+                                    }
+                                }
+                                else
+                                {
+                                    root.addContent(tempRoot.detach());
+                                }
+                            }
+                        }
+                    }
+                   
+                } catch (Exception ex)
+                {
+                    log.error(MODSDisseminationCrosswalk.class.getName()+": " + ex.getLocalizedMessage());
+                
+                }
+            } else {
                 log.warn("WARNING: " + getPluginInstanceName() + ": No MODS mapping for \"" + qdc + "\"");
             }
-            else
-            {
-                try
-                {
-                    Element me = (Element)trip.xml.clone();
-                    if (addSchema)
-                    {
-                        me.setAttribute("schemaLocation", schemaLocation, XSI_NS);
-                    }
-                    Iterator ni = trip.xpath.selectNodes(me).iterator();
-                    if (!ni.hasNext())
-                    {
-                        log.warn("XPath \"" + trip.xpath.getXPath() +
-                                "\" found no elements in \"" +
-                                outputUgly.outputString(me) +
-                                "\", qdc=" + qdc);
-                    }
-                    while (ni.hasNext())
-                    {
-                        Object what = ni.next();
-                        if (what instanceof Element)
-                        {
-                            ((Element) what).setText(checkedString(value));
-                        }
-                        else if (what instanceof Attribute)
-                        {
-                            ((Attribute) what).setValue(checkedString(value));
-                        }
-                        else if (what instanceof Text)
-                        {
-                            ((Text) what).setText(checkedString(value));
-                        }
-                        else
-                        {
-                            log.warn("Got unknown object from XPath, class=" + what.getClass().getName());
-                        }
-                    }
-                    result.add(me);
-                }
-                catch (JDOMException je)
-                {
-                    log.error("Error following XPath in modsTriple: context="+
-                        outputUgly.outputString(trip.xml)+
-                        ", xpath="+trip.xpath.getXPath()+", exception="+
-                        je.toString());
-                }
-            }
         }
-        return result;
+        
+        return root;
     }
 
     /**
      * ModsCrosswalk can disseminate: Items, Collections, Communities, and Site.
      */
-    public boolean canDisseminate(DSpaceObject dso)
-    {
-        return (dso.getType() == Constants.ITEM ||
-            dso.getType() == Constants.COLLECTION ||
-            dso.getType() == Constants.COMMUNITY ||
-            dso.getType() == Constants.SITE);
+    @Override
+    public boolean canDisseminate(DSpaceObject dso) {
+        return (dso.getType() == Constants.ITEM
+                || dso.getType() == Constants.COLLECTION
+                || dso.getType() == Constants.COMMUNITY
+                || dso.getType() == Constants.SITE);
     }
 
     /**
      * ModsCrosswalk prefer's element form over list.
      */
-    public boolean preferList()
-    {
+    @Override
+    public boolean preferList() {
         return false;
     }
-
 
     /**
      * Generate a list of metadata elements for the given DSpace
@@ -469,8 +380,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
      * @param site
      *            The site to derive metadata from
      */
-    protected DCValue[] site2Metadata(Site site)
-    {
+    protected DCValue[] site2Metadata(Site site) {
         List<DCValue> metadata = new ArrayList<DCValue>();
 
         String identifier_uri = "http://hdl.handle.net/"
@@ -478,24 +388,22 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
         String title = site.getName();
         String url = site.getURL();
 
-        if (identifier_uri != null)
-        {
+        if (identifier_uri != null) {
             metadata.add(createDCValue("identifier.uri", null, identifier_uri));
         }
 
         //FIXME: adding two URIs for now (site handle and URL), in case site isn't using handles
-        if (url != null)
-        {
+        if (url != null) {
             metadata.add(createDCValue("identifier.uri", null, url));
         }
 
-        if (title != null)
-        {
+        if (title != null) {
             metadata.add(createDCValue("title", null, title));
         }
 
         return (DCValue[]) metadata.toArray(new DCValue[metadata.size()]);
     }
+
     /**
      * Generate a list of metadata elements for the given DSpace
      * community.
@@ -503,46 +411,38 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
      * @param community
      *            The community to derive metadata from
      */
-    protected DCValue[] community2Metadata(Community community)
-    {
+    protected DCValue[] community2Metadata(Community community) {
         List<DCValue> metadata = new ArrayList<DCValue>();
 
         String description = community.getMetadata("introductory_text");
-        String description_abstract = community
-                .getMetadata("short_description");
+        String description_abstract = community.getMetadata("short_description");
         String description_table = community.getMetadata("side_bar_text");
         String identifier_uri = "http://hdl.handle.net/"
                 + community.getHandle();
         String rights = community.getMetadata("copyright_text");
         String title = community.getMetadata("name");
 
-        if (description != null)
-        {
+        if (description != null) {
             metadata.add(createDCValue("description", null, description));
         }
 
-        if (description_abstract != null)
-        {
+        if (description_abstract != null) {
             metadata.add(createDCValue("description", "abstract", description_abstract));
         }
 
-        if (description_table != null)
-        {
+        if (description_table != null) {
             metadata.add(createDCValue("description", "tableofcontents", description_table));
         }
 
-        if (identifier_uri != null)
-        {
+        if (identifier_uri != null) {
             metadata.add(createDCValue("identifier.uri", null, identifier_uri));
         }
 
-        if (rights != null)
-        {
+        if (rights != null) {
             metadata.add(createDCValue("rights", null, rights));
         }
 
-        if (title != null)
-        {
+        if (title != null) {
             metadata.add(createDCValue("title", null, title));
         }
 
@@ -556,13 +456,11 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
      * @param collection
      *            The collection to derive metadata from
      */
-    protected DCValue[] collection2Metadata(Collection collection)
-    {
+    protected DCValue[] collection2Metadata(Collection collection) {
         List<DCValue> metadata = new ArrayList<DCValue>();
 
         String description = collection.getMetadata("introductory_text");
-        String description_abstract = collection
-                .getMetadata("short_description");
+        String description_abstract = collection.getMetadata("short_description");
         String description_table = collection.getMetadata("side_bar_text");
         String identifier_uri = "http://hdl.handle.net/"
                 + collection.getHandle();
@@ -571,43 +469,35 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
         String rights_license = collection.getMetadata("license");
         String title = collection.getMetadata("name");
 
-        if (description != null)
-        {
+        if (description != null) {
             metadata.add(createDCValue("description", null, description));
         }
 
-        if (description_abstract != null)
-        {
+        if (description_abstract != null) {
             metadata.add(createDCValue("description", "abstract", description_abstract));
         }
 
-        if (description_table != null)
-        {
+        if (description_table != null) {
             metadata.add(createDCValue("description", "tableofcontents", description_table));
         }
 
-        if (identifier_uri != null)
-        {
+        if (identifier_uri != null) {
             metadata.add(createDCValue("identifier", "uri", identifier_uri));
         }
 
-        if (provenance != null)
-        {
+        if (provenance != null) {
             metadata.add(createDCValue("provenance", null, provenance));
         }
 
-        if (rights != null)
-        {
+        if (rights != null) {
             metadata.add(createDCValue("rights", null, rights));
         }
 
-        if (rights_license != null)
-        {
+        if (rights_license != null) {
             metadata.add(createDCValue("rights.license", null, rights_license));
         }
 
-        if (title != null)
-        {
+        if (title != null) {
             metadata.add(createDCValue("title", null, title));
         }
 
@@ -620,8 +510,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
      * @param item
      *            The item to derive metadata from
      */
-    protected DCValue[] item2Metadata(Item item)
-    {
+    protected DCValue[] item2Metadata(Item item) {
         DCValue[] dcvs = item.getMetadata(Item.ANY, Item.ANY, Item.ANY,
                 Item.ANY);
 
@@ -638,29 +527,21 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
     }
 
     // check for non-XML characters
-    private String checkedString(String value)
-    {
-        if (value == null)
-        {
+    private String checkedString(String value) {
+        if (value == null) {
             return null;
         }
         String reason = Verifier.checkCharacterData(value);
-        if (reason == null)
-        {
+        if (reason == null) {
             return value;
-        }
-        else
-        {
-            if (log.isDebugEnabled())
-            {
+        } else {
+            if (log.isDebugEnabled()) {
                 log.debug("Filtering out non-XML characters in string, reason=" + reason);
             }
-            StringBuffer result = new StringBuffer(value.length());
-            for (int i = 0; i < value.length(); ++i)
-            {
+            StringBuilder result = new StringBuilder(value.length());
+            for (int i = 0; i < value.length(); ++i) {
                 char c = value.charAt(i);
-                if (Verifier.isXMLCharacter((int)c))
-                {
+                if (Verifier.isXMLCharacter((int) c)) {
                     result.append(c);
                 }
             }
@@ -668,170 +549,16 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
         }
     }
 
-    //=====================
-
-     // Added by Kemal Taskin 20060906
-    private boolean sameAttributes(Element e1, Element e2)
-    {
-    	// check attributes
-		List l1 = e1.getAttributes();
-		List l2 = e2.getAttributes();
-
-		Attribute e1Attribute = l1.size() > 0 ? (Attribute) l1.get(0) : null;
-		Attribute e2Attribute = l2.size() > 0 ? (Attribute) l2.get(0) : null;
-
-		if(e1Attribute != null && e2Attribute != null)
-		{
-			if((e1Attribute.getName() == e2Attribute.getName()))
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else if(e1Attribute == null && e2Attribute == null)
-			return true; //no attributes = the same element
-		else
-			return false;
+   private boolean tagExist(Element parent, Element tag) 
+   {
+        Element child;
+        Iterator itr = parent.getChildren().iterator();
+        while (itr.hasNext()) {
+            child = (Element) itr.next();
+            if (child.getNamespacePrefix().equals(tag.getNamespacePrefix()) && child.getName().equals(tag.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
-
-    // Added by Kemal Taskin 20060907
-    // in this function we assume that both elements have Attributes with the same name
-    private boolean sameAttributeValues(Element e1, Element e2)
-    {
-    	// check attributes
-		List l1 = e1.getAttributes();
-		List l2 = e2.getAttributes();
-
-		Attribute e1Attribute = (Attribute) l1.get(0);
-		Attribute e2Attribute = (Attribute) l2.get(0);
-
-		if(e1Attribute.getValue().equals(e2Attribute.getValue()))
-			return true;
-
-		return false;
-    }
-
-    // Added by Kemal Taskin 20060906
-    private void copyChildren(Element from, Element to)
-    {
-    	Iterator it = from.getChildren().iterator();
-
-		while(it.hasNext())
-		{
-			Element cur = (Element) ((Element) it.next()).clone();
-			to.addContent(cur);
-		}
-    }
-
-    //Added by Kemal Taskin 20060906
-    private void copyElement(Element child, Element to)
-    {
-    	to.addContent((Element) child.clone());
-    }
-
-    // Added by Kemal Taskin 20060906
-    private void insert(Element em, Element to)
-    {
-    	if(em.getChildren().size() == 0)
-    		copyElement(em, to.getParentElement());
-    	else
-    	{
-    		if(!sameAttributes(em, to))
-    		{
-    			log.info("NOT SAME ATTRIBUTES: " + em.toString());
-    			copyElement(em, to.getParentElement());
-    		}
-    		else
-    			insertChildren(em.getChildren(), to);
-    	}
-
-    }
-
-    // Added by Kemal Taskin 20060906
-    private void insertChildren(List children, Element to)
-    {
-    	Iterator it = children.iterator();
-
-    	while(it.hasNext())
-    	{
-    		Element el = (Element) it.next();
-    		int size = el.getChildren().size();
-
-    		if(size == 0)
-    		{
-    			Element temp = giveMeTheChild(to, el); //to.getChild(el.getName(), MODS_NS);
-
-    			if(temp != null)
-    			{
-    				if(el.getAttributes().size() != 0)
-    				{
-    					if(!sameAttributes(el, temp))
-    						copyElement(el, to);
-    				}
-    				else
-    					copyElement(el, to);
-    			}
-    			else
-    			{
-    				log.info("ELEMENT: " + el.toString() + " PARENT: " + to.toString());
-    				copyElement(el, to);
-    			}
-    		}
-    		else
-    		{
-    			Element temp = giveMeTheChild(to, el);
-
-    			if(temp != null)
-    			{
-    				if(el.getAttributes().size() != 0)
-    				{
-    					if(!sameAttributes(el, temp))
-    						copyElement(el, to);
-    					else if(!sameAttributeValues(el, temp))
-    						copyElement(el, to);
-    					else
-    						insertChildren(el.getChildren(), temp);
-    				}
-    				else
-    					insertChildren(el.getChildren(), temp);
-    			}
-    			else
-    			{
-    				copyElement(el, to);
-    			}
-    		}
-    	}
-    }
-
-    // get the child with the same attribute if present
-    private Element giveMeTheChild(Element parent, Element child)
-    {
-    	if(child.getAttributes().size() == 0)
-    	{
-    		return parent.getChild(child.getName(), MODS_NS);
-    	}
-    	else
-    	{
-    		Iterator it = parent.getChildren().iterator();
-
-        	while(it.hasNext())
-        	{
-        		Element el = (Element) it.next();
-
-        		if(el.getName() == child.getName() && el.getAttributes().size() != 0)
-        		{
-        			if(sameAttributes(el, child))
-        			{
-        				return el;
-        			}
-        		}
-        	}
-
-        	return null;
-    	}
-    }
-
 }

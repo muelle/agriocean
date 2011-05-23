@@ -57,42 +57,42 @@ function DSpaceSetupAutocomplete(formID, args)
 
     // field in whcih to store authority value
     var options =
-      {
+    {
         // class name of spans that contain value in li elements
         select: "value",
         // make up query args for AJAX callback
         parameters: 'collection='+collID+'&format=ul',
         callback:
-          function(inField, querystring) {
+        function(inField, querystring) {
             return querystring+"&query="+inField.value;
-          },
+        },
         // called after target field is updated
         afterUpdateElement:
-          function(ignoreField, li)
+        function(ignoreField, li)
+        {
+            // NOTE: lookup element late because it might not be in DOM
+            // at the time we evaluate the function..
+            var authInput = document.getElementById(authorityID);
+            var authValue = li == null ? "" : li.getAttribute("authority");
+            if (authInput != null)
             {
-                // NOTE: lookup element late because it might not be in DOM
-                // at the time we evaluate the function..
-                var authInput = document.getElementById(authorityID);
-                var authValue = li == null ? "" : li.getAttribute("authority");
-                if (authInput != null)
+                authInput.value = authValue;
+                // update confidence input's value too if available.
+                if (args.confidenceName != null)
                 {
-                    authInput.value = authValue;
-                    // update confidence input's value too if available.
-                    if (args.confidenceName != null)
-                    {
-                        var confInput = authInput.form.elements[args.confidenceName];
-                        if (confInput != null)
-                            confInput.value = 'accepted';
-                    }
+                    var confInput = authInput.form.elements[args.confidenceName];
+                    if (confInput != null)
+                        confInput.value = 'accepted';
                 }
-                // make indicator blank if no authority value
-                DSpaceUpdateConfidence(document, args.confidenceIndicatorID,
-                    authValue == null || authValue == '' ? 'blank' :'accepted');
             }
-      };
+            // make indicator blank if no authority value
+            DSpaceUpdateConfidence(document, args.confidenceIndicatorID,
+                authValue == null || authValue == '' ? 'blank' :'accepted');
+        }
+    };
 
-      if (args.indicatorID != null)
-          options.indicator = args.indicatorID;
+    if (args.indicatorID != null)
+        options.indicator = args.indicatorID;
 
     // be sure to turn off autocomplete, it absorbs arrow-key events!
     form.elements[args.inputName].setAttribute("autocomplete", "off");
@@ -109,8 +109,8 @@ function DSpaceChoiceLookup(url, field, formID, valueInput, authInput,
 {
     // fill in URL
     url += '?field='+field+'&formID='+formID+'&valueInput='+valueInput+
-             '&authorityInput='+authInput+'&collection='+collectionID+
-             '&isName='+isName+'&isRepeating='+isRepeating+'&confIndicatorID='+confIndicatorID;
+    '&authorityInput='+authInput+'&collection='+collectionID+
+    '&isName='+isName+'&isRepeating='+isRepeating+'&confIndicatorID='+confIndicatorID;
 
     // primary input field - for positioning popup.
     var inputFieldName = isName ? dspace_makeFieldInput(valueInput,'_last') : valueInput;
@@ -121,7 +121,8 @@ function DSpaceChoiceLookup(url, field, formID, valueInput, authInput,
         cOffset = $(inputField).cumulativeOffset();
     var width = 600;  // XXX guesses! these should be params, or configured..
     var height = 470;
-    var left; var top;
+    var left;
+    var top;
     if (window.screenX == null) {
         left = window.screenLeft + cOffset.left - (width/2);
         top = window.screenTop + cOffset.top - (height/2);
@@ -132,8 +133,8 @@ function DSpaceChoiceLookup(url, field, formID, valueInput, authInput,
     if (left < 0) left = 0;
     if (top < 0) top = 0;
     var pw = window.open(url, 'ignoreme',
-         'width='+width+',height='+height+',left='+left+',top='+top+
-         ',toolbar=no,menubar=no,location=no,status=no,resizable');
+        'width='+width+',height='+height+',left='+left+',top='+top+
+        ',toolbar=no,menubar=no,location=no,status=no,resizable');
     if (window.focus) pw.focus();
     return false;
 }
@@ -146,13 +147,13 @@ function DSpaceChoicesSetup(form)
     var fieldset = document.getElementById('aspect_general_ChoiceLookupTransformer_list_choicesList');
     for (i = 0; i < fieldset.childNodes.length; ++i)
     {
-      if (fieldset.childNodes[i].nodeName == 'LEGEND')
-      {
-          form.statline = fieldset.childNodes[i];
-          form.statline_template = fieldset.childNodes[i].innerHTML;
-          fieldset.childNodes[i].innerHTML = "Loading...";
-          break;
-      }
+        if (fieldset.childNodes[i].nodeName == 'LEGEND')
+        {
+            form.statline = fieldset.childNodes[i];
+            form.statline_template = fieldset.childNodes[i].innerHTML;
+            fieldset.childNodes[i].innerHTML = "Loading...";
+            break;
+        }
     }
     DSpaceChoicesLoad(form);
 }
@@ -185,7 +186,7 @@ function DSpaceChoicesLoad(form)
         var of = window.opener.document.getElementById(formID);
         if (isName)
             value = makePersonName(of.elements[dspace_makeFieldInput(valueInput,'_last')].value,
-                                   of.elements[dspace_makeFieldInput(valueInput,'_first')].value);
+                of.elements[dspace_makeFieldInput(valueInput,'_first')].value);
         else
             value = of.elements[valueInput].value;
 
@@ -210,102 +211,107 @@ function DSpaceChoicesLoad(form)
         indicator.style.display = "inline";
 
     new Ajax.Request(contextPath+"/choices/"+field,
-      {
+    {
         method: "get",
-        parameters: {query: value, format: 'select', collection: collID,
-                     start: start, limit: limit},
+        parameters: {
+            query: value, 
+            format: 'select', 
+            collection: collID,
+            start: start, 
+            limit: limit
+        },
         // triggered by any exception, even in success
         onException: function(req, e) {
-          window.alert(fail+" Exception="+e);
-          if (indicator != null) indicator.style.display = "none";
+            window.alert(fail+" Exception="+e);
+            if (indicator != null) indicator.style.display = "none";
         },
         // when http load of choices fails
         onFailure: function() {
-          window.alert(fail+" HTTP error resonse");
-          if (indicator != null) indicator.style.display = "none";
+            window.alert(fail+" HTTP error resonse");
+            if (indicator != null) indicator.style.display = "none";
         },
         // format is <select><option authority="key" value="val">label</option>...
         onSuccess: function(transport) {
-          var ul = transport.responseXML.documentElement;
-          var err = ul.getAttributeNode('error');
-          if (err != null && err.value == 'true')
-              window.alert(fail+" Server indicates error in response.");
-          var opts = ul.getElementsByTagName('option');
+            var ul = transport.responseXML.documentElement;
+            var err = ul.getAttributeNode('error');
+            if (err != null && err.value == 'true')
+                window.alert(fail+" Server indicates error in response.");
+            var opts = ul.getElementsByTagName('option');
 
-          // update range message and update 'more' button
-          var oldStart = 1 * ul.getAttributeNode('start').value;
-          var nextStart = oldStart + opts.length;
-          var lastTotal = ul.getAttributeNode('total').value;
-          var resultMore = ul.getAttributeNode('more');
-          form.elements['more'].disabled = !(resultMore != null && resultMore.value == 'true');
-          form.elements['paramStart'].value = nextStart;
+            // update range message and update 'more' button
+            var oldStart = 1 * ul.getAttributeNode('start').value;
+            var nextStart = oldStart + opts.length;
+            var lastTotal = ul.getAttributeNode('total').value;
+            var resultMore = ul.getAttributeNode('more');
+            form.elements['more'].disabled = !(resultMore != null && resultMore.value == 'true');
+            form.elements['paramStart'].value = nextStart;
 
-          // clear select first
-          var select = form.elements['chooser'];
-          for (var i = select.length-1; i >= 0; --i)
-            select.remove(i);
+            // clear select first
+            var select = form.elements['chooser'];
+            for (var i = select.length-1; i >= 0; --i)
+                select.remove(i);
 
-          // load select and look for default selection
-          var selectedByValue = -1; // select by value match
-          var selectedByChoices = -1;  // Choice says its selected
-          for (var i = 0; i < opts.length; ++i)
-          {
-            var opt = opts.item(i);
-            var olabel = "";
-            for (var j = 0; j < opt.childNodes.length; ++j)
+            // load select and look for default selection
+            var selectedByValue = -1; // select by value match
+            var selectedByChoices = -1;  // Choice says its selected
+            for (var i = 0; i < opts.length; ++i)
             {
-               var node = opt.childNodes[j];
-               if (node.nodeName == "#text")
-                 olabel += node.data;
+                var opt = opts.item(i);
+                var olabel = "";
+                for (var j = 0; j < opt.childNodes.length; ++j)
+                {
+                    var node = opt.childNodes[j];
+                    if (node.nodeName == "#text")
+                        olabel += node.data;
+                }
+                var ovalue = opt.getAttributeNode('value').value;
+                var option = new Option(olabel, ovalue);
+                option.authority = opt.getAttributeNode('authority').value;
+                select.add(option, null);
+                if (value == ovalue)
+                    selectedByValue = select.options.length - 1;
+                if (opt.getAttributeNode('selected') != null)
+                    selectedByChoices = select.options.length - 1;
             }
-            var ovalue = opt.getAttributeNode('value').value;
-            var option = new Option(olabel, ovalue);
-            option.authority = opt.getAttributeNode('authority').value;
-            select.add(option, null);
-            if (value == ovalue)
-                selectedByValue = select.options.length - 1;
-            if (opt.getAttributeNode('selected') != null)
-                selectedByChoices = select.options.length - 1;
-          }
-          // add non-authority option if needed.
-          if (!isClosed)
-          {
-            select.add(new Option(dspace_formatMessage(nonAuthority, value), value), null);
-          }
-          var defaultSelected = -1;
-          if (selectedByChoices >= 0)
-            defaultSelected = selectedByChoices;
-          else if (selectedByValue >= 0)
-            defaultSelected = selectedByValue;
-          else if (select.options.length == 1)
-            defaultSelected = 0;
-
-          // load default-selected value
-          if (defaultSelected >= 0)
-          {
-            select.options[defaultSelected].defaultSelected = true;
-            var so = select.options[defaultSelected];
-            if (isName)
+            // add non-authority option if needed.
+            if (!isClosed)
             {
-                form.elements['text1'].value = lastNameOf(so.value);
-                form.elements['text2'].value = firstNameOf(so.value);
+                select.add(new Option(dspace_formatMessage(nonAuthority, value), value), null);
             }
-            else
-                form.elements['text1'].value = so.value;
-          }
+            var defaultSelected = -1;
+            if (selectedByChoices >= 0)
+                defaultSelected = selectedByChoices;
+            else if (selectedByValue >= 0)
+                defaultSelected = selectedByValue;
+            else if (select.options.length == 1)
+                defaultSelected = 0;
 
-          // turn off spinner
-          if (indicator != null)
-              indicator.style.display = "none";
+            // load default-selected value
+            if (defaultSelected >= 0)
+            {
+                select.options[defaultSelected].defaultSelected = true;
+                var so = select.options[defaultSelected];
+                if (isName)
+                {
+                    form.elements['text1'].value = lastNameOf(so.value);
+                    form.elements['text2'].value = firstNameOf(so.value);
+                }
+                else
+                    form.elements['text1'].value = so.value;
+            }
 
-          // "results" status line
-          var statLast =  nextStart + (isClosed ? 2 : 1);
+            // turn off spinner
+            if (indicator != null)
+                indicator.style.display = "none";
 
-          form.statline.innerHTML =
+            // "results" status line
+            var statLast =  nextStart + (isClosed ? 2 : 1);
+
+            form.statline.innerHTML =
             dspace_formatMessage(form.statline_template,
-              oldStart+1, statLast, Math.max(lastTotal,statLast), value);
+                oldStart+1, statLast, Math.max(lastTotal,statLast), value);
         }
-      });
+    });
 }
 
 // handler for change event on choice selector - load new values
@@ -378,7 +384,7 @@ function DSpaceChoicesAcceptOnClick ()
                 of.elements[confInput].value = 'accepted';
             // make indicator blank if no authority value
             DSpaceUpdateConfidence(window.opener.document, confIndicatorID,
-                    authValue == null || authValue == '' ? 'blank' :'accepted');
+                authValue == null || authValue == '' ? 'blank' :'accepted');
         }
 
         // force the submit button -- if there is an "add"
@@ -414,7 +420,7 @@ function DSpaceChoicesCancelOnClick ()
 function makePersonName(lastName, firstName)
 {
     return (firstName == null || firstName.length == 0) ? lastName :
-        lastName+", "+firstName;
+    lastName+", "+firstName;
 }
 
 // DSpace person-name conventions, see DCPersonName

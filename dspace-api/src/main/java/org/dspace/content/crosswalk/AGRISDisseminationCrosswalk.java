@@ -257,7 +257,7 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
     @Override
     public List<Element> disseminateList(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException
     {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("AGRIS dissemination as list of resources tags not applicable.");
     }
 
     @Override
@@ -370,7 +370,7 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
                 }
                 catch (Exception ex)
                 {
-                    java.util.logging.Logger.getLogger(AGRISDisseminationCrosswalk.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error(AGRISDisseminationCrosswalk.class.getName()+": " + ex.getLocalizedMessage());
                 }
             }
             else
