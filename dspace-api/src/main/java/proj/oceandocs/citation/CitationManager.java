@@ -269,8 +269,8 @@ public class CitationManager
                         m.appendReplacement(sb, (String) map.get(m.group(m.groupCount())));
                     }
                 }
-                m.appendTail(sb);
                 citation += sb.toString() + " ";
+                m.appendTail(sb);
             }
         }
         return citation;
