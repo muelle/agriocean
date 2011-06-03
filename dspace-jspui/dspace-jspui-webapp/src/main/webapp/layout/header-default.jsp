@@ -213,7 +213,7 @@
     {
 %>
             <td class="navigationBar">
-                <dspace:include page="<%= navbar %>" />
+                <dspace:include page="<%=navbar %>" />
             </td>
 <%
     }

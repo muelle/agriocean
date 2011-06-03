@@ -989,13 +989,9 @@
         if (repeatable) {
             if (readonly) {
                 sb.append(" disabled=\"disabled\"");
-
-
             }
         }
         sb.append(">");
-
-
 
         for (int i = 0; i
                 < valueList.size(); i += 2) {
@@ -1007,13 +1003,9 @@
                     < defaults.length; j++) {
                 if (value.equals(defaults[j].value)) {
                     break;
-
-
                 }
             }
             sb.append("<option ").append(j < defaults.length ? " selected=\"selected\" " : "").append("value=\"").append(value.replaceAll("\"", "&quot;")).append("\">").append(display).append("</option>");
-
-
         }
 
         sb.append("</select></td>");
@@ -1025,18 +1017,12 @@
             String fieldNameLang = fieldName + "_lang";
             doLang(
                     sb, item, fieldNameLang, fieldCounter, false, 0);
-
-
         } else {
             sb.append("<td>&nbsp;</td>");
-
-
         }
 
         sb.append("</tr>");
         out.write(sb.toString());
-
-
     }
 %>
 <!--doChoiceSelect-->
@@ -1269,8 +1255,6 @@
                                                             < listOfTypes.size(); i++) {
                                                         isselected = listOfTypes.get(i).equals(doctype) ? "selected=\"selected\"" : "";
                                                         sb.append("<option value=\"" + listOfTypes.get(i) + "\"" + isselected + ">" + listOfTypes.get(i) + "</option>");
-
-
                                                     }
                                                     out.println(sb);
                                                 }
@@ -1310,8 +1294,6 @@
                 String gLabel = null;
                 String gHint = null;
                 DCInputGroup iG = null;
-
-
 
                 for (int i = 0; i
                         < iGroups.size(); i++) {

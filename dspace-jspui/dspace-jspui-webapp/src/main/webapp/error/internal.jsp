@@ -22,7 +22,7 @@
 
 <%@ taglib uri="http://www.dspace.org/dspace-tags.tld" prefix="dspace" %>
 
-<dspace:layout titlekey="jsp.error.internal.title">
+<dspace:layout>
     <%-- <h1>Internal System Error</h1> --%>
     <h1><fmt:message key="jsp.error.internal.title"/></h1>
     <%-- <p>Oops!  The system has experienced an internal error.  This is our fault,
