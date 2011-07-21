@@ -1,4 +1,4 @@
---
+﻿--
 -- PostgreSQL database dump
 --
 
@@ -15,7 +15,7 @@ SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_with_oids = true;
 
 --
 -- TOC entry 1528 (class 1259 OID 104612285)

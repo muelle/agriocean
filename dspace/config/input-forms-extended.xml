@@ -11,9 +11,9 @@
             <type name="Research Report" />
             <type name="Theses and Dissertations" />
             <type name="Working Paper" />
-			<type name="Map" />		
-			<type name="Data Set" />
-			<type name="Audiovisual Material" />
+	    <type name="Map" />
+	    <type name="Data Set" />
+	    <type name="Audiovisual Material" />
             <type name="Other"  />
         </collection>
     </collection-type>
@@ -36,11 +36,11 @@
    <form-definitions>
         <form name="Map" baseForm="alternative">
             <page number="1">
-				<fieldgroup>
+	      <fieldgroup>
                     <label>Type</label>
                     <hint></hint>
                    <fieldrow>
-						<field>
+			<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>specified</dc-qualifier>
@@ -50,7 +50,7 @@
                             <required></required>
                         </field>
 					</fieldrow>
-				</fieldgroup>
+		</fieldgroup>
                 <fieldgroup>
                     <label>Creators</label>
                     <hint></hint>
@@ -710,7 +710,7 @@
                             <repeatable>false</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-						</field>
+		</field>
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -762,11 +762,11 @@
 
         <form name="Article" baseForm="basic">
             <page  number="1">
-				<fieldgroup>
+		<fieldgroup>
                     <label>Type</label>
                     <hint></hint>
                    <fieldrow>
-						<field>
+			<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>specified</dc-qualifier>
@@ -775,9 +775,9 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					</fieldrow>
-				</fieldgroup>
-				<fieldgroup>
+		  </fieldrow>
+		</fieldgroup>
+		<fieldgroup>
                     <label>Creators</label>
                     <hint></hint>
                     <fieldrow>
@@ -840,16 +840,18 @@
                     <label>Reference</label>
                     <hint></hint>
                     <fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>bibliographicCitation</dc-element>
-							<dc-qualifier>title</dc-qualifier>
-							<label>Journal Title *</label>
-							<hint>Enter a word from the journal title and choose the correct title out of the picklist.</hint>
-							<input-type size="69">onebox</input-type>
-							<repeatable>false</repeatable>
-							<required>Enter a (part of) the keyword and choose from the list</required>
-						</field>
+			<field>
+			  <dc-schema>dc</dc-schema>
+			 <dc-element>bibliographicCitation</dc-element>
+			 <dc-qualifier>title</dc-qualifier>
+			 <label>Journal Title *</label>
+			 <hint>Enter a word from the journal title and choose the correct title out of the picklist.</hint>
+			 <input-type size="69">onebox</input-type>
+			 <repeatable>false</repeatable>
+			 <required>Enter a (part of) the keyword and choose from the list</required>
+			 <!-- presentation: suggest, lookup-->
+			 <authority closed="true" editable="true" presentation="suggest" limit="0">issn</authority>
+			</field>
                         <!--<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>identifier</dc-element>

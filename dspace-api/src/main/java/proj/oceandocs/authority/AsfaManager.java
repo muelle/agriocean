@@ -111,4 +111,23 @@ public class AsfaManager implements ChoiceAuthority
     {
         return labels[Integer.parseInt(key)];
     }
+    
+    public ArrayList<Choice> getAutocompleteSet(String query) {
+        List<String> issns = new ArrayList<String>();
+        ArrayList<Choice> v = new ArrayList<Choice>();
+
+        if (query.length() < 2) {
+            return v;
+        } else {
+            issns = db.getData(sql, query);
+
+            for (int i = 0; i < issns.size(); ++i) {
+                String label = issns.get(i);
+                String authority = label.substring(label.indexOf("(") + 1, label.indexOf(")"));
+                String value = label.substring(0, label.indexOf("("));
+                v.add(new Choice(authority, value, label));
+            }
+        }
+        return v;
+    }
 }

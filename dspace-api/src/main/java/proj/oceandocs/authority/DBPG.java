@@ -53,7 +53,6 @@ private String password = null;
         //System.out.println("sql=" + sql + " key=" + key);
         List<String> results = new ArrayList<String>();
         Statement stmt = null;
-        PreparedStatement pstmt = null;
         ResultSet rs = null;
         try{
             try {
@@ -82,7 +81,7 @@ private String password = null;
                     if (rs != null) rs.close();
                 }
             } finally {
-                if (pstmt != null ) pstmt.close();
+                if (stmt != null ) stmt.close();
             }
         } catch (SQLException ex) {
         Logger.getLogger(DBPG.class.getName()).log(Level.SEVERE, null, ex);

@@ -423,6 +423,20 @@ public class DCInputsReaderExt {
                     } else {
                         field.put("asklang", "false");
                     }
+                }else if (tagName.equals("authority"))
+                {
+                    String suffix = getValue(nd);
+                    String presentation = getAttribute(nd, "presentation");
+                    String limit = getAttribute(nd, "limit");
+                    String editable = getAttribute(nd, "editable");
+                    String closed = getAttribute(nd, "closed");
+                    
+                    field.put("authority", "true");
+                    field.put("aclosed",closed);
+                    field.put("aeditable", editable);
+                    field.put("choices", limit);
+                    field.put("authURL", suffix);
+                    field.put("presentation", presentation);
                 }
             }
         }
@@ -457,21 +471,21 @@ public class DCInputsReaderExt {
      * Check that this is the only field with the name dc-element.dc-qualifier
      * If there is a duplicate, return an error message, else return null;
      */
-    private boolean checkForDups() {
-        boolean err = true;
-        for (String formName : formDefns.keySet()) {
-            DCInputSetExt form = formDefns.get(formName);
-            if (hasDuplicate(form.getAllFieldsQual())) {
-                log.error("Duplicate field detected in form " + formName + ": ");
-                for (DCInput dd : (Collection<DCInput>) getDuplicate(form.getAllFields())) {
-                    log.error(dd.getFullQualName() + ",");
-                }
-                log.error("\n");
-                err = false;
-            }
-        }
-        return err;
-    }
+//    private boolean checkForDups() {
+//        boolean err = true;
+//        for (String formName : formDefns.keySet()) {
+//            DCInputSetExt form = formDefns.get(formName);
+//            if (hasDuplicate(form.getAllFieldsQual())) {
+//                log.error("Duplicate field detected in form " + formName + ": ");
+//                for (DCInput dd : (Collection<DCInput>) getDuplicate(form.getAllFields())) {
+//                    log.error(dd.getFullQualName() + ",");
+//                }
+//                log.error("\n");
+//                err = false;
+//            }
+//        }
+//        return err;
+//    }
 
     /*
      * Returns list of submission types defined for given collection.

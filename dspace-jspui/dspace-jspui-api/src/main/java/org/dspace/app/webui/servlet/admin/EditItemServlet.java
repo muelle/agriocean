@@ -60,6 +60,7 @@ import org.dspace.core.Context;
 import org.dspace.core.LogManager;
 import org.dspace.handle.HandleManager;
 import org.dspace.license.CreativeCommons;
+import proj.oceandocs.citation.CitationManager;
 import proj.oceandocs.submission.DCInputSetExt;
 import proj.oceandocs.submission.DCInputsReaderExt;
 
@@ -875,6 +876,12 @@ public class EditItemServlet extends DSpaceServlet {
         }
 
         item.updateCitationString();
+//        CitationManager cm = new CitationManager();
+//        if (cm != null)
+//            cm.updateCitationString(item);
+//        else{
+//            log.error(LogManager.getHeader(context, "Update items dc.identifier.citation. Unable to initialize citation manager.", ""));
+//        }
         item.updateISSN();
         item.updateSubjectFields();
         item.update();

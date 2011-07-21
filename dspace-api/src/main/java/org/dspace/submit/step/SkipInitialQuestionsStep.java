@@ -56,6 +56,7 @@ public class SkipInitialQuestionsStep extends AbstractProcessingStep
         return STATUS_COMPLETE;
     }
 
+    @Override
     public int getNumberOfPages(HttpServletRequest request,
             SubmissionInfo subInfo) throws ServletException
     {

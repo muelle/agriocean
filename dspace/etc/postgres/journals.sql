@@ -15,7 +15,7 @@ SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_with_oids = true;
 
 --
 -- TOC entry 1726 (class 1259 OID 89261167)

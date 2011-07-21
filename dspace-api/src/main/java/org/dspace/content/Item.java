@@ -1740,6 +1740,10 @@ public class Item extends DSpaceObject
             ourContext.addEvent(new Event(Event.MODIFY, Constants.ITEM, getID(), null));
             modified = false;
         }
+        
+//        this.updateCitationString();
+//        this.updateISSN();
+//        this.updateSubjectFields();
     }
     private transient MetadataField[] allMetadataFields = null;
 

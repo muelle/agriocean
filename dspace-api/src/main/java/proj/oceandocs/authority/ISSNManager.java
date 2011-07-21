@@ -8,7 +8,6 @@
 package proj.oceandocs.authority;
 //Imports
 import org.dspace.core.ConfigurationManager;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import org.dspace.content.authority.Choice;
@@ -16,16 +15,13 @@ import org.dspace.content.authority.ChoiceAuthority;
 import org.dspace.content.authority.Choices;
 
 //DC
-public class ISSNManager implements ChoiceAuthority
-{
+public class ISSNManager implements ChoiceAuthority {
 //ICV
 
-    private static String values[] =
-    {
+    private static String values[] = {
         ""
     };
-    private static String labels[] =
-    {
+    private static String labels[] = {
         ""
     };
     private boolean isConnected = false;
@@ -37,10 +33,8 @@ public class ISSNManager implements ChoiceAuthority
     private static String sql = null;
 //DC
 
-    public ISSNManager()
-    {
-        if (!isConnected)
-        {
+    public ISSNManager() {
+        if (!isConnected) {
             //Lees de DB parameter uit de config file
             driver = ConfigurationManager.getProperty("db.driver");
             url = ConfigurationManager.getProperty("db.url");
@@ -52,8 +46,7 @@ public class ISSNManager implements ChoiceAuthority
             db = new DBPG(driver, url, username, password);
             isConnected = db.getConnection();
             // sanity check
-            if (!isConnected)
-            {
+            if (!isConnected) {
                 throw new IllegalStateException("Missing DSpace configuration keys for DBName Query");
             }
         }
@@ -61,25 +54,20 @@ public class ISSNManager implements ChoiceAuthority
 
 //getMatches
     @Override
-    public Choices getMatches(String field, String query, int collection, int start, int limit, String locale)
-    {
+    public Choices getMatches(String field, String query, int collection, int start, int limit, String locale) {
         int dflt = -1;
         List<String> issns = new ArrayList<String>();
         Choice[] v;
 
-        if (query.length() < 2)
-        {
+        if (query.length() < 2) {
             v = new Choice[0];
-        }
-        else
-        {
+        } else {
             issns = db.getData(sql, query);
 //        if (issns.isEmpty())
 //            issns = db.getData(sql,"");
-             v = new Choice[issns.size()];
+            v = new Choice[issns.size()];
 
-            for (int i = 0; i < issns.size(); ++i)
-            {
+            for (int i = 0; i < issns.size(); ++i) {
                 String label = issns.get(i);
                 String authority = label.substring(label.indexOf("(") + 1, label.indexOf(")"));
                 String value = label.substring(0, label.indexOf("("));
@@ -88,15 +76,31 @@ public class ISSNManager implements ChoiceAuthority
         }
         return new Choices(v, 0, v.length, Choices.CF_AMBIGUOUS, false, dflt);
     }
+
+    public ArrayList<Choice> getAutocompleteSet(String query) {
+        List<String> issns = new ArrayList<String>();
+        ArrayList<Choice> v = new ArrayList<Choice>();
+
+        if (query.length() < 2) {
+            return v;
+        } else {
+            issns = db.getData(sql, query);
+
+            for (int i = 0; i < issns.size(); ++i) {
+                String label = issns.get(i);
+                String authority = label.substring(label.indexOf("(") + 1, label.indexOf(")"));
+                String value = label.substring(0, label.indexOf("("));
+                v.add(new Choice(authority, value, label));
+            }
+        }
+        return v;
+    }
 //getBestMatches
 
     @Override
-    public Choices getBestMatch(String field, String text, int collection, String locale)
-    {
-        for (int i = 0; i < values.length; ++i)
-        {
-            if (text.equalsIgnoreCase(values[i]))
-            {
+    public Choices getBestMatch(String field, String text, int collection, String locale) {
+        for (int i = 0; i < values.length; ++i) {
+            if (text.equalsIgnoreCase(values[i])) {
                 Choice v[] = new Choice[1];
                 v[0] = new Choice(String.valueOf(i), values[i], labels[i]);
                 return new Choices(v, 0, v.length, Choices.CF_UNCERTAIN, false, 0);
@@ -107,8 +111,7 @@ public class ISSNManager implements ChoiceAuthority
 //getLabel
 
     @Override
-    public String getLabel(String field, String key, String locale)
-    {
+    public String getLabel(String field, String key, String locale) {
         return labels[Integer.parseInt(key)];
     }
 }

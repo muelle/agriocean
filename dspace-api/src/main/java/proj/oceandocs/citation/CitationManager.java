@@ -252,6 +252,7 @@ public class CitationManager
     {
 
         String citation = "";
+        DCValue dcv = null;
 
         CitationTemplate tmpTMPL = this.getTemplate(type, name);
         if (tmpTMPL != null)
@@ -264,13 +265,14 @@ public class CitationManager
                 while (m.find())
                 {
                     // if metadata field is null - must skip it with related formatting.
-                    if (map.containsKey(m.group(m.groupCount())))
+                    dcv = (DCValue) map.get(m.group(m.groupCount()));
+                    if ((dcv != null) && (dcv.value != null)/*map.containsKey(m.group(m.groupCount()))*/)
                     {
-                        m.appendReplacement(sb, (String) map.get(m.group(m.groupCount())));
+                        m.appendReplacement(sb, dcv.value);
+                        m.appendTail(sb);
+                        citation += sb.toString() + " ";
                     }
                 }
-                citation += sb.toString() + " ";
-                m.appendTail(sb);
             }
         }
         return citation;
@@ -300,37 +302,37 @@ public class CitationManager
                     quals = fillQuals(type);
                     values = getBibliographicValues(item, quals);
 
-                    lit = values.keySet().iterator();
+                    //lit = values.keySet().iterator();
 
-                    while (lit.hasNext())
-                    {
-                        lang = (String) lit.next();
-                        HashMap map = (HashMap) values.get(lang);
-                        citation = compileCitation(type, map);
-                        if (values.size() > 0)
-                        {
+//                    while (lit.hasNext())
+//                    {
+                        //lang = (String) lit.next();
+                        //HashMap map = (HashMap) values.get(lang);
+                        citation = compileCitation(type, values);
+//                        if (values.size() > 0)
+//                        {
                             item.clearMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", Item.ANY);
-                        }
-                        item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", lang, citation);
-                    }
+                        //}
+                        item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", Item.ANY, citation);
+                    //}
 
                     if (getTemplate(type, "agscitationNumber") != null)
                     {
                         quals = fillQuals(type, "agscitationNumber");
                         values = getBibliographicValues(item, quals);
-                        lit = values.keySet().iterator();
+                        //lit = values.keySet().iterator();
                         String agsCitation;
-                        while (lit.hasNext())
-                        {
-                            lang = (String) lit.next();
-                            HashMap map = (HashMap) values.get(lang);
-                            agsCitation = compileCitation(type, map, "agscitationNumber");
-                            if (values.size() > 0)
-                            {
+//                        while (lit.hasNext())
+//                        {
+//                            lang = (String) lit.next();
+//                            HashMap map = (HashMap) values.get(lang);
+                            agsCitation = compileCitation(type, values, "agscitationNumber");
+//                            if (values.size() > 0)
+//                            {
                                 item.clearMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "agscitationNumber", Item.ANY);
-                            }
+                            //}
                             item.addMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "agscitationNumber", Item.ANY, agsCitation);
-                        }
+                        //}
                     }
 
                     item.update();
@@ -393,42 +395,43 @@ public class CitationManager
                 qualifier = "null";
             }
             v = item.getMetadata(MetadataSchema.DC_SCHEMA, element, qualifier, Item.ANY);
-            addLanguages(languages, v);
+            //addLanguages(languages, v);
+            result.put(qual, v.length > 0 ? v[0]: null);
         }
 
-        lit = languages.iterator();
-        while (lit.hasNext())
-        {
-            String lang = (String) lit.next();
-            HashMap values = new HashMap();
-
-            result.put(lang, values);
-
-            qit = quals.iterator();
-            while (qit.hasNext())
-            {
-                qual = (String) qit.next();
-                element = qual.split("\\.")[0];
-                if (qual.split("\\.").length >= 2)
-                {
-                    qualifier = qual.split("\\.")[1];
-                }
-                else
-                {
-                    qualifier = "null";
-                }
-                v = item.getMetadata(MetadataSchema.DC_SCHEMA, element, qualifier, lang);
-                if (v != null && v.length > 0)
-                {
-                    String compVal = v[0].value;
-                    for (int i = 1; i < v.length; i++)
-                    {
-                        compVal = compVal + " & " + v[i].value;
-                    }
-                    values.put(qual, compVal);
-                }
-            }
-        }
+//        lit = languages.iterator();
+//        while (lit.hasNext())
+//        {
+//            String lang = (String) lit.next();
+//            HashMap values = new HashMap();
+//
+//            result.put(lang, values);
+//
+//            qit = quals.iterator();
+//            while (qit.hasNext())
+//            {
+//                qual = (String) qit.next();
+//                element = qual.split("\\.")[0];
+//                if (qual.split("\\.").length >= 2)
+//                {
+//                    qualifier = qual.split("\\.")[1];
+//                }
+//                else
+//                {
+//                    qualifier = "null";
+//                }
+//                v = item.getMetadata(MetadataSchema.DC_SCHEMA, element, qualifier, lang);
+//                if (v != null && v.length > 0)
+//                {
+//                    String compVal = v[0].value;
+//                    for (int i = 1; i < v.length; i++)
+//                    {
+//                        compVal = compVal + " & " + v[i].value;
+//                    }
+//                    values.put(qual, compVal);
+//                }
+//            }
+//        }
         return result;
     }
 }
