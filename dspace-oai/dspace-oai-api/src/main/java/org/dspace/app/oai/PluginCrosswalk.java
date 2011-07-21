@@ -126,6 +126,7 @@ public class PluginCrosswalk extends Crosswalk
     /**
      * @return true if this dissemination is available for the item.
      */
+    @Override
     public boolean isAvailableFor(Object nativeItem)
     {
         Item item = ((HarvestedItemInfo) nativeItem).item;
@@ -135,6 +136,7 @@ public class PluginCrosswalk extends Crosswalk
     /**
      * Do the crosswalk.  Returns serialized XML in a string.
      */
+    @Override
     public String createMetadata(Object nativeItem)
             throws CannotDisseminateFormatException
     {

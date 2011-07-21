@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
@@ -65,8 +64,7 @@ import org.jdom.input.SAXBuilder;
  * name and simply reusing those instances.  The PluginManager does this
  * by default.
  */
-public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements DisseminationCrosswalk
-{
+public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements DisseminationCrosswalk {
 
     /** log4j category */
     private static Logger log = Logger.getLogger(AGRISDisseminationCrosswalk.class);
@@ -85,42 +83,38 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
      * ARGIS namespace.
      */
     public static final Namespace AGRIS_NS =
-        Namespace.getNamespace("agris", "http://purl.org/agmes/agrisap/schema");
+            Namespace.getNamespace("agris", "http://purl.org/agmes/agrisap/schema");
     public static final Namespace AGS_NS =
-        Namespace.getNamespace("ags", "http://purl.org/agmes/1.1/");
+            Namespace.getNamespace("ags", "http://purl.org/agmes/1.1/");
     public static final Namespace AGLS_NS =
-        Namespace.getNamespace("agls", "http://www.naa.gov.au/recordkeeping/gov_online/agls/1.2");
+            Namespace.getNamespace("agls", "http://www.naa.gov.au/recordkeeping/gov_online/agls/1.2");
     public static final Namespace DC_NS =
-        Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
+            Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
     public static final Namespace DCTERMS_NS =
-        Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/");
-    private static final Namespace namespaces[] =
-    {
+            Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/");
+    private static final Namespace namespaces[] = {
         AGRIS_NS, AGS_NS, AGLS_NS, DC_NS, DCTERMS_NS
     };
     /**  URL of ARGIS XML Schema */
     public static final String AGRIS_XSD = "http://www.fao.org/agris/agmes/schemas/agrisap.xsd";
     private static final String schemaLocation = AGRIS_NS.getURI() + " " + AGRIS_XSD;
     final String prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-        + "<ags:resources xmlns:" + AGRIS_NS.getPrefix() + "=\"" + AGRIS_NS.getURI() + "\" "
-        + "xmlns:" + AGS_NS.getPrefix() + "=\"" + AGS_NS.getURI() + "\" "
-        + "xmlns:" + DC_NS.getPrefix() + "=\"" + DC_NS.getURI() + "\" "
-        + "xmlns:" + DCTERMS_NS.getPrefix() + "=\"" + DCTERMS_NS.getURI() + "\" "
-        + "xmlns:" + AGLS_NS.getPrefix() + "=\"" + AGLS_NS.getURI() + "\">";
+            + "<ags:resources xmlns:" + AGRIS_NS.getPrefix() + "=\"" + AGRIS_NS.getURI() + "\" "
+            + "xmlns:" + AGS_NS.getPrefix() + "=\"" + AGS_NS.getURI() + "\" "
+            + "xmlns:" + DC_NS.getPrefix() + "=\"" + DC_NS.getURI() + "\" "
+            + "xmlns:" + DCTERMS_NS.getPrefix() + "=\"" + DCTERMS_NS.getURI() + "\" "
+            + "xmlns:" + AGLS_NS.getPrefix() + "=\"" + AGLS_NS.getURI() + "\">";
     final String postlog = "</ags:resources>";
     //private static XMLOutputter XMLoutputer = new XMLOutputter(Format.getPrettyFormat());
     private static SAXBuilder builder = new SAXBuilder();
     private HashMap<String, String> agrisMap = null;
 
-    static
-    {
+    static {
         List aliasList = new ArrayList();
         Enumeration pe = ConfigurationManager.propertyNames();
-        while (pe.hasMoreElements())
-        {
+        while (pe.hasMoreElements()) {
             String key = (String) pe.nextElement();
-            if (key.startsWith(CONFIG_PREFIX))
-            {
+            if (key.startsWith(CONFIG_PREFIX)) {
                 aliasList.add(key.substring(CONFIG_PREFIX.length()));
             }
         }
@@ -132,8 +126,7 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
 
     }
 
-    public static String[] getPluginNames()
-    {
+    public static String[] getPluginNames() {
         return aliases;
     }
 
@@ -165,58 +158,45 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
      *
      */
     private void initMap()
-        throws CrosswalkInternalException
-    {
-        if ((agrisMap != null) && (agrisMap.size() > 0))
-        {
+            throws CrosswalkInternalException {
+        if ((agrisMap != null) && (agrisMap.size() > 0)) {
             return;
         }
         String myAlias = getPluginInstanceName();
-        if (myAlias == null)
-        {
+        if (myAlias == null) {
             log.error("Must use PluginManager to instantiate AGRISDisseminationCrosswalk so the class knows its name.");
             return;
         }
 
         String cmPropName = CONFIG_PREFIX + myAlias;
         String propsFilename = ConfigurationManager.getProperty(cmPropName);
-        if (propsFilename == null)
-        {
+        if (propsFilename == null) {
             String msg = "ARGIS crosswalk missing " + "configuration file for crosswalk named \"" + myAlias + "\"";
             log.error(msg);
             throw new CrosswalkInternalException(msg);
-        }
-        else
-        {
+        } else {
             String parent = ConfigurationManager.getProperty("dspace.dir")
-                + File.separator + "config" + File.separator;
+                    + File.separator + "config" + File.separator;
             File propsFile = new File(parent, propsFilename);
             Properties modsConfig = new Properties();
-            try
-            {
+            try {
                 modsConfig.load(new FileInputStream(propsFile));
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 log.error("Error opening or reading ARGIS properties file: " + propsFile.toString() + ": " + e.toString());
                 throw new CrosswalkInternalException("ARGIS crosswalk cannot "
-                    + "open config file: " + e.toString());
+                        + "open config file: " + e.toString());
             }
 
             agrisMap = new HashMap<String, String>();
             Enumeration pe = modsConfig.propertyNames();
-            while (pe.hasMoreElements())
-            {
+            while (pe.hasMoreElements()) {
                 String qdc = (String) pe.nextElement();
                 String val = modsConfig.getProperty(qdc);
                 String pair[] = val.split("\\s+\\|\\s+", 2);
-                if (pair.length < 1)
-                {
+                if (pair.length < 1) {
                     log.warn("Illegal ARGIS mapping in " + propsFile.toString() + ", line = "
-                        + qdc + " = " + val);
-                }
-                else
-                {
+                            + qdc + " = " + val);
+                } else {
                     agrisMap.put(qdc, pair[0]);
                 }
             }
@@ -224,45 +204,36 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
     }
 
     @Override
-    public Namespace[] getNamespaces()
-    {
+    public Namespace[] getNamespaces() {
         return namespaces;
     }
 
     @Override
-    public String getSchemaLocation()
-    {
+    public String getSchemaLocation() {
         return schemaLocation;
     }
 
     @Override
-    public boolean canDisseminate(DSpaceObject dso)
-    {
-        if (dso.getType() == Constants.ITEM)
-        {
+    public boolean canDisseminate(DSpaceObject dso) {
+        if (dso.getType() == Constants.ITEM) {
             return true;
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
     @Override
-    public boolean preferList()
-    {
+    public boolean preferList() {
         return false;
     }
 
     @Override
-    public List<Element> disseminateList(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException
-    {
+    public List<Element> disseminateList(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException {
         throw new UnsupportedOperationException("AGRIS dissemination as list of resources tags not applicable.");
     }
 
     @Override
-    public Element disseminateElement(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException
-    {
+    public Element disseminateElement(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException {
         Item item = (Item) dso;
         initMap();
         Document subdoc = null;
@@ -280,101 +251,81 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
 
         Element resource = new Element("resource", AGS_NS);
 
-        String arn = ARNcountry;
-        dc = item.getMetadata("dc", "date", "issued", Item.ANY);
-        if (dc.length > 0)
-        {
-            arn = arn + dc[0].value;
+        String arn = "", year ="";
+        dc = item.getMetadata("dc", "identifier", "arn", Item.ANY); // if ARN already put by user we will use it, if not then generate
+        if ((dc != null) && (dc.length > 0) && (dc[0].value != null) && ("".equals(dc[0].value))) {
+            arn = dc[0].value;
+        } else {
+            dc = item.getMetadata("dc", "date", "issued", Item.ANY);
+            if (dc.length > 0) {
+                year = dc[0].value.split("-")[0];
+            }
+            
+            arn = ARNcountry + year + ARNinstitute + String.format("%5s",((item.getHandle().split("/").length == 2) ? item.getHandle().split("/")[1]: "" )).replace(' ', '0');
         }
-        arn = arn + ARNinstitute + Integer.toString(item.getID());
+
         resource.getAttributes().add(new Attribute("ARN", arn, AGS_NS));
 
         String template = "";
 
         dc = item.getMetadata(Item.ANY, Item.ANY, Item.ANY, Item.ANY);
         //List result = new ArrayList(dc.length);
-        for (int i = 0; i < dc.length; i++)
-        {
+        for (int i = 0; i < dc.length; i++) {
             /** Compose qualified DC name - schema.element[.qualifier]
             e.g. "dc.title", "dc.subject.lcc", "lom.Classification.Keyword"*/
             String qdc = dc[i].schema + "."
-                + ((dc[i].qualifier == null) ? dc[i].element
-                : (dc[i].element + "." + dc[i].qualifier));
+                    + ((dc[i].qualifier == null) ? dc[i].element
+                    : (dc[i].element + "." + dc[i].qualifier));
 
-            if (agrisMap.containsKey(qdc))
-            {
+            if (agrisMap.containsKey(qdc)) {
                 template = agrisMap.get(qdc);
-                if (template.equals(""))
-                {
+                if (template.equals("")) {
                     continue;
                 }
 
-                if (dc[i].value != null)
-                {
+                if (dc[i].value != null) {
                     template = template.replace("%s", dc[i].value);
-                }
-                else
-                {
+                } else {
                     template = template.replace("%s", "");
                 }
 
-                if (dc[i].authority != null)
-                {
+                if (dc[i].authority != null) {
                     template = template.replace("%a", dc[i].authority);
-                }
-                else
-                {
+                } else {
                     template = template.replace("%a", "");
                 }
 
-                if (dc[i].language != null)
-                {
+                if (dc[i].language != null) {
                     template = template.replace("%l", dc[i].language);
-                }
-                else
-                {
+                } else {
                     template = template.replace("%l", "");
                 }
 
-                try
-                {
+                try {
                     subdoc = builder.build(new StringReader(prolog + template + postlog));
-                    if (subdoc != null)
-                    {
-                        if (!subdoc.getRootElement().getChildren().isEmpty())
-                        {
+                    if (subdoc != null) {
+                        if (!subdoc.getRootElement().getChildren().isEmpty()) {
                             tempRoot = (Element) subdoc.getRootElement().getChildren().get(0);
-                            if (tempRoot.getChildren().isEmpty())
-                            {
+                            if (tempRoot.getChildren().isEmpty()) {
                                 resource.addContent(tempRoot.detach());
-                            }
-                            else
-                            {
-                                if (tagExist(resource, tempRoot))
-                                {
+                            } else {
+                                if (tagExist(resource, tempRoot) && !tempRoot.getName().equalsIgnoreCase("name")) {
                                     tempElement = resource.getChild(tempRoot.getName(), tempRoot.getNamespace());
                                     Iterator itr = tempRoot.getChildren().iterator();
-                                    while(itr.hasNext())
-                                    {
+                                    while (itr.hasNext()) {
                                         currentElement = (Element) itr.next();
-                                        tempElement.addContent((Element)currentElement.clone());
+                                        tempElement.addContent((Element) currentElement.clone());
                                     }
-                                }
-                                else
-                                {
+                                } else {
                                     resource.addContent(tempRoot.detach());
                                 }
                             }
                         }
                     }
+                } catch (Exception ex) {
+                    log.error(AGRISDisseminationCrosswalk.class.getName() + ": " + ex.getLocalizedMessage());
                 }
-                catch (Exception ex)
-                {
-                    log.error(AGRISDisseminationCrosswalk.class.getName()+": " + ex.getLocalizedMessage());
-                }
-            }
-            else
-            {
+            } else {
                 log.warn("WARNING: " + getPluginInstanceName() + ": No ARGIS mapping for \"" + qdc + "\"");
             }
         }
@@ -383,15 +334,12 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
         return root;
     }
 
-    private boolean tagExist(Element parent, Element tag)
-    {
+    private boolean tagExist(Element parent, Element tag) {
         Element child;
         Iterator itr = parent.getChildren().iterator();
-        while (itr.hasNext())
-        {
+        while (itr.hasNext()) {
             child = (Element) itr.next();
-            if (child.getNamespacePrefix().equals(tag.getNamespacePrefix()) && child.getName().equals(tag.getName()))
-            {
+            if (child.getNamespacePrefix().equals(tag.getNamespacePrefix()) && child.getName().equals(tag.getName())) {
                 return true;
             }
         }
