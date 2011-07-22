@@ -9,13 +9,11 @@ package proj.oceandocs.authority;
 //Imports
 import java.sql.DriverManager;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +38,7 @@ private String password = null;
             Class.forName(driver);
             connection = DriverManager.getConnection(url, username, password);
             isConnected = true;
-            System.out.println("isConnected? " + isConnected);
+            //System.out.println("isConnected? " + isConnected);
         } catch (SQLException ex) {
             Logger.getLogger(DBPG.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

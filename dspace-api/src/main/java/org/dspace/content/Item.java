@@ -614,6 +614,28 @@ public class Item extends DSpaceObject
             addMetadata(schema, element, qualifier, lang, values, null, null);
         }
     }
+    
+    public void addMetadata(String schema, String element, String qualifier, String lang,
+                            String[] values, boolean authorityControlled)
+    {
+        String fieldKey = MetadataField.formKey(schema, element, qualifier);
+        if (authorityControlled)
+        {
+            String authorities[] = new String[values.length];
+            int confidences[] = new int[values.length];
+            for (int i = 0; i < values.length; ++i)
+            {
+                Choices c = ChoiceAuthorityManager.getManager().getBestMatch(fieldKey, values[i], getOwningCollectionID(), null);
+                authorities[i] = c.values.length > 0 ? c.values[0].authority : null;
+                confidences[i] = c.confidence;
+            }
+            addMetadata(schema, element, qualifier, lang, values, authorities, confidences, authorityControlled);
+        }
+        else
+        {
+            addMetadata(schema, element, qualifier, lang, values, null, null, false);
+        }
+    }
 
     /**
      * Add metadata fields. These are appended to existing values.
@@ -713,6 +735,79 @@ public class Item extends DSpaceObject
         }
     }
 
+    
+    public void addMetadata(String schema, String element, String qualifier, String lang,
+                            String[] values, String authorities[], int confidences[], boolean authorityControlled)
+    {
+        List<DCValue> dublinCore = getMetadata();
+        String fieldName = schema + "." + element + ((qualifier == null) ? "" : "." + qualifier);
+
+        // We will not verify that they are valid entries in the registry
+        // until update() is called.
+        for (int i = 0; i < values.length; i++)
+        {
+            DCValue dcv = new DCValue();
+            dcv.schema = schema;
+            dcv.element = element;
+            dcv.qualifier = qualifier;
+            dcv.language = (lang == null ? null : lang.trim());
+
+            // Logic to set Authority and Confidence:
+            //  - normalize an empty string for authority to NULL.
+            //  - if authority key is present, use given confidence or NOVALUE if not given
+            //  - otherwise, preserve confidence if meaningful value was given since it may document a failed authority lookup
+            //  - CF_UNSET signifies no authority nor meaningful confidence.
+            //  - it's possible to have empty authority & CF_ACCEPTED if e.g. user deletes authority key
+            if (authorityControlled)
+            {
+                if (authorities != null && authorities[i] != null && authorities[i].length() > 0)
+                {
+                    dcv.authority = authorities[i];
+                    dcv.confidence = confidences == null ? Choices.CF_NOVALUE : confidences[i];
+                }
+                else
+                {
+                    dcv.authority = null;
+                    dcv.confidence = confidences == null ? Choices.CF_UNSET : confidences[i];
+                }
+                // authority sanity check: if authority is required, was it supplied?
+                // XXX FIXME? can't throw a "real" exception here without changing all the callers to expect it, so use a runtime exception
+//                if (authorityRequired && (dcv.authority == null || dcv.authority.length() == 0))
+//                {
+//                    throw new IllegalArgumentException("The metadata field \"" + fieldName + "\" requires an authority key but none was provided. Vaue=\"" + dcv.value + "\"");
+//                }
+            }
+            if (values[i] != null)
+            {
+                // remove control unicode char
+                String temp = values[i].trim();
+                char[] dcvalue = temp.toCharArray();
+                for (int charPos = 0; charPos < dcvalue.length; charPos++)
+                {
+                    if (Character.isISOControl(dcvalue[charPos])
+                        && !String.valueOf(dcvalue[charPos]).equals("\u0009")
+                        && !String.valueOf(dcvalue[charPos]).equals("\n")
+                        && !String.valueOf(dcvalue[charPos]).equals("\r"))
+                    {
+                        dcvalue[charPos] = ' ';
+                    }
+                }
+                dcv.value = String.valueOf(dcvalue);
+            }
+            else
+            {
+                dcv.value = null;
+            }
+            dublinCore.add(dcv);
+            addDetails(fieldName);
+        }
+
+        if (values.length > 0)
+        {
+            dublinCoreChanged = true;
+        }
+    }
+    
     /**
      * Add a single metadata field. This is appended to existing
      * values. Use <code>clearDC</code> to remove values.
@@ -775,6 +870,19 @@ public class Item extends DSpaceObject
         confArray[0] = confidence;
 
         addMetadata(schema, element, qualifier, lang, valArray, authArray, confArray);
+    }
+    
+    public void addMetadata(String schema, String element, String qualifier,
+                            String lang, String value, String authority, int confidence, boolean authorityControlled)
+    {
+        String[] valArray = new String[1];
+        String[] authArray = new String[1];
+        int[] confArray = new int[1];
+        valArray[0] = value;
+        authArray[0] = authority;
+        confArray[0] = confidence;
+
+        addMetadata(schema, element, qualifier, lang, valArray, authArray, confArray, authorityControlled);
     }
 
     /**
@@ -2865,7 +2973,7 @@ public class Item extends DSpaceObject
             DCValue[] dc;
             String text = "", schema, element, qualifier;
             String[] parts;
-
+            
             if (dcToBeMapped.length > 0)
             {
                 for (int i = 0; i < dcToBeMapped.length; i++)
@@ -2912,7 +3020,7 @@ public class Item extends DSpaceObject
                                     {
                                         qualifier = "";
                                     }
-
+                                    this.clearMetadata(schema, element, qualifier, dc[j].language);
                                     this.addMetadata(schema, element, qualifier, dc[j].language, text);
                                     authorityDone.get(dcToBeMapped[i]).add(dc[j].authority);
                                 }

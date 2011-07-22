@@ -15,13 +15,18 @@ function authoritySuggest(field, div, url, indicator)
 
 function updateAuthority(field, li)
 {
+    var parts = field.id.split("_");
     var authority = field.id + '_authority';
-    //var confidence = field.id + '_confidence';
     
-    document.getElementById(authority).value = li.id;
-}
-
-function clearAuthority(authority)
-{
-    document.getElementById(authority).value ="";
+    if (parts.length > 0){
+        if(!isNaN(parseInt(parts[parts.length-1]))){
+            authority = "";
+            for(i=0; i < parts.length-1; i++){
+                authority += parts[i] + "_";
+            }
+            authority += "authority_" + parts[parts.length-1];
+        }
+    }
+        //var confidence = field.id + '_confidence';
+        document.getElementById(authority).value = li.id;
 }

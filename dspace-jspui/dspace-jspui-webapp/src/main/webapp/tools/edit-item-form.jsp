@@ -101,7 +101,9 @@
             if (field.getPresentation() == DCInput.AuthorityPresentation.SUGGEST) {
                 sb.append("<td colspan=\"2\">");
                 String fieldNameIdx = fieldName + ((repeatable && i != fieldCount - 1) ? "_" + (i + 1) : "");
-                sb.append("<input type=\"text\" name=\"").append(fieldNameIdx).append("\" id=\"").append(fieldNameIdx).append("\" size=\"" + isize + "\" value=\"").append(val + "\"").append(readonly ? " disabled=\"disabled\" " : "").append("/>").append("\n");
+                String fieldAuthority = fieldName + "_authority" + ((repeatable && i != fieldCount - 1) ? "_" + (i + 1) : "");
+                String fieldConfidence = fieldName + "_confidence" + ((repeatable && i != fieldCount - 1) ? "_" + (i + 1) : "");
+                sb.append("<input type=\"text\" name=\"").append(fieldNameIdx).append("\" id=\"").append(fieldNameIdx).append("\" size=\"" + isize + "\" value=\"").append(val + "\"").append(readonly ? " readonly=\"true\" " : "").append("/>").append("\n");
                 
                 //autocomplete "magic"
                 acIndicator = fieldNameIdx+"_indicator";
@@ -113,8 +115,8 @@
                 sb.append("</td>\n");
                 
                 //authority value field ... editable if the field value is not in the authority list and authorityis not closed
-                sb.append("<td>").append("<input type=\"text\" name=\"").append(fieldNameIdx).append("_authority\" id=\"").append(fieldNameIdx).append("_authority\" \" value=\"").append(auth + "\" size=\"15\"").append(field.isAuthorityClosed() ? " readonly=\"true\"" : "").append("/>").append("\n");
-                sb.append("<input type=\"hidden\" name=\"").append(fieldNameIdx).append("_confidence\" id=\"").append(fieldNameIdx).append("_confidence\" value=\"").append(conf + "\" />");
+                sb.append("<td>").append("<input type=\"text\" name=\"").append(fieldAuthority).append("\" id=\"").append(fieldAuthority).append("\" \" value=\"").append(auth + "\" size=\"10\"").append(field.isAuthorityClosed() ? " readonly=\"true\"" : "").append("/>").append("\n");
+                sb.append("<input type=\"hidden\" name=\"").append(fieldConfidence).append("\" id=\"").append(fieldConfidence).append("\" value=\"").append(conf + "\" />");
                 sb.append("</td>");
 
                 if (repeatable && !readonly && i < defaults.length) {
@@ -674,7 +676,7 @@
             }
             sb.append("<td colspan=\"2\">\n");
             String fieldNameIdx = fieldName + ((repeatable && i != fieldCount - 1) ? "_" + (i + 1) : "");
-            StringBuffer inputBlock = new StringBuffer().append("<textarea name=\"").append(fieldNameIdx).append("\" rows=\"4\" cols=\"" + isize + "\" id=\"").append(fieldNameIdx).append("_id\" ").append((hasVocabulary(vocabulary) && closedVocabulary) || readonly ? " disabled=\"disabled\" " : "").append(">").append(val).append("</textarea>\n").append(doControlledVocabulary(fieldNameIdx, pageContext, vocabulary, readonly));
+            sb.append("<textarea name=\"").append(fieldNameIdx).append("\" rows=\"4\" cols=\"" + isize + "\" id=\"").append(fieldNameIdx).append("_id\" ").append((hasVocabulary(vocabulary) && closedVocabulary) || readonly ? " disabled=\"disabled\" " : "").append(">").append(val).append("</textarea>\n").append(doControlledVocabulary(fieldNameIdx, pageContext, vocabulary, readonly));
             sb.append("</td>\n");
 
             // put language selection list if neccessary (for the dc lang attribute)

@@ -32,16 +32,12 @@ import org.dspace.content.Site;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.SelfNamedPlugin;
-import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.jdom.Namespace;
-import org.jdom.Text;
 import org.jdom.Verifier;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
 
 /**
  * Configurable MODS Crosswalk
@@ -188,6 +184,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
                     try {
                         pfs.close();
                     } catch (IOException ioe) {
+                        log.error("Error opening or reading MODS properties file: " + propsFile.toString() + ": " + ioe.toString());
                     }
                 }
             }
@@ -264,7 +261,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
         }
         initMap();
 
-        List<Element> result = new ArrayList<Element>(dcvs.length);
+        //List<Element> result = new ArrayList<Element>(dcvs.length);
         String template = "";
 
         for (int i = 0; i < dcvs.length; i++) 
@@ -273,7 +270,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
             if (dcvs[i].qualifier != null) {
                 qdc += "." + dcvs[i].qualifier;
             }
-            String value = dcvs[i].value;
+            //String value = dcvs[i].value;
 
             if (modsMap.containsKey(qdc)) {
                 template = modsMap.get(qdc);

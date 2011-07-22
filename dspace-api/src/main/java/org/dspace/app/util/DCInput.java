@@ -142,7 +142,7 @@ public class DCInput {
             if ("true".equals(fieldMap.get("aclosed")) || "yes".equals(fieldMap.get("aclosed")))
             this.closed = true;
         
-            if ("false".equals(fieldMap.get("aeditable")) || "on".equals(fieldMap.get("aeditable")))
+            if ("false".equals(fieldMap.get("aeditable")) || "off".equals(fieldMap.get("aeditable")))
             this.editable = false;
         
             try {
@@ -151,8 +151,8 @@ public class DCInput {
                 this.choisesLimit = 0;
             }
             
-            if("lookup".equals(fieldMap.get("presentation")))
-                this.presentation = AuthorityPresentation.LOOKUP;
+//            if("lookup".equals(fieldMap.get("presentation")))
+//                this.presentation = AuthorityPresentation.LOOKUP;
             
             if(fieldMap.containsKey("authURL"))
                 this.authorityURLsuffix = fieldMap.get("authURL");

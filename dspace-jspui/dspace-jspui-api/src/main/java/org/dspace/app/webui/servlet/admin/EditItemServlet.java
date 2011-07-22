@@ -323,58 +323,9 @@ public class EditItemServlet extends DSpaceServlet {
 
             case ADD_FIELD:
 
-//                String fieldName = request.getParameter("field");
-//
-//                String[] parts = fieldName.split("_");
-//                if (parts.length == 3) {
-//                    item.addMetadata(parts[0], parts[1], parts[2], Item.ANY, "");
-//                } else if (parts.length == 2) {
-//                    item.addMetadata(parts[0], parts[1], null, Item.ANY, "");
-//                }
-//
-//                item.update();
-//                showEditForm(context, request, response, item);
                 break;
 
             case REMOVE_FIELD:
-//                String removeField = request.getParameter("field");
-//                int fieldCounter = -1;
-//                String[] quals = removeField.split("_");
-//
-//                try {
-//                    fieldCounter = Integer.parseInt(request.getParameter("counter"));
-//                } catch (NumberFormatException e) {
-//                }
-//
-//                //read and remember existing fields set to array
-//                //remove filed with counter number
-//                //put rest of the fields back
-//                String schema = "",
-//                 element = "",
-//                 qualifier = "";
-//                ArrayList<DCValue> dcfields = new ArrayList<DCValue>();
-//
-//                if (quals.length == 3) {
-//                    schema = quals[0];
-//                    element = quals[1];
-//                    qualifier = quals[2];
-//                } else if (quals.length == 2) {
-//                    schema = quals[0];
-//                    element = quals[1];
-//                    qualifier = null;
-//                }
-//                dcfields.addAll(Arrays.asList(item.getMetadata(schema, element, qualifier, Item.ANY)));
-//                item.clearMetadata(schema, element, qualifier, Item.ANY);
-//                if ((fieldCounter >= 0) && (fieldCounter < dcfields.size())) {
-//                    dcfields.remove(fieldCounter);
-//                }
-//
-//                for (DCValue dcv : dcfields) {
-//                    item.addMetadata(dcv.schema, dcv.element, dcv.qualifier, dcv.language, dcv.value, dcv.authority, dcv.confidence);
-//                }
-//
-//                item.update();
-//                showEditForm(context, request, response, item);
 
                 break;
 
@@ -553,38 +504,6 @@ public class EditItemServlet extends DSpaceServlet {
         // of the same element/qualifier are added in the correct sequence.
         // Get the parameters names
         List<String> paramNames = Collections.list(request.getParameterNames());
-//
-//        // Put them in a list
-//        HashMap<String, String> fieldsTypes = new HashMap<String, String>();
-//        HashMap<String, String> fieldsLangs = new HashMap<String, String>();
-//        HashMap<String, String> fieldsRepeat = new HashMap<String, String>();
-//
-//        String parm = "", parmVal = "";
-//        int endindx = -1;
-//
-//        for (String paramName : unsortedParamNames) {
-//            parm = (String) paramName;
-//            if (parm.startsWith("fieldtype_")) {
-//                parmVal = request.getParameter(parm);
-//                if (parm.contains("_single")) {
-//                    endindx = parm.indexOf("_single");
-//                    fieldsTypes.put(parm.substring(10, endindx), parmVal);
-//                    fieldsRepeat.put(parm.substring(10, endindx), "s");
-//                } else {
-//                    endindx = parm.indexOf("_repeatable");
-//                    fieldsTypes.put(parm.substring(10, endindx), parmVal);
-//                    fieldsRepeat.put(parm.substring(10, endindx), "r");
-//                }
-//
-//
-//            } else if (parm.contains("_lang")) {
-//                parmVal = request.getParameter(parm);
-//                fieldsLangs.put(parm.substring(0, parm.indexOf("_lang")), parmVal);
-//            }
-//        }
-//
-//        String[] tempQuals = null;
-//        String fieldName = "", schema = "", element = "", qualifier = "";
 
         List<DCInput> inputs = null;
 
@@ -626,6 +545,7 @@ public class EditItemServlet extends DSpaceServlet {
             String element = inputs.get(j).getElement();
             String qualifier = inputs.get(j).getQualifier();
             String schema = inputs.get(j).getSchema();
+            boolean authority = inputs.get(j).isAuthority();
             if (qualifier != null && !qualifier.equals(Item.ANY)) {
                 fieldName = schema + "_" + element + '_' + qualifier;
             } else {
@@ -634,7 +554,7 @@ public class EditItemServlet extends DSpaceServlet {
 
             String language_qual = request.getParameter(fieldName + "_lang");
 
-            String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
+            String fieldKey = MetadataField.formKey(schema, element, qualifier);
             ChoiceAuthorityManager cmgr = ChoiceAuthorityManager.getManager();
             String inputType = inputs.get(j).getInputType();
             if (inputType.equals("name")) {
@@ -679,7 +599,7 @@ public class EditItemServlet extends DSpaceServlet {
             } else if ((inputType.equals("onebox"))
                     || (inputType.equals("twobox"))
                     || (inputType.equals("textarea"))) {
-                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual);
+                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual, authority);
             } else {
                 throw new ServletException("Field " + fieldName
                         + " has an unknown input type: " + inputType);
@@ -1021,9 +941,8 @@ public class EditItemServlet extends DSpaceServlet {
     protected void readNames(HttpServletRequest request, Item item,
             String schema, String element, String qualifier, boolean repeated) {
         String metadataField = MetadataField.formKey(schema, element, qualifier);
-
-        String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
-        boolean isAuthorityControlled = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
+        String fieldKey = MetadataField.formKey(schema, element, qualifier);
+        boolean isAuthorityControlled = false;
 
         // Names to add
         List<String> firsts = new LinkedList<String>();
@@ -1178,13 +1097,12 @@ public class EditItemServlet extends DSpaceServlet {
      *            language to set (ISO code)
      */
     protected void readText(HttpServletRequest request, Item item, String schema,
-            String element, String qualifier, boolean repeated, String lang) {
+            String element, String qualifier, boolean repeated, String lang, boolean authority) {
         // FIXME: Of course, language should be part of form, or determined
         // some other way
         String metadataField = MetadataField.formKey(schema, element, qualifier);
-
-        String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
-        boolean isAuthorityControlled = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
+        String fieldKey = MetadataField.formKey(schema, element, qualifier);
+        boolean isAuthorityControlled = authority;
 
         // Values to add
         List<String> vals = null;
@@ -1259,15 +1177,15 @@ public class EditItemServlet extends DSpaceServlet {
                 if (isAuthorityControlled) {
                     String authKey = auths.size() > i ? auths.get(i) : null;
                     String sconf = (authKey != null && confs.size() > i) ? confs.get(i) : null;
-                    if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
-                            && (authKey == null || authKey.length() == 0)) {
-                        log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
-                        //addErrorField(request, metadataField);
-                    } else {
+//                    if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
+//                            && (authKey == null || authKey.length() == 0)) {
+//                        log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
+//                        //addErrorField(request, metadataField);
+//                    } else {
                         item.addMetadata(schema, element, qualifier, l, s,
-                                authKey, (sconf != null && sconf.length() > 0)
-                                ? Choices.getConfidenceValue(sconf) : Choices.CF_ACCEPTED);
-                    }
+                                authKey, /*(sconf != null && sconf.length() > 0)
+                                ? Choices.getConfidenceValue(sconf) :*/ Choices.CF_ACCEPTED, isAuthorityControlled);
+                    //}
                 } else {
                     item.addMetadata(schema, element, qualifier, l, s);
                 }
@@ -1492,5 +1410,5 @@ public class EditItemServlet extends DSpaceServlet {
             language = "en";
         }
         return language;
-    }
+    }   
 }

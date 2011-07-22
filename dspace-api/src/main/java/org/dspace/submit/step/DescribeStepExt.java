@@ -212,6 +212,7 @@ public class DescribeStepExt extends AbstractProcessingStep
             String element = inputs.get(j).getElement();
             String qualifier = inputs.get(j).getQualifier();
             String schema = inputs.get(j).getSchema();
+            boolean authority = inputs.get(j).isAuthority();
             if (qualifier != null && !qualifier.equals(Item.ANY))
             {
                 fieldName = schema + "_" + element + '_' + qualifier;
@@ -223,7 +224,7 @@ public class DescribeStepExt extends AbstractProcessingStep
 
             String language_qual = request.getParameter(fieldName + "_lang");
 
-            String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
+            String fieldKey =  MetadataField.formKey(schema, element, qualifier);
             ChoiceAuthorityManager cmgr = ChoiceAuthorityManager.getManager();
             String inputType = inputs.get(j).getInputType();
             if (inputType.equals("name"))
@@ -285,7 +286,7 @@ public class DescribeStepExt extends AbstractProcessingStep
                 || (inputType.equals("twobox"))
                 || (inputType.equals("textarea")))
             {
-                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual);
+                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual, authority);
             }
             else
             {
@@ -643,7 +644,7 @@ public class DescribeStepExt extends AbstractProcessingStep
                     String authKey = auths.size() > i ? auths.get(i) : null;
                     String sconf = (authKey != null && confs.size() > i) ? confs.get(i) : null;
                     if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
-                        && (authKey == null || authKey.length() == 0))
+                            && (authKey == null || authKey.length() == 0))
                     {
                         log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
                         addErrorField(request, metadataField);
@@ -698,14 +699,14 @@ public class DescribeStepExt extends AbstractProcessingStep
      *            language to set (ISO code)
      */
     protected void readText(HttpServletRequest request, Item item, String schema,
-                            String element, String qualifier, boolean repeated, String lang)
+                            String element, String qualifier, boolean repeated, String lang, boolean authority)
     {
         // FIXME: Of course, language should be part of form, or determined
         // some other way
         String metadataField = MetadataField.formKey(schema, element, qualifier);
 
-        String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
-        boolean isAuthorityControlled = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
+        String fieldKey = MetadataField.formKey(schema, element, qualifier);
+        boolean isAuthorityControlled = authority;
 
         // Values to add
         List<String> vals = null;
@@ -794,18 +795,18 @@ public class DescribeStepExt extends AbstractProcessingStep
                 {
                     String authKey = auths.size() > i ? auths.get(i) : null;
                     String sconf = (authKey != null && confs.size() > i) ? confs.get(i) : null;
-                    if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
-                        && (authKey == null || authKey.length() == 0))
-                    {
-                        log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
-                        addErrorField(request, metadataField);
-                    }
-                    else
-                    {
+//                    if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
+//                        && (authKey == null || authKey.length() == 0))
+//                    {
+//                        log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
+//                        addErrorField(request, metadataField);
+//                    }
+//                    else
+//                    {
                         item.addMetadata(schema, element, qualifier, l, s,
-                                         authKey, (sconf != null && sconf.length() > 0)
-                            ? Choices.getConfidenceValue(sconf) : Choices.CF_ACCEPTED);
-                    }
+                                authKey, /*(sconf != null && sconf.length() > 0)
+                                ? Choices.getConfidenceValue(sconf) :*/ Choices.CF_ACCEPTED, isAuthorityControlled);
+                    //}
                 }
                 else
                 {

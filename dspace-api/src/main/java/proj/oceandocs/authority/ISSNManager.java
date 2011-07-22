@@ -41,8 +41,7 @@ public class ISSNManager implements ChoiceAuthority {
             username = ConfigurationManager.getProperty("db.username");
             password = ConfigurationManager.getProperty("db.password");
             sql = ConfigurationManager.getProperty("dbissn.sql");
-            //Maak een connectie aan uit de DB class
-            System.out.println("dbissn sql: " + sql);
+           
             db = new DBPG(driver, url, username, password);
             isConnected = db.getConnection();
             // sanity check
