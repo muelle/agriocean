@@ -41,7 +41,7 @@
 	if(comList.length > 0) {
 	%>
 		<tr>
-			<td class="navigatiobarTitle" nowrap="nowrap" colspan="2"><fmt:message key="jsp.home.com1"/></td>
+			<td class="navigatiobarTitle" colspan="2"><fmt:message key="jsp.home.com1"/></td>
 				
 		</tr>     
 	<%
@@ -51,7 +51,7 @@
 	for(int i = 0;i < comList.length;i++)
         {
             %> <tr>
-            <td class="navigatiobarRow">
+            <td class="navigatiobarRow" style="word-wrap:break-word">
             <a href="<%= request.getContextPath() %>/handle/<%= comList[i].getHandle() %>"><%= comList[i].getMetadata("name") %></a>
             <%
             if (ConfigurationManager.getBooleanProperty("webui.strengths.show"))
