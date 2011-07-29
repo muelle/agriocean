@@ -77,7 +77,7 @@ public class DescribeStepExt extends AbstractProcessingStep
     public static final int STATUS_MISSING_REQUIRED_FIELDS = 2;
     // the metadata language qualifier
     public static final String LANGUAGE_QUALIFIER = getDefaultLanguageQualifier();
-    public static final String DOCTYPE_BUTTON = "submit_doctype";
+    public static final String DOCTYPE_BUTTON = "select_doctype";
 
     /** Constructor */
     public DescribeStepExt() throws ServletException
@@ -117,12 +117,12 @@ public class DescribeStepExt extends AbstractProcessingStep
     {
         boolean newDocType = false;
         // check what submit button was pressed in User Interface
-        String buttonPressed = Util.getSubmitButton(request, NEXT_BUTTON);
+        String buttonPressed = Util.getSubmitButton(request, DOCTYPE_BUTTON);//NEXT_BUTTON);
         Collection c = subInfo.getSubmissionItem().getCollection();
         // get the item and current page
         Item item = subInfo.getSubmissionItem().getItem();
         int currentPage = getCurrentPage(request);
-        String doctype = request.getParameter("submit_doctype");
+        String doctype = request.getParameter(DOCTYPE_BUTTON);
 
 
         if (DOCTYPE_BUTTON.equals(buttonPressed))
@@ -397,7 +397,7 @@ public class DescribeStepExt extends AbstractProcessingStep
 
             if (documentType == null)
             {
-                documentType = request.getParameter("submit_doctype");
+                documentType = request.getParameter(DOCTYPE_BUTTON);
 
                 if (documentType == null)
                 {

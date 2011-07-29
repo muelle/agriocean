@@ -5,9 +5,7 @@
  *
  * http://www.dspace.org/license/
  */
-/*
- *
- */
+
 package org.dspace.app.webui.servlet;
 
 import java.io.IOException;
@@ -21,13 +19,11 @@ import org.dspace.authorize.AuthorizeException;
 import org.dspace.core.Context;
 
 import org.dspace.content.authority.Choice;
-import proj.oceandocs.authority.AgrovocManager;
-import proj.oceandocs.authority.AsfaManager;
-import proj.oceandocs.authority.ISSNManager;
+import proj.oceandocs.authority.AuthorityManager;
 
 /**
  *
- * @author bollini
+ * @author Denys Slipetskyy
  */
 public class AuthorityServlet extends DSpaceServlet {
 
@@ -54,39 +50,24 @@ public class AuthorityServlet extends DSpaceServlet {
      *  locale - explicit locale, pass to choice plugin
      */
     private void process(Context context, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException, AuthorizeException {
+        
         String[] paths = request.getPathInfo().split("/");
         String generator = paths[paths.length - 1];
         String input = request.getParameter("value") == null ? "": request.getParameter("value");
 
         response.setContentType("text/plain; charset=\"utf-8\"");
         Writer writer = response.getWriter();
-
-        if (generator.equalsIgnoreCase("issn")) {
-            writer.append("<ul>");
-            ArrayList<Choice> choices = new ISSNManager().getAutocompleteSet(input);
-            for(Choice ch: choices)
+        
+        AuthorityManager am = new AuthorityManager(generator, context);
+        if(am != null){
+           ArrayList<Choice> choices = am.getAutocompleteSet(input); 
+           writer.append("<ul>");
+           for(Choice ch: choices)
             {
                 writer.append("<li id=\"").append(ch.authority).append("\">").append(ch.value).append("</li>\n");
             }
             writer.append("</ul>");
-        } else if(generator.equalsIgnoreCase("agrovoc")){
-            writer.append("<ul>");
-            ArrayList<Choice> choices = new AgrovocManager().getAutocompleteSet(input);
-            for(Choice ch: choices)
-            {
-                writer.append("<li id=\"").append(ch.authority).append("\">").append(ch.value).append("</li>\n");
-            }
-            writer.append("</ul>");
-        } else if(generator.equalsIgnoreCase("asfa")){
-            writer.append("<ul>");
-            ArrayList<Choice> choices = new AsfaManager().getAutocompleteSet(input);
-            for(Choice ch: choices)
-            {
-                writer.append("<li id=\"").append(ch.authority).append("\">").append(ch.value).append("</li>\n");
-            }
-            writer.append("</ul>");
-        }        
-        else {
+        }else {
             writer.append("<ul></ul>");
         }
             writer.flush();

@@ -58,6 +58,7 @@ public class BrowserServlet extends AbstractBrowserServlet
      * Do the usual DSpace GET method.  You will notice that browse does not currently
      * respond to POST requests.
      */
+    @Override
     protected void doDSGet(Context context, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException,
             AuthorizeException
@@ -94,6 +95,7 @@ public class BrowserServlet extends AbstractBrowserServlet
      * @throws SQLException
      * @throws AuthorizeException
      */
+    @Override
     protected void showError(Context context, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException,
             AuthorizeException
@@ -112,6 +114,7 @@ public class BrowserServlet extends AbstractBrowserServlet
      * @throws SQLException
      * @throws AuthorizeException
      */
+    @Override
     protected void showNoResultsPage(Context context, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException,
             AuthorizeException
@@ -133,6 +136,7 @@ public class BrowserServlet extends AbstractBrowserServlet
      * @throws SQLException
      * @throws AuthorizeException
      */
+    @Override
     protected void showSinglePage(Context context, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException,
             AuthorizeException
@@ -152,6 +156,7 @@ public class BrowserServlet extends AbstractBrowserServlet
      * @throws SQLException
      * @throws AuthorizeException
      */
+    @Override
     protected void showFullPage(Context context, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException,
             AuthorizeException

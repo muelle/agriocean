@@ -315,7 +315,7 @@ public class ItemListTag extends TagSupport
                 cOddOrEven[colIdx] = (((colIdx + 1) % 2) == 0 ? "Odd" : "Even");
 
                 // find out if the field is a date
-                if (field.indexOf("(date)") > 0)
+                if (field.indexOf("date") > 0)
                 {
                     field = field.replaceAll("\\(date\\)", "");
                     isDate[colIdx] = true;
@@ -445,7 +445,7 @@ public class ItemListTag extends TagSupport
                         if (isDate[colIdx])
                         {
                             DCDate dd = new DCDate(metadataArray[0].value);
-                            metadata = UIUtil.displayDate(dd, false, false, hrq);
+                            metadata = Integer.toString(dd.getYear());//UIUtil.displayDate(dd, false, false, hrq);
                         }
                         // format the title field correctly for withdrawn items (ie. don't link)
                         else if (field.equals(titleField) && items[i].isWithdrawn())

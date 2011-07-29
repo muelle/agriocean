@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <input-forms>
 
-     <collection-type>
+    <collection-type>
         <collection handle="default">
             <type name="Journal Contribution" />
+            <type name="Preprint" />
             <type name="Book"/>
             <type name="Book Section" />
             <type name="Proceedings Paper" />
@@ -11,9 +12,9 @@
             <type name="Research Report" />
             <type name="Theses and Dissertations" />
             <type name="Working Paper" />
-	    <type name="Map" />
-	    <type name="Data Set" />
-	    <type name="Audiovisual Material" />
+            <type name="Map" />		
+            <type name="Data Set" />
+            <type name="Audiovisual Material" />
             <type name="Other"  />
         </collection>
     </collection-type>
@@ -30,17 +31,18 @@
         <type name="Map" form="Map"/>		
         <type name="Data Set" form="Data"/>
         <type name="Audiovisual Material" form="AVM"/>	
+        <type name="Preprint" form="Other"/>
         <type name="Other" form="Other"/>
     </type-form>
 
-   <form-definitions>
+    <form-definitions>
         <form name="Map" baseForm="alternative">
             <page number="1">
-	      <fieldgroup>
+                <fieldgroup>
                     <label>Type</label>
-                    <hint></hint>
-                   <fieldrow>
-			<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Type');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>specified</dc-qualifier>
@@ -49,11 +51,11 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					</fieldrow>
-		</fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
                 <fieldgroup>
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -72,6 +74,7 @@
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <repeatable>true</repeatable>
                             <label>Corporate Authors</label>
+                            <hint>Used when an organization has the authorship of the object.</hint>
                             <input-type size="33">name</input-type>
                             <required></required>
                         </field>
@@ -79,14 +82,14 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title *</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
                             <label>Title</label>
-							<hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>			    
                             <repeatable>false</repeatable>
@@ -99,20 +102,20 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative titles</label>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>							
+                            <hint>Enter here the translation(s) of the title.</hint>							
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
-							<repeatable>true</repeatable>
+                            <repeatable>true</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
-			</page>
-			<page  number="2">
-				<fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
-                     <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -122,8 +125,8 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					 </fieldrow>
- 					<fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -134,39 +137,48 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
-				</fieldgroup>
-				<fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Publisher and Place of Publication</label>
-                            <input-type size="35">series</input-type>
+                            <label>Publisher</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
-					<fieldrow>
-						<field>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-							<input-type>date</input-type>
+                            <label>Publication Date *</label>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
-                       </field>
-					</fieldrow>
-                     <fieldrow>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
+                            <label>Status *</label>
                             <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
                             <input-type value-pairs-name="status">dropdown</input-type>
                             <repeatable>false</repeatable>
@@ -178,7 +190,7 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>language</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
+                            <label>Language *</label>
                             <hint>Select the language(s) of your deposit.</hint>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
                             <repeatable>true</repeatable>
@@ -191,11 +203,11 @@
 
         <form name="AVM" baseForm="alternative">
             <page number="1">
-				<fieldgroup>
+                <fieldgroup>
                     <label>Type</label>
-                    <hint></hint>
-                   <fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Type');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>specified</dc-qualifier>
@@ -204,11 +216,11 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					</fieldrow>
-				</fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
                 <fieldgroup>
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -228,21 +240,22 @@
                             <repeatable>true</repeatable>
                             <label>Corporate Authors</label>
                             <input-type size="33">name</input-type>
+                            <hint>Used when an organization has the authorship of the object.</hint>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
+                            <label>Title *</label>
                             <input-type size="69">onebox</input-type>
-							<hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
                             <ask-language>true</ask-language>			    
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
@@ -255,19 +268,19 @@
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative titles</label>
                             <input-type size="69">onebox</input-type>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>							
+                            <hint>Enter here the translation(s) of the title.</hint>							
                             <ask-language>true</ask-language>
-							<repeatable>true</repeatable>
+                            <repeatable>true</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
-			</page>
-			<page  number="2">
-					<fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links and identifiers</label>
-                    <hint></hint>
-                     <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -277,8 +290,8 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					 </fieldrow>
- 					<fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -289,10 +302,10 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
+                    </fieldrow>
 <!-- New  identifier dc.identifier.isan -->                
-					<fieldrow>
-						<field>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>identifier</dc-element>
                             <dc-qualifier>isan</dc-qualifier>
@@ -301,39 +314,48 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					</fieldrow> 
-				</fieldgroup>
-				<fieldgroup>
+                    </fieldrow> 
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Publisher and Place of Publication</label>
-                            <input-type size="35">series</input-type>
+                            <label>Publisher</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
-					<fieldrow>
-						<field>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-							<input-type>date</input-type>
+                            <label>Publication Date *</label>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
-					</fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
+                            <label>Status *</label>
                             <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
                             <input-type value-pairs-name="status">dropdown</input-type>
                             <repeatable>false</repeatable>
@@ -343,7 +365,7 @@
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
-                            <dc-element>language</dc-element>
+                            <dc-element>language *</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
                             <label>Language</label>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
@@ -357,11 +379,11 @@
 
         <form name="Data" baseForm="alternative">
             <page number="1">
-				<fieldgroup>
+                <fieldgroup>
                     <label>Type</label>
-                    <hint></hint>
-                   <fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Type');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>specified</dc-qualifier>
@@ -370,11 +392,11 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					</fieldrow>
-				</fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
                 <fieldgroup>
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -393,6 +415,7 @@
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <repeatable>true</repeatable>
                             <label>Corporate Authors</label>
+                            <hint>Used when an organization has the authorship of the object.</hint>
                             <input-type size="33">name</input-type>
                             <required></required>
                         </field>
@@ -400,15 +423,15 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Title</label>
+                            <label>Title *</label>
                             <input-type size="69">onebox</input-type>
-							<hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
                             <ask-language>true</ask-language>			    
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
@@ -421,19 +444,19 @@
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative titles</label>
                             <input-type size="69">onebox</input-type>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>							
+                            <hint>Enter here the translation(s) of the title.</hint>							
                             <ask-language>true</ask-language>
-							<repeatable>true</repeatable>
+                            <repeatable>true</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
-			</page>
-			<page  number="2">
-					<fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
-                     <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -443,8 +466,8 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					 </fieldrow>
- 					<fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -455,33 +478,42 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
-					</fieldgroup>
-					<fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Publisher and Place of Publication</label>
-                            <input-type size="35">series</input-type>
+                            <label>Publisher</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
-					<fieldrow>
-						<field>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date</label>
-							<input-type>date</input-type>
+                            <label>Publication Date *</label>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
-					</fieldrow>
+                    </fieldrow>
 <!--                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -496,7 +528,7 @@
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
-                            <dc-element>language</dc-element>
+                            <dc-element>language *</dc-element>
                             <dc-qualifier>iso</dc-qualifier>
                             <label>Language</label>
                             <input-type value-pairs-name="common_iso_languages">list</input-type>
@@ -508,11 +540,11 @@
             </page>
         </form>
 
-   <form name="alternative">
+        <form name="alternative">
             <page number="3">
                 <fieldgroup>
                     <label>Subjects</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Subjects');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -520,24 +552,28 @@
                             <dc-qualifier>asfa</dc-qualifier>
                             <label>ASFA Terms</label>
                             <input-type size="69">onebox</input-type>
-                           <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://www4.fao.org/asfa/asfa.htm" target="_blank"&gt;ASFA website&lt;/a&gt;</hint>
+                            <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://www4.fao.org/asfa/asfa.htm" target="_blank"&gt;ASFA website&lt;/a&gt;</hint>
                             <repeatable>true</repeatable>
                             <required></required>
-						</field>
+                            <ask-language>true</ask-language>
+                            <authority closed="true" editable="false" presentation="suggest" limit="0">asfa</authority>
+                        </field>
                     </fieldrow>
-					<fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>subject</dc-element>
-							<dc-qualifier>agrovoc</dc-qualifier>
-							<label>AGROVOC Terms</label>
-							<input-type size="69">onebox</input-type>
-							<hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://aims.fao.org/website/Search-Terms/sub" target="_blank"&gt;Agrovoc website&lt;/a&gt;</hint>	
-							<repeatable>true</repeatable>
-							<required></required>
-						</field>
-					</fieldrow>
-					<fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>subject</dc-element>
+                            <dc-qualifier>agrovoc</dc-qualifier>
+                            <label>AGROVOC Terms</label>
+                            <input-type size="69">onebox</input-type>
+                            <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://aims.fao.org/website/Search-Terms/sub" target="_blank"&gt;Agrovoc website&lt;/a&gt;</hint>	
+                            <repeatable>true</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+                            <authority closed="true" editable="false" presentation="suggest" limit="50">agrovoc</authority>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
@@ -548,24 +584,24 @@
                             <repeatable>false</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-						</field> 
-					</fieldrow>
-					<fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>coverage</dc-element>
-							<dc-qualifier>spatial</dc-qualifier>
-							<label>Geographical Terms</label>
-							<hint>Select the geographical terms your deposit covers. </hint>
-							<input-type size="69">onebox</input-type>
-							<repeatable>true</repeatable>
-							<required></required>
-						</field>
-					</fieldrow>
-				</fieldgroup>
+                        </field> 
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>coverage</dc-element>
+                            <dc-qualifier>spatial</dc-qualifier>
+                            <label>Geographical Terms</label>
+                            <hint>Select the geographical terms your deposit covers. </hint>
+                            <input-type size="69">onebox</input-type>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                </fieldgroup>
                 <fieldgroup>
                     <label>Description of Content</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Description_');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -577,7 +613,7 @@
                             <repeatable>true</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-						</field> 
+                        </field> 
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -590,12 +626,12 @@
                             <repeatable>false</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-						</field>
+                        </field>
                     </fieldrow>
-				</fieldgroup>
+                </fieldgroup>
                 <fieldgroup>
                     <label>Intellectual Property</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Intellectual_');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -608,56 +644,60 @@
                             <required></required>
                         </field> 
                     </fieldrow>
-                  </fieldgroup>
-                 <fieldgroup>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Funding organization</label>
-                    <hint></hint>				
-					<fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Funding_');"&gt;Help&lt;/a&gt;</hint>			
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>sponsorship</dc-qualifier>
-							<label>Funders</label>
-							<hint>Enter here the names of the corporate bodies/people who have funded your deposit.</hint>	
+                            <label>Funders</label>
+                            <hint>Enter here the names of the corporate bodies/people who have funded your deposit.</hint>	
                             <input-type size="69">textarea</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
-				</fieldgroup>
+                </fieldgroup>
             </page>
         </form>
 		
-   <form name="basic">
+        <form name="basic">
             <page number="3">
                 <fieldgroup>
                     <label>Subjects</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Subjects');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>subject</dc-element>
                             <dc-qualifier>asfa</dc-qualifier>
                             <label>ASFA Terms</label>
-                            <input-type size="69">onebox</input-type>
-                           <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://www4.fao.org/asfa/asfa.htm" target="_blank"&gt;ASFA website&lt;/a&gt;</hint>
+                            <input-type size="50">onebox</input-type>
+                            <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://www4.fao.org/asfa/asfa.htm" target="_blank"&gt;ASFA website&lt;/a&gt;</hint>
                             <repeatable>true</repeatable>
                             <required></required>
-						</field>
+                            <ask-language>true</ask-language>
+                            <authority closed="true" editable="false" presentation="suggest" limit="0">asfa</authority>
+                        </field>
                     </fieldrow>
-					<fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>subject</dc-element>
-							<dc-qualifier>agrovoc</dc-qualifier>
-							<label>AGROVOC Terms</label>
-							<input-type size="69">onebox</input-type>
-							<hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://aims.fao.org/website/Search-Terms/sub" target="_blank"&gt;Agrovoc website&lt;/a&gt;</hint>	
-							<repeatable>true</repeatable>
-							<required></required>
-						</field>
-					</fieldrow>
-					<fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>subject</dc-element>
+                            <dc-qualifier>agrovoc</dc-qualifier>
+                            <label>AGROVOC Terms</label>
+                            <input-type size="50">onebox</input-type>
+                            <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://aims.fao.org/website/Search-Terms/sub" target="_blank"&gt;Agrovoc website&lt;/a&gt;</hint>	
+                            <repeatable>true</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+                            <authority closed="true" editable="true" presentation="suggest" limit="0">agrovoc</authority>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
@@ -668,24 +708,24 @@
                             <repeatable>false</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-						</field> 
-					</fieldrow>
-					<fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>coverage</dc-element>
-							<dc-qualifier>spatial</dc-qualifier>
-							<label>Geographical Terms</label>
-							<hint>Select the geographical terms your deposit covers. </hint>
-							<input-type size="69">onebox</input-type>
-							<repeatable>true</repeatable>
-							<required></required>
-						</field>
-					</fieldrow>
-				</fieldgroup>
+                        </field> 
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>coverage</dc-element>
+                            <dc-qualifier>spatial</dc-qualifier>
+                            <label>Geographical Terms</label>
+                            <hint>Select the geographical terms your deposit covers. </hint>
+                            <input-type size="69">onebox</input-type>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                </fieldgroup>
                 <fieldgroup>
                     <label>Description of Content</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Description_');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -697,7 +737,7 @@
                             <repeatable>true</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-						</field> 
+                        </field> 
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -710,7 +750,7 @@
                             <repeatable>false</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-		</field>
+                        </field>
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -724,10 +764,10 @@
                             <required></required>
                         </field>
                     </fieldrow>
-				</fieldgroup>
+                </fieldgroup>
                 <fieldgroup>
                     <label>Intellectual Property</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Intellectual_');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -740,33 +780,33 @@
                             <required></required>
                         </field> 
                     </fieldrow>
-                  </fieldgroup>
-                 <fieldgroup>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Funding organization</label>
-                    <hint></hint>				
-					<fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Funding_');"&gt;Help&lt;/a&gt;</hint>				
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
                             <dc-qualifier>sponsorship</dc-qualifier>
-							<label>Funders</label>
-							<hint>Enter here the names of the corporate bodies/people who have funded your deposit.</hint>	
+                            <label>Funders</label>
+                            <hint>Enter here the names of the corporate bodies/people who have funded your deposit.</hint>	
                             <input-type size="69">textarea</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
-				</fieldgroup>
+                </fieldgroup>
             </page>
         </form>
 
         <form name="Article" baseForm="basic">
             <page  number="1">
-		<fieldgroup>
+                <fieldgroup>
                     <label>Type</label>
-                    <hint></hint>
-                   <fieldrow>
-			<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Type');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
                             <dc-qualifier>specified</dc-qualifier>
@@ -775,18 +815,18 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-		  </fieldrow>
-		</fieldgroup>
-		<fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
                             <label>Personal Authors</label>
-                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -798,7 +838,7 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint>Used when an organization has the authorship of the publication.</hint>
                             <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -807,7 +847,7 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title Information</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -820,7 +860,7 @@
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
                             <ask-language>true</ask-language>
-						</field>
+                        </field>
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -828,30 +868,30 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <hint>Enter here the translation(s) of the title.</hint>
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
-						</field>
+                        </field>
                     </fieldrow>
                 </fieldgroup>
-                 <fieldgroup>
+                <fieldgroup>
                     <label>Reference</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Reference');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
-			<field>
-			  <dc-schema>dc</dc-schema>
-			 <dc-element>bibliographicCitation</dc-element>
-			 <dc-qualifier>title</dc-qualifier>
-			 <label>Journal Title *</label>
-			 <hint>Enter a word from the journal title and choose the correct title out of the picklist.</hint>
-			 <input-type size="69">onebox</input-type>
-			 <repeatable>false</repeatable>
-			 <required>Enter a (part of) the keyword and choose from the list</required>
-			 <!-- presentation: suggest, lookup-->
-			 <authority closed="true" editable="true" presentation="suggest" limit="0">issn</authority>
-			</field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>title</dc-qualifier>
+                            <label>Journal Title *</label>
+                            <hint>Enter a word from the journal title and choose the correct title out of the picklist.</hint>
+                            <input-type size="69">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required>Enter a (part of) the keyword and choose from the list</required>
+                            <authority closed="false" editable="true" presentation="suggest" limit="0">issn</authority>
+                            <ask-language>true</ask-language>
+                        </field>
                         <!--<field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>identifier</dc-element>
@@ -900,36 +940,45 @@
                             <required></required>
                         </field>
                     </fieldrow>
-                    <fieldrow>
+   <!--                  <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Publisher and Place of Publication</label>
-                            <input-type size="35">series</input-type>
+                            <label>Publisher</label>
+                            <input-type size="35">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-                    </fieldrow>
-				</fieldgroup>
-			</page>
-			<page number="2">
-					<fieldgroup>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow> -->
+                </fieldgroup>
+            </page>
+            <page number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
-                     <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>doi</dc-qualifier>
                             <label>DOI of published version</label>
-							<hint>The DOI is a unique digital object identifier. This identification system is used by international publishers.</hint>
+                            <hint>The DOI is a unique digital object identifier. This identification system is used by international publishers.</hint>
                             <input-type>onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					 </fieldrow>
- 					 <fieldrow>
+                    </fieldrow>
+                    <fieldrow> 
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -940,24 +989,24 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
-					</fieldgroup>
-					<fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
-					<fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
                             <label>Publication Date *</label>
 
-							<input-type>date</input-type>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
-					</fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
@@ -968,8 +1017,8 @@
                             <repeatable>false</repeatable>
                             <required>You must enter the status.</required>
                         </field>
-                     </fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
@@ -993,34 +1042,22 @@
                             <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
- 				</fieldgroup>
-			</page>
+                </fieldgroup>
+            </page>
         </form>
         <form name="Book" baseForm="basic">
             <page number="1">
                 <fieldgroup>
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
                             <label>Personal Authors</label>
-                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <label>Corporate Authors</label>
-                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
-                            <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
@@ -1032,15 +1069,27 @@
                             <dc-qualifier>editor</dc-qualifier>
                             <repeatable>true</repeatable>
                             <label>Editors</label>
-                            <hint>Enter the personal name of the editor(s) of the book.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>contributor</dc-element>
+                            <dc-qualifier>corpauthor</dc-qualifier>
+                            <label>Corporate Authors</label>
+                            <hint>Used when an organization has the authorship of the publication.</hint>
+                            <input-type size="69">onebox</input-type>
+                            <repeatable>true</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1060,17 +1109,17 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <hint>Enter here the translation(s) of the title.</hint>
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
-							<repeatable>true</repeatable>
+                            <repeatable>true</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
                     <label>Reference</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Reference');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1092,36 +1141,53 @@
                         </field>
                     </fieldrow>                    
                     <fieldrow>
-						<field>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Publisher and Place of Publication</label>
-                            <input-type size="35">series</input-type>
+                            <label>Publisher</label>
+                            <input-type size="35">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-                    </fieldrow>                    
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>                 
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>ispartofseries</dc-qualifier>
-                            <label>Series Name and Number</label>
-                            <hint>Enter the title of the series of the book.</hint>
-                            <input-type size="33">series</input-type>
+                            <label>Series Name</label>
+                            <input-type size="65">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseriesnr</dc-qualifier>
+                            <label>N°</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
                     </fieldrow>
-				</fieldgroup>
-			</page>
-			<page  number="2">
-					<fieldgroup>
+                </fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
-                     <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -1131,8 +1197,8 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					 </fieldrow>
- 					 <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -1143,24 +1209,24 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
-					</fieldgroup>                 
-					<fieldgroup>
+                    </fieldrow>
+                </fieldgroup>                 
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
-					<fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
                             <label>Publication Date *</label>
 
-							<input-type>date</input-type>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
                     </fieldrow>
-                     <fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
@@ -1171,8 +1237,8 @@
                             <repeatable>false</repeatable>
                             <required>You must enter the status.</required>
                         </field>
-                     </fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
@@ -1198,20 +1264,21 @@
                     </fieldrow>
                 </fieldgroup>
             </page>
+
         </form>
 
-		<form name="Book Section" baseForm="basic">
+        <form name="Book Section" baseForm="basic">
             <page number="1">
-               <fieldgroup >
+                <fieldgroup >
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
                             <label>Personal Authors</label>
-                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1223,7 +1290,7 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint>Used when an organization has the authorship of the publication.</hint>
                             <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1232,7 +1299,7 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1252,24 +1319,24 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <hint>Enter here the translation(s) of the title.</hint>
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
-						</field>
+                        </field>
                     </fieldrow>
                 </fieldgroup>
-                 <fieldgroup>
+                <fieldgroup>
                     <label>Reference</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Reference');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>authors</dc-qualifier>
                             <label>Editors</label>
-                            <hint>Enter the personal name of the editor(s) of the book.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1279,27 +1346,18 @@
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
-                            <dc-qualifier>booktitle</dc-qualifier>
+                            <dc-qualifier>title</dc-qualifier>
                             <label>Book Title *</label>
                             <hint>Enter the complete title of the book your deposit is a part of. Title and subtitle are divided by a double colon (:)</hint>
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>false</repeatable>
-                            <required>You must enter the title  title of the book your deposit is a part of.</required>
+                            <required>You must enter the title of the book your deposit is a part of.</required>
                         </field>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>bibliographicCitation</dc-element>
-                            <dc-qualifier>edition</dc-qualifier>
-                            <label>Edition</label>
-                            <hint>   </hint>
-                            <input-type size="4">onebox</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
+
                     </fieldrow>
                     <fieldrow>
-                       <field>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>stpage</dc-qualifier>
@@ -1317,47 +1375,74 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-			<field>
-				<dc-schema>dc</dc-schema>
-				<dc-element>identifier</dc-element>
-				<dc-qualifier>isbn</dc-qualifier>
-				<label>ISBN</label>
-				<input-type size="15">onebox</input-type>
-				<repeatable>false</repeatable>
-				<required></required>
-			</field>    
-		    </fieldrow>
-                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
-                            <dc-element>publisher</dc-element>
-                            <dc-qualifier></dc-qualifier>
-                            <label>Publisher and Place of Publication</label>
-                            <input-type size="35">series</input-type>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>isbn</dc-qualifier>
+                            <label>ISBN</label>
+                            <input-type size="15">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
-                        </field>
+                        </field> 
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>edition</dc-qualifier>
+                            <label>Edition</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>   
                     </fieldrow>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>ispartofseries</dc-qualifier>
-                            <label>Series Name and Number</label>
-                            <hint>Enter the title of the series of the book.</hint>
-                            <input-type size="50">series</input-type>
+                            <label>Series Name</label>
+                            <input-type size="65">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
+
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseriesnr</dc-qualifier>
+                            <label>N°</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
                     </fieldrow>
-				</fieldgroup>
-			</page>
-			<page  number="2">
-					<fieldgroup>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier></dc-qualifier>
+                            <label>Publisher</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                </fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
-                     <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -1367,8 +1452,8 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					 </fieldrow>
- 					 <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -1379,24 +1464,24 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
-					</fieldgroup>
-					<fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
-					<fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
                             <label>Publication Date *</label>
 
-							<input-type>date</input-type>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
-					</fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
@@ -1407,8 +1492,8 @@
                             <repeatable>false</repeatable>
                             <required>You must enter the status.</required>
                         </field>
-                     </fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
@@ -1432,21 +1517,21 @@
                             <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
-               </fieldgroup>
+                </fieldgroup>
             </page>
         </form>
         <form name="Proceedings Paper" baseForm="basic">
             <page number="1">
                 <fieldgroup >
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
                             <label>Personal Authors</label>
-                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1458,7 +1543,7 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint>Used when an organization has the authorship of the publication.</hint>
                             <input-type  size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1467,7 +1552,7 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1487,17 +1572,17 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <hint>Enter here the translation(s) of the title.</hint>
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
-						</field>
+                        </field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
                     <label>Conference description</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Conference_');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1516,20 +1601,8 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>conferenceplace</dc-qualifier>
-                            <label>Conference Place</label>
-                            <hint>Enter the place where the conference took place - City (State), Country.</hint>
-                            <input-type size="69">onebox</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                   <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>bibliographicCitation</dc-element>
-                            <dc-qualifier>conferencedate</dc-qualifier>
-                            <label>Conference Date</label>
-                            <hint>Enter the date the conference took place (starting-ending date including year) .</hint>
+                            <label>Conference Place - Date</label>
+                            <hint>Enter the place (City - State) and the dates (Day(s)/month/year)of the conference.</hint>
                             <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
@@ -1538,14 +1611,14 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Reference</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Reference');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>authors</dc-qualifier>
                             <label>Editors</label>
-                            <hint>Enter the personal name of the editor(s) of the book.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1555,7 +1628,7 @@
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
-                            <dc-qualifier>proceedingstitle</dc-qualifier>
+                            <dc-qualifier>title</dc-qualifier>
                             <label>Proceedings Title *</label>
                             <hint>Enter here the full title that is given to the proceedings publication of which your paper is a part.</hint>
                             <input-type size="69">onebox</input-type>
@@ -1563,76 +1636,93 @@
                             <required>You must enter a proceedings title for this conference paper.</required>
                             <ask-language>true</ask-language>
                         </field>
-					</fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>stpage</dc-qualifier>
+                            <label>Start Page</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>endpage</dc-qualifier>
+                            <label>End Page</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>isbn</dc-qualifier>
+                            <label>ISBN</label>
+                            <input-type size="15">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>issn</dc-qualifier>
+                            <label>ISSN</label>
+                            <input-type size="15">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>ispartofseries</dc-qualifier>
-                            <label>Series Name and Number</label>
-                            <hint>Enter the title of the series and number.</hint>
-                            <input-type  size="50">series</input-type>
+                            <label>Series Name</label>
+                            <input-type size="65">onebox</input-type>
+                            <ask-language>true</ask-language>
                             <repeatable>false</repeatable>
                             <required></required>
-                            <ask-language>true</ask-language>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseriesnr</dc-qualifier>
+                            <label>N°</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
                         </field>
                     </fieldrow>
-					 <fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Publisher and Place of Publication</label>
-                            <input-type  size="35">series</input-type>
+                            <label>Publisher</label>
+                            <input-type size="35">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
-					<fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>bibliographicCitation</dc-element>
-							<dc-qualifier>stpage</dc-qualifier>
-							<label>Start Page</label>
-							<input-type size="4">onebox</input-type>
-							<repeatable>false</repeatable>
-							<required></required>
-						</field>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>bibliographicCitation</dc-element>
-							<dc-qualifier>endpage</dc-qualifier>
-							<label>End Page</label>
-							<input-type size="4">onebox</input-type>
-							<repeatable>false</repeatable>
-							<required></required>
-						</field>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>identifier</dc-element>
-							<dc-qualifier>isbn</dc-qualifier>
-							<label>ISBN</label>
-							<input-type size="15">onebox</input-type>
-							<repeatable>false</repeatable>
-							<required></required>
-						</field>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>identifier</dc-element>
-							<dc-qualifier>issn</dc-qualifier>
-							<label>ISSN</label>
-							<input-type size="15">onebox</input-type>
-							<repeatable>false</repeatable>
-							<required></required>
-						</field>
-					</fieldrow>
- 				</fieldgroup>
-			</page>
-			<page  number="2">
-					<fieldgroup>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                </fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
-                     <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -1642,8 +1732,8 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					 </fieldrow>
- 					 <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -1654,24 +1744,24 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
-					</fieldgroup>
-					<fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
-					<fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
                             <label>Publication Date *</label>
 
-							<input-type>date</input-type>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
-					</fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
@@ -1682,8 +1772,8 @@
                             <repeatable>false</repeatable>
                             <required>You must enter the status.</required>
                         </field>
-                     </fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
@@ -1707,15 +1797,15 @@
                             <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
-               </fieldgroup>
+                </fieldgroup>
             </page>
         </form>
         <form name="Conference Material" baseForm="basic">
             <page number="1">
- 				<fieldgroup>
+                <fieldgroup>
                     <label>Type</label>
-                    <hint></hint>
-                  <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Type');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
@@ -1725,18 +1815,18 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					</fieldrow>
+                    </fieldrow>
                 </fieldgroup>
-				<fieldgroup>
+                <fieldgroup>
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
                             <label>Personal Authors</label>
-                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1748,7 +1838,7 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint>Used when an organization has the authorship of the publication.</hint>
                             <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1757,7 +1847,7 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1777,18 +1867,18 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <hint>Enter here the translation(s) of the title.</hint>
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-						</field>
+                        </field>
                     </fieldrow>
-				</fieldgroup>
+                </fieldgroup>
                 <fieldgroup>
                     <label>Conference Description</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Conference_');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1807,33 +1897,20 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>conferenceplace</dc-qualifier>
-                            <label>Conference Place</label>
-                            <hint>Enter the place where the conference took place - City (State), Country.</hint>
-                            <input-type size="69">onebox</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-		      <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>bibliographicCitation</dc-element>
-                            <dc-qualifier>conferencedate</dc-qualifier>
-                            <label>Conference Date</label>
-                            <hint>Enter the date the conference took place (starting-ending date including year) .</hint>
+                            <label>Conference Place - Date</label>
+                            <hint>Enter the place (City - State) and the dates (Day(s)/month/year)of the conference.</hint>
                             <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
-
-			</page>
-			<page  number="2">
-               <fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
- 					<fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -1845,22 +1922,22 @@
                             <required></required>
                         </field>
                     </fieldrow>
-		</fieldgroup>
-		<fieldgroup>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
-					<fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
                             <label>Publication Date *</label>
-							<input-type>date</input-type>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
-					</fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
@@ -1884,22 +1961,22 @@
                             <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
-               </fieldgroup>
+                </fieldgroup>
             </page>
         </form>
 
         <form name="Research Report" baseForm="basic">
             <page number="1">
-               <fieldgroup >
+                <fieldgroup >
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
                             <label>Personal Authors</label>
-                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1909,9 +1986,21 @@
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
+                            <dc-qualifier>editor</dc-qualifier>
+                            <repeatable>true</repeatable>
+                            <label>Editors</label>
+                            <hint></hint>
+                            <input-type size="33">name</input-type>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint>Used when an organization has the authorship of the publication.</hint>
                             <input-type  size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -1920,7 +2009,7 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1940,24 +2029,33 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <hint>Enter here the translation(s) of the title.</hint>
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
-					</field>
+                        </field>
                     </fieldrow>
                 </fieldgroup>
-                 <fieldgroup>
+                <fieldgroup>
                     <label>Reference</label>
-                    <hint></hint>
-                   <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Reference');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>publisher</dc-element>
                             <dc-qualifier></dc-qualifier>
-                            <label>Publisher and Place of Publication</label>
-                            <input-type size="35">series</input-type>
+                            <label>Publisher</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
@@ -1967,12 +2065,20 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>ispartofseries</dc-qualifier>
-                            <label>Series Name and Number</label>
-                            <hint>Enter the title of the series of the book.</hint>
-                            <input-type size="50">series</input-type>
+                            <label>Series Name</label>
+                            <input-type size="65">onebox</input-type>
+                            <ask-language>true</ask-language>
                             <repeatable>false</repeatable>
                             <required></required>
-                            <ask-language>true</ask-language>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseriesnr</dc-qualifier>
+                            <label>N°</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -1986,13 +2092,13 @@
                             <required></required>
                         </field>
                     </fieldrow>
-				</fieldgroup>
-			</page>
-			<page  number="2">
-					<fieldgroup>
+                </fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
-                     <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -2002,8 +2108,8 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					 </fieldrow>
- 					 <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -2014,24 +2120,24 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
-					</fieldgroup>
-					<fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
-					<fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
                             <label>Publication Date *</label>
 
-							<input-type>date</input-type>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
                     </fieldrow>
-                     <fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
@@ -2042,8 +2148,8 @@
                             <repeatable>false</repeatable>
                             <required>You must enter the status.</required>
                         </field>
-                     </fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>type</dc-element>
@@ -2067,7 +2173,7 @@
                             <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
-               </fieldgroup>
+                </fieldgroup>
             </page>
         </form>
 
@@ -2075,29 +2181,29 @@
             <page number="1">
                 <fieldgroup>
                     <label>Type</label>
-                    <hint></hint>
-					<fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>type</dc-element>
-							<dc-qualifier>specified</dc-qualifier>
-							<label>Thesis Type *</label>
-							<input-type  value-pairs-name="type_thesis">dropdown</input-type>
-							<repeatable>false</repeatable>
-							<required>You must enter the thesis type.</required>
-						</field>
-					</fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Type');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>type</dc-element>
+                            <dc-qualifier>specified</dc-qualifier>
+                            <label>Thesis Type *</label>
+                            <input-type  value-pairs-name="type_thesis">dropdown</input-type>
+                            <repeatable>false</repeatable>
+                            <required>You must enter the thesis type.</required>
+                        </field>
+                    </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
                             <label>Personal Authors</label>
-                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -2114,22 +2220,22 @@
                             <required></required>
                         </field>
                     </fieldrow>
-					<fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>contributor</dc-element>
-							<dc-qualifier>corpauthor</dc-qualifier>
-							<label>University/Institute</label>
-							<hint>Enter the institution from which the author obtained his degree.</hint>
-							<input-type size="69">onebox</input-type>
-							<repeatable>true</repeatable>
-							<required></required>
-						</field>
-					</fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>contributor</dc-element>
+                            <dc-qualifier>institution</dc-qualifier>
+                            <label>University/Institute</label>
+                            <hint>Enter the institution from which the author obtained his degree.</hint>
+                            <input-type size="69">onebox</input-type>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -2149,7 +2255,7 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <hint>Enter here the translation(s) of the title.</hint>
                             <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -2157,12 +2263,12 @@
                         </field>
                     </fieldrow>
                 </fieldgroup>
-			</page>
-			<page  number="2">
-					<fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
-                     <fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -2172,8 +2278,8 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-					 </fieldrow>
- 					 <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -2184,24 +2290,23 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                     </fieldrow>
-					</fieldgroup>
-                  <fieldgroup>
+                    </fieldrow>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
-					<fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
                             <label>Publication Date *</label>
-
-							<input-type>date</input-type>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
-					</fieldrow>
-                     <fieldrow>
+                    </fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>description</dc-element>
@@ -2212,7 +2317,7 @@
                             <repeatable>false</repeatable>
                             <required>You must enter the status.</required>
                         </field>
-                     </fieldrow>
+                    </fieldrow>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -2225,16 +2330,16 @@
                             <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
-                     <fieldrow>
-						<field>
-							<dc-schema>dc</dc-schema>
-							<dc-element>identifier</dc-element>
-							<dc-qualifier>isbn</dc-qualifier>
-							<label>ISBN</label>
-							<input-type size="15">onebox</input-type>
-							<repeatable>false</repeatable>
-							<required></required>
-						</field>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>isbn</dc-qualifier>
+                            <label>ISBN</label>
+                            <input-type size="15">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>format</dc-element>
@@ -2245,22 +2350,22 @@
                             <required></required>
                         </field>
                     </fieldrow>
-               </fieldgroup>
+                </fieldgroup>
             </page>
         </form>
 
         <form name="Other" baseForm="basic">
             <page number="1">
-               <fieldgroup>
+                <fieldgroup>
                     <label>Creators</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>                    
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>author</dc-qualifier>
                             <label>Personal Authors</label>
-                            <hint>Enter the personal name(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint></hint>
                             <input-type size="33">name</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -2272,7 +2377,7 @@
                             <dc-element>contributor</dc-element>
                             <dc-qualifier>corpauthor</dc-qualifier>
                             <label>Corporate Authors</label>
-                            <hint>Enter the corporate author(s) responsable for the intellectual content of your deposit.</hint>
+                            <hint>Used when an organization has the authorship of the publication.</hint>
                             <input-type size="69">onebox</input-type>
                             <repeatable>true</repeatable>
                             <required></required>
@@ -2281,7 +2386,7 @@
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
-                    <hint></hint>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -2301,21 +2406,21 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
                             <label>Alternative Titles</label>
-                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <hint>Enter here the translation(s) of the title.</hint>
                             <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>
                             <repeatable>true</repeatable>
                             <required></required>
                             <ask-language>true</ask-language>
-						</field>
+                        </field>
                     </fieldrow>
                 </fieldgroup>
-			</page>
-			<page  number="2">
-               <fieldgroup>
+            </page>
+            <page  number="2">
+                <fieldgroup>
                     <label>Links</label>
-                    <hint></hint>
- 					<fieldrow>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -2327,18 +2432,18 @@
                             <required></required>
                         </field>
                     </fieldrow>
-				</fieldgroup>
-                  <fieldgroup>
+                </fieldgroup>
+                <fieldgroup>
                     <label>Characteristics</label>
-                    <hint></hint>
-					<fieldrow>
-						<field>
+                    <hint>&lt;a href="javascript:newPopup('/jspui/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
                             <label>Publication Date *</label>
 
-							<input-type>date</input-type>
+                            <input-type>date</input-type>
                             <repeatable>false</repeatable>
                             <required>The year is mandatory (YYYY).</required>
                         </field>
@@ -2352,18 +2457,6 @@
                             <required></required>
                         </field>
                     </fieldrow>
-                     <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>description</dc-element>
-                            <dc-qualifier>status</dc-qualifier>
-                            <label>Status *</label>
-                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
-                            <input-type value-pairs-name="status">dropdown</input-type>
-                            <repeatable>false</repeatable>
-                            <required>You must enter the status.</required>
-                        </field>
-                     </fieldrow>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -2376,7 +2469,7 @@
                             <required>You must enter the language of the item</required>
                         </field>
                     </fieldrow>
-               </fieldgroup>
+                </fieldgroup>
             </page>
         </form>
 
@@ -2398,83 +2491,83 @@
  <!-- stores the associated stored-values in the database.                  -->
     <form-value-pairs>
         <value-pairs value-pairs-name="refereed" dc-term="type_refereed">
-                <pair>
-                        <displayed-value>Non-Refereed</displayed-value>
-                        <stored-value>Non-Refereed</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Refereed</displayed-value>
-                        <stored-value>Refereed</stored-value>
-                </pair>
+            <pair>
+                <displayed-value>Non-Refereed</displayed-value>
+                <stored-value>Non-Refereed</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Refereed</displayed-value>
+                <stored-value>Refereed</stored-value>
+            </pair>
         </value-pairs>
         <value-pairs value-pairs-name="status" dc-term="description_status">
-                <pair>
-                        <displayed-value>Unpublished</displayed-value>
-                        <stored-value>Unpublished</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Submitted</displayed-value>
-                        <stored-value>Submitted</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>In press</displayed-value>
-                        <stored-value>In press</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Published</displayed-value>
-                        <stored-value>Published</stored-value>
-                </pair>
+            <pair>
+                <displayed-value>Unpublished</displayed-value>
+                <stored-value>Unpublished</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Submitted</displayed-value>
+                <stored-value>Submitted</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>In press</displayed-value>
+                <stored-value>In press</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Published</displayed-value>
+                <stored-value>Published</stored-value>
+            </pair>
         </value-pairs>
         <value-pairs value-pairs-name="type_article" dc-term="type_specified">
-                <pair>
-                        <displayed-value>Article</displayed-value>
-                        <stored-value>Article</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Editorial material</displayed-value>
-                        <stored-value>Editorial material</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Review</displayed-value>
-                        <stored-value>Review</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Book Review</displayed-value>
-                        <stored-value>Book Review</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Meeting abstract</displayed-value>
-                        <stored-value>Meeting abstract</stored-value>
-                </pair>
+            <pair>
+                <displayed-value>Article</displayed-value>
+                <stored-value>Article</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Editorial material</displayed-value>
+                <stored-value>Editorial material</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Review</displayed-value>
+                <stored-value>Review</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Book Review</displayed-value>
+                <stored-value>Book Review</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Meeting abstract</displayed-value>
+                <stored-value>Meeting abstract</stored-value>
+            </pair>
         </value-pairs>
         <value-pairs value-pairs-name="type_conference" dc-term="type_specified">
-                <pair>
-                        <displayed-value>Paper</displayed-value>
-                        <stored-value>Paper</stored-value>
-                </pair>
+            <pair>
+                <displayed-value>Paper</displayed-value>
+                <stored-value>Paper</stored-value>
+            </pair>
  
-                <pair>
-                        <displayed-value>Presentation</displayed-value>
-                        <stored-value>Presentation</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Poster</displayed-value>
-                        <stored-value>Poster</stored-value>
-                </pair>
+            <pair>
+                <displayed-value>Presentation</displayed-value>
+                <stored-value>Presentation</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Poster</displayed-value>
+                <stored-value>Poster</stored-value>
+            </pair>
         </value-pairs>
         <value-pairs value-pairs-name="type_thesis" dc-term="type_specified">
-                <pair>
-                        <displayed-value>Bachelor</displayed-value>
-                        <stored-value>Bachelor thesis</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Master</displayed-value>
-                        <stored-value>Master thesis</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Phd</displayed-value>
-                        <stored-value>Phd thesis</stored-value>
-                </pair>
+            <pair>
+                <displayed-value>Bachelor</displayed-value>
+                <stored-value>Bachelor thesis</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Master</displayed-value>
+                <stored-value>Master thesis</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Phd</displayed-value>
+                <stored-value>Phd thesis</stored-value>
+            </pair>
         </value-pairs>
         <value-pairs value-pairs-name="common_types" dc-term="type">
             <pair>
@@ -2534,47 +2627,48 @@
             </pair>
         </value-pairs>
         <value-pairs value-pairs-name="type_map" dc-term="type_specified">
-                <pair>
-                        <displayed-value>Unspecified</displayed-value>
-                        <stored-value></stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Atlas</displayed-value>
-                        <stored-value>Atlas</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Diagram</displayed-value>
-                        <stored-value>Diagram</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Profile</displayed-value>
-                        <stored-value>Profile</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Model</displayed-value>
-                        <stored-value>Model</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Remote-sensing image</displayed-value>
-                        <stored-value>Remote-sensing image</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>Section</displayed-value>
-                        <stored-value>Section</stored-value>
-                </pair>
+            <pair>
+                <displayed-value>Unspecified</displayed-value>
+                <stored-value></stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Atlas</displayed-value>
+                <stored-value>Atlas</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Diagram</displayed-value>
+                <stored-value>Diagram</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Profile</displayed-value>
+                <stored-value>Profile</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Model</displayed-value>
+                <stored-value>Model</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Remote-sensing image</displayed-value>
+                <stored-value>Remote-sensing image</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>Section</displayed-value>
+                <stored-value>Section</stored-value>
+            </pair>
         </value-pairs>
         <value-pairs value-pairs-name="type_avm" dc-term="type_specified">
-                <pair>
-                        <displayed-value>audio</displayed-value>
-                        <stored-value>audio</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>image</displayed-value>
-                        <stored-value>image</stored-value>
-                </pair>
-                <pair>
-                        <displayed-value>video</displayed-value>
-                        <stored-value>video</stored-value>
-                </pair>
-        </value-pairs>    </form-value-pairs>
+            <pair>
+                <displayed-value>audio</displayed-value>
+                <stored-value>audio</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>image</displayed-value>
+                <stored-value>image</stored-value>
+            </pair>
+            <pair>
+                <displayed-value>video</displayed-value>
+                <stored-value>video</stored-value>
+            </pair>
+        </value-pairs>    
+    </form-value-pairs>
 </input-forms>

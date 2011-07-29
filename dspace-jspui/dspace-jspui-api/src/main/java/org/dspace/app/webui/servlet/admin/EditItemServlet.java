@@ -309,7 +309,7 @@ public class EditItemServlet extends DSpaceServlet {
 
             case CHANGE_DOCTYPE:
 
-                String doctype = request.getParameter("submit_doctype");
+                String doctype = request.getParameter("select_doctype");
 
                 if (doctype != null && !"".equals(doctype)) {
                     item.clearMetadata("dc", "type", null, Item.ANY);

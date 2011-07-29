@@ -1005,24 +1005,17 @@
             } else {
                 currentQual = "";
                 currentVal = "";
-
-
             } // do the dropdown box
             sb.append("<td colspan=\"2\"><select name=\"").append(fieldName).append("_qualifier");
 
 
             if (repeatable && j != fieldCount - 1) {
                 sb.append("_").append(j + 1);
-
-
             }
             if (readonly) {
                 sb.append("\" disabled=\"disabled");
-
-
             }
             sb.append("\">");
-
 
             for (int i = 0; i
                     < qualMap.size(); i += 2) {
@@ -1030,9 +1023,8 @@
                 v = (String) qualMap.get(i + 1);
                 sb.append("<option").append((v.equals(currentQual) ? " selected=\"selected\" " : "")).append(" value=\"").append(v).append("\">").append(q).append("</option>");
 
-
             } // do the input box
-            sb.append("</select>&nbsp;<input type=\"text\" name=\"").append(fieldName).append("_value");
+            sb.append("</select>&nbsp;<input type=\"text\"").append("size=\""+isize+"\"").append(" name=\"").append(fieldName).append("_value");
 
 
             if (repeatable && j != fieldCount - 1) {
@@ -1340,7 +1332,7 @@
                                 <td colspan="2">
                                     <div class="metadataType">
                                         <!-- selection of submission document type -->
-                                        <select name="submit_doctype" id="submit_doctype" onchange="SetDocType();">
+                                        <select name="select_doctype" id="select_doctype" onchange="SetDocType();">
                                             <%
                                                 StringBuffer sb = new StringBuffer();
                                                 String isselected = "";

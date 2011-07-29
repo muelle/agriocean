@@ -347,8 +347,8 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
 .submitFormDateLabel {  margin-left: 10px;
                         margin-right: 10px;
                         font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                        font-size: 10pt;
-                        font-style: italic;
+                        font-size: 8pt;
+                        
                         text-align: center;
                         vertical-align: top; }
 
@@ -943,7 +943,7 @@ input.ds-authority-lock.is-unlocked
 .latestLayout a
 {
     color: #000000;
-    padding: 2px 10px;
+    padding: 0px;
     font-size: 11pt;
     text-decoration:none;
     font-weight:bold
@@ -964,7 +964,7 @@ input.ds-authority-lock.is-unlocked
 }
 
 .latestLayout div {
-    margin-left: 10px;
+    margin-left: 0px;
     margin-right: 10px;
     margin-bottom: 0px;
     font-family: "verdana", "Arial", "Helvetica", sans-serif;

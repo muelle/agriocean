@@ -22,7 +22,6 @@ import org.dspace.app.util.DCInputsReaderException;
 import org.dspace.app.util.SubmissionInfo;
 import org.dspace.app.webui.submit.JSPStep;
 import org.dspace.app.webui.submit.JSPStepManager;
-import org.dspace.app.webui.submit.step.JSPDescribeStep;
 import org.dspace.app.webui.util.JSPManager;
 import org.dspace.app.webui.util.UIUtil;
 import org.dspace.authorize.AuthorizeException;
@@ -114,7 +113,7 @@ public class JSPDescribeStepExt extends JSPStep
             AuthorizeException
     {
         // check for type of submission changed
-        String doctype = request.getParameter("submit_doctype");
+        String doctype = request.getParameter("select_doctype");
         if (doctype != null)
         {
             request.setAttribute("submission.doctype", doctype);

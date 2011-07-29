@@ -766,5 +766,23 @@
         <element>identifier</element>
         <qualifier>arn</qualifier>
     </dc-type>
+    
+    <dc-type>
+        <schema>dc</schema>
+        <element>relation</element>
+        <qualifier>ispartofseriesnr</qualifier>
+    </dc-type>
+    
+    <dc-type>
+        <schema>dc</schema>
+        <element>publisher</element>
+        <qualifier>place</qualifier>
+    </dc-type>
+    
+    <dc-type>
+        <schema>dc</schema>
+        <element>relation</element>
+        <qualifier>doi</qualifier>
+    </dc-type>
 
 </dspace-dc-types>

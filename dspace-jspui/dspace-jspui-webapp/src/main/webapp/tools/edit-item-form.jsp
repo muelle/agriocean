@@ -1362,7 +1362,7 @@
                                           <td colspan="2">
                                               <div class="metadataType">
                                                   <!-- selection of submission document type -->
-                                                  <select name="submit_doctype" id="submit_doctype" onchange="updatedoctype()">
+                                                  <select name="select_doctype" id="select_doctype" onchange="updatedoctype()">
                                                       <%
                                                           List<String> types = new ArrayList<String>();
                                                           if (collections.length > 0) {

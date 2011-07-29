@@ -11,16 +11,16 @@
 <citation>
     <type name="Journal Contribution">
         <!--<template lang="en" name="default">$BibliographicCitation.title$, $BibliographicCitation.volume$($BibliographicCitation.issue$) p. $BibliographicCitation.stpage$-$BibliographicCitation.endpage$.</template>-->
-        <template lang="en" name="default"><g>$bibliographicCitation.title$,</g><g> $bibliographicCitation.volume$</g><g>($bibliographicCitation.issue$).</g><g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+        <template lang="en" name="default"><g>$bibliographicCitation.title$,</g><g> $bibliographicCitation.volume$</g><g> ($bibliographicCitation.issue$)</g><g>.p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
 	<template lang="en" name="agscitationNumber"><g>vol. $bibliographicCitation.volume$, </g><g>issue: $bibliographicCitation.issue$, </g><g> p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
-    <type name="Proceedings - published">
-        <template lang="en" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g> <g>$bibliographicCitation.booktitle$, </g> <g>$publisher$,</g> <g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    <type name="Proceedings Paper">
+        <template lang="en" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g> <g>$bibliographicCitation.title$,</g> <g> $publisher$,</g> <g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
-    <type name="Proceedings - unpublished">
-        <template lang="en" name="default"><g>$bibliographicCitation.cconferencename$, </g><g> $bibliographicCitation.cconferenceplace$, </g> <g> $bibliographicCitation.cconferencedate$</g>.</template>
+    <type name="Conference Material">
+        <template lang="en" name="default"><g>$bibliographicCitation.conferencename$,</g><g> $bibliographicCitation.conferenceplace$,</g> <g> $bibliographicCitation.conferencedate$</g>.</template>
     </type>
-    <type name="Book item">
-        <template lang="en" name="default"><g>$bibliographicCitation.bauthors$ (Ed.). </g><g>$bibliographicCitation.booktitle$, </g><g>$publisher$,</g><g> p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    <type name="Book Section">
+        <template lang="en" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g><g>$bibliographicCitation.title$,</g><g> $publisher$,</g><g> p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
 </citation>

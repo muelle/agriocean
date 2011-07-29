@@ -138,6 +138,7 @@ public class BrowseListTag extends TagSupport
         super();
     }
 
+    @Override
     public int doStartTag() throws JspException
     {
         JspWriter out = pageContext.getOut();
@@ -348,7 +349,7 @@ public class BrowseListTag extends TagSupport
                 cOddOrEven[colIdx] = (((colIdx + 1) % 2) == 0 ? "Odd" : "Even");
 
                 // find out if the field is a date
-                if (field.indexOf("(date)") > 0)
+                if (field.indexOf("date") > 0)
                 {
                     field = field.replaceAll("\\(date\\)", "");
                     isDate[colIdx] = true;
@@ -488,7 +489,7 @@ public class BrowseListTag extends TagSupport
                         if (isDate[colIdx])
                         {
                             DCDate dd = new DCDate(metadataArray[0].value);
-                            metadata = UIUtil.displayDate(dd, false, false, hrq);
+                            metadata = Integer.toString(dd.getYear());//UIUtil.displayDate(dd, false, false, hrq);
                         }
                         // format the title field correctly for withdrawn items (ie. don't link)
                         else if (field.equals(titleField) && items[i].isWithdrawn())
@@ -518,7 +519,7 @@ public class BrowseListTag extends TagSupport
                         		log.debug("Limiting output of field " + field + " to " + Integer.toString(loopLimit) + " from an original " + Integer.toString(metadataArray.length));
                         	}
 
-                            StringBuffer sb = new StringBuffer();
+                            StringBuilder sb = new StringBuilder();
                             for (int j = 0; j < loopLimit; j++)
                             {
                             	String startLink = "";
@@ -603,7 +604,7 @@ public class BrowseListTag extends TagSupport
                     }
                     else if (!field.equals(titleField))
                     {
-                        out.print("<td width=\"10px\" headers=\"" + id + "\" valign=\"top\" class=\"latestLayout\">"
+                        out.print("<td align=\"right\" headers=\"" + id + "\" width=\"10px\" valign=\"top\" class=\"latestLayout\">"
                             + (emph[colIdx] ? "<strong>" : "") + metadata + (emph[colIdx] ? "</strong>" : "")
                             + "</td>");
                     }

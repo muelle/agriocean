@@ -7,6 +7,7 @@
  */
 package org.dspace.content.crosswalk;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,6 +20,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
@@ -38,6 +41,15 @@ import org.jdom.Namespace;
 import org.jdom.Verifier;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+
+import javax.xml.transform.*;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URISyntaxException;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Configurable MODS Crosswalk
@@ -104,28 +116,15 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
     /**
      * MODS namespace.
      */
-    public static final Namespace MODS_NS =
-            Namespace.getNamespace("mods", "http://www.loc.gov/mods/v3");
-    private static final Namespace XLINK_NS =
-            Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
+    public static final Namespace MODS_NS = Namespace.getNamespace("mods", "http://www.loc.gov/mods/v3");
+    private static final Namespace XLINK_NS = Namespace.getNamespace("xlink", "http://www.w3.org/1999/xlink");
     private static final Namespace namespaces[] = {MODS_NS, XLINK_NS};
     /**  URL of MODS XML Schema */
-    public static final String MODS_XSD =
-            "http://www.loc.gov/standards/mods/v3/mods-3-1.xsd";
-    private static final String schemaLocation =
-            MODS_NS.getURI() + " " + MODS_XSD;
-    final String prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            + "<modsCollection xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
-            + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
-            + "xmlns=\"http://www.loc.gov/mods/v3\" "
-            + "xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd\">";
-    final String postlog = "</modsCollection>";
-    
-    private static XMLOutputter outputUgly = new XMLOutputter();
+    public static final String MODS_XSD = "http://www.loc.gov/standards/mods/v3/mods-3-1.xsd";
+    private static final String schemaLocation = MODS_NS.getURI() + " " + MODS_XSD;
     private static SAXBuilder builder = new SAXBuilder();
     private Map<String, String> modsMap = null;
 
-    
     /**
      * Initialize Crosswalk table from a properties file
      * which itself is the value of the DSpace configuration property
@@ -149,8 +148,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
      *  dc.description.abstract = <mods:abstract>%s</mods:abstract>
      *
      */
-    private void initMap()
-            throws CrosswalkInternalException {
+    private void initMap() throws CrosswalkInternalException {
         if (modsMap != null) {
             return;
         }
@@ -221,12 +219,57 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
         return schemaLocation;
     }
 
+    private String prepareTags(Map<String, DCValue> metadata) {
+
+        //StringBuilder result = new StringBuilder();
+        //$dc.element.qualifier|s$ like constructions will be replased by value of apropriate field
+        Pattern p = Pattern.compile("\\$(\\w+.\\w+)\\|([s,a,l])\\$", Pattern.CASE_INSENSITIVE);
+        Matcher m;
+        DCValue dcv;
+        DCValue tempDCV;
+        StringBuffer sb = new StringBuffer();
+        sb.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+        sb.append("<modsCollection xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:mods=\"http://www.loc.gov/mods/v3\" xsi:schemaLocation=\"http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd\">");
+                
+        String subst = "";
+
+        for (String field : metadata.keySet()) {
+            if (modsMap.containsKey(field)) {
+                String template = modsMap.get(field);
+                dcv = metadata.get(field);
+                template = template.replace("%s", dcv.value != null ? dcv.value : "");
+                template = template.replace("%a", dcv.authority != null ? dcv.authority : "");
+                template = template.replace("%l", dcv.language != null ? dcv.language : "");
+
+                m = p.matcher(template);
+                while (m.find()) {
+                    if (m.groupCount() == 2) {
+                        tempDCV = metadata.get(m.group(1));
+                        if (tempDCV != null) {
+                            if ("s".equalsIgnoreCase(m.group(2))) {
+                                subst = tempDCV.value != null ? tempDCV.value : m.group();
+                            } else if ("a".equalsIgnoreCase(m.group(2))) {
+                                subst = tempDCV.authority != null ? tempDCV.authority : m.group();
+                            } else if ("l".equalsIgnoreCase(m.group(2))) {
+                                subst = tempDCV.language != null ? tempDCV.language : m.group();
+                            }
+                            m.appendReplacement(sb, subst);
+                        }
+                    }
+                }
+                m.appendTail(sb);
+                //result.append(sb);
+            }
+        }
+        sb.append("</modsCollection>");
+        return sb.toString();//result.toString();
+    }
+
     /**
      * Returns object's metadata in MODS format, as List of XML structure nodes.
      */
     @Override
-    public List<Element> disseminateList(DSpaceObject dso)
-            throws CrosswalkException,
+    public List<Element> disseminateList(DSpaceObject dso) throws CrosswalkException,
             IOException, SQLException, AuthorizeException {
         throw new UnsupportedOperationException("MODS dissemination as list of mods tags not applicable.");
     }
@@ -238,14 +281,10 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
     public Element disseminateElement(DSpaceObject dso)
             throws CrosswalkException,
             IOException, SQLException, AuthorizeException {
-        Element root = new Element("mods", MODS_NS);
-        root.setAttribute("schemaLocation", schemaLocation, XSI_NS);
-       
-        Document subdoc = null;
-        Element tempRoot = null;
-        Element tempElement = null;
-        Element currentElement = null;
-        
+
+        //StringBuilder sb = new StringBuilder();
+        Element root = new Element("mods");
+
         DCValue[] dcvs = null;
         if (dso.getType() == Constants.ITEM) {
             dcvs = item2Metadata((Item) dso);
@@ -261,94 +300,44 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
         }
         initMap();
 
-        //List<Element> result = new ArrayList<Element>(dcvs.length);
-        String template = "";
+        String result= "";
+        Map<String, DCValue> itemDCVs = new HashMap<String, DCValue>();
 
-        for (int i = 0; i < dcvs.length; i++) 
-        {
+        for (int i = 0; i < dcvs.length; i++) {
             String qdc = dcvs[i].schema + "." + dcvs[i].element;
             if (dcvs[i].qualifier != null) {
                 qdc += "." + dcvs[i].qualifier;
             }
-            //String value = dcvs[i].value;
-
-            if (modsMap.containsKey(qdc)) {
-                template = modsMap.get(qdc);
-                if (template.equals(""))
-                {
-                    continue;
-                }
-
-                if (dcvs[i].value != null)
-                {
-                    template = template.replace("%s", dcvs[i].value);
-                }
-                else
-                {
-                    template = template.replace("%s", "");
-                }
-
-                if (dcvs[i].authority != null)
-                {
-                    template = template.replace("%a", dcvs[i].authority);
-                }
-                else
-                {
-                    template = template.replace("%a", "");
-                }
-
-                if (dcvs[i].language != null)
-                {
-                    template = template.replace("%l", dcvs[i].language);
-                }
-                else
-                {
-                    template = template.replace("%l", "");
-                }
-                
-                try 
-                {
-                    subdoc = builder.build(new StringReader(prolog + template + postlog));
-                    if (subdoc != null)
-                    {
-                        if (!subdoc.getRootElement().getChildren().isEmpty())
-                        {
-                            tempRoot = (Element) subdoc.getRootElement().getChildren().get(0);
-                            if (tempRoot.getChildren().isEmpty())
-                            {
-                                root.addContent(tempRoot.detach());
-                            }
-                            else
-                            {
-                                if (tagExist(root, tempRoot))
-                                {
-                                    tempElement = root.getChild(tempRoot.getName(), tempRoot.getNamespace());
-                                    Iterator itr = tempRoot.getChildren().iterator();
-                                    while(itr.hasNext())
-                                    {
-                                        currentElement = (Element) itr.next();
-                                        tempElement.addContent((Element)currentElement.clone());
-                                    }
-                                }
-                                else
-                                {
-                                    root.addContent(tempRoot.detach());
-                                }
-                            }
-                        }
-                    }
-                   
-                } catch (Exception ex)
-                {
-                    log.error(MODSDisseminationCrosswalk.class.getName()+": " + ex.getLocalizedMessage());
-                
-                }
-            } else {
-                log.warn("WARNING: " + getPluginInstanceName() + ": No MODS mapping for \"" + qdc + "\"");
-            }
+            itemDCVs.put(qdc, dcvs[i]);
         }
+
+        String tags = prepareTags(itemDCVs);
         
-        return root;
+        String xslt = ConfigurationManager.getProperty("dspace.dir")
+                    + File.separator + "config" + File.separator + "crosswalks" + File.separator + "mods.xsl";
+        
+        try {
+                StringReader reader = new StringReader(tags);
+                StringWriter writer = new StringWriter();
+                TransformerFactory tFactory = TransformerFactory.newInstance();
+                Transformer transformer = tFactory.newTransformer(
+                                new javax.xml.transform.stream.StreamSource(xslt));
+
+                transformer.transform(
+                                new javax.xml.transform.stream.StreamSource(reader), 
+                                new javax.xml.transform.stream.StreamResult(writer));
+
+                result = writer.toString();
+        
+                root = builder.build(new StringReader((result))).getRootElement();
+                //Element root = new Element("mods", MODS_NS);
+                //root.setAttribute("schemaLocation", schemaLocation, XSI_NS);        
+                
+        } catch (Exception e) {
+               log.error("MODSDisseminationCrosswalk error: " + e.getLocalizedMessage()); 
+        }finally{
+             return root;
+        }
     }
 
     /**
@@ -544,18 +533,5 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
             }
             return result.toString();
         }
-    }
-
-   private boolean tagExist(Element parent, Element tag) 
-   {
-        Element child;
-        Iterator itr = parent.getChildren().iterator();
-        while (itr.hasNext()) {
-            child = (Element) itr.next();
-            if (child.getNamespacePrefix().equals(tag.getNamespacePrefix()) && child.getName().equals(tag.getName())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

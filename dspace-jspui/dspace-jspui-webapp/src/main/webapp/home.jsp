@@ -91,7 +91,7 @@
                             <table cellspacing="2" width="100%">
                                 <tr>
                                     <td valign="top" class="latestLayoutTitle"><fmt:message key="itemlist.dc.title" /> - <fmt:message key="metadata.dc.identifier.citation" /> - <fmt:message key="itemlist.dc.contributor.author" /></td>
-                                    <td width="10px" align="right" valign="top" class="latestLayoutTitle"><fmt:message key="itemlist.dc.type" /></td>
+                                    <td align="right" valign="top" class="latestLayoutTitle"><fmt:message key="itemlist.dc.type" /></td>
                                 </tr>
 
                                 <%
