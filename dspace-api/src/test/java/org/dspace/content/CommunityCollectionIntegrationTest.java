@@ -7,17 +7,27 @@
  */
 package org.dspace.content;
 
-import org.databene.contiperf.Required;
-import org.databene.contiperf.PerfTest;
-import java.sql.SQLException;
+//~--- non-JDK imports --------------------------------------------------------
+
 import org.apache.log4j.Logger;
+
+import org.databene.contiperf.PerfTest;
+import org.databene.contiperf.Required;
+
 import org.dspace.AbstractIntegrationTest;
 import org.dspace.authorize.AuthorizeException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
 import static org.hamcrest.CoreMatchers.*;
+
+import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.sql.SQLException;
 
 /**
  * This is an integration test to ensure collections and communities interact properly
@@ -30,11 +40,10 @@ import static org.hamcrest.CoreMatchers.*;
  *
  * @author pvillega
  */
-public class CommunityCollectionIntegrationTest extends AbstractIntegrationTest
-{
+public class CommunityCollectionIntegrationTest extends AbstractIntegrationTest {
+
     /** log4j category */
     private static final Logger log = Logger.getLogger(CommunityCollectionIntegrationTest.class);
-
 
     /**
      * This method will be run before every test as per @Before. It will
@@ -45,8 +54,7 @@ public class CommunityCollectionIntegrationTest extends AbstractIntegrationTest
      */
     @Before
     @Override
-    public void init()
-    {
+    public void init() {
         super.init();
     }
 
@@ -59,8 +67,7 @@ public class CommunityCollectionIntegrationTest extends AbstractIntegrationTest
      */
     @After
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         super.destroy();
     }
 
@@ -68,73 +75,89 @@ public class CommunityCollectionIntegrationTest extends AbstractIntegrationTest
      * Tests the creation of a community collection tree
      */
     @Test
-    @PerfTest(invocations = 25, threads = 1)
-    @Required(percentile95 = 1200, average = 700, throughput = 2)
-    public void testCreateTree() throws SQLException, AuthorizeException
-    {
-        //we create the structure
+    @PerfTest(
+        invocations  = 25,
+        threads      = 1
+    )
+    @Required(
+        percentile95 = 1200,
+        average      = 700,
+        throughput   = 2
+    )
+    public void testCreateTree() throws SQLException, AuthorizeException {
+
+        // we create the structure
         context.turnOffAuthorisationSystem();
-        Community parent = Community.create(null, context);        
-        Community child1 = Community.create(parent, context);
-        
-        Collection col1 = Collection.create(context);        
-        Collection col2 = Collection.create(context);
-        
-        child1.addCollection(col1);        
+
+        Community  parent = Community.create(null, context);
+        Community  child1 = Community.create(parent, context);
+        Collection col1   = Collection.create(context);
+        Collection col2   = Collection.create(context);
+
+        child1.addCollection(col1);
         child1.addCollection(col2);
-        
         context.restoreAuthSystemState();
         context.commit();
-        
-        //verify it works as expected
+
+        // verify it works as expected
         assertThat("testCreateTree 0", parent.getParentCommunity(), nullValue());
         assertThat("testCreateTree 1", child1.getParentCommunity(), equalTo(parent));
         assertThat("testCreateTree 2", (Community) col1.getParentObject(), equalTo(child1));
         assertThat("testCreateTree 3", (Community) col2.getParentObject(), equalTo(child1));
     }
 
-     /**
-      * Tests that count items works as expected
-      */
+    /**
+     * Tests that count items works as expected
+     */
     @Test
-    @PerfTest(invocations = 50, threads = 1)
-    @Required(percentile95 = 900, average= 600)
-    public void testCountItems() throws SQLException, AuthorizeException
-    {
-        //make it an even number, not to high to reduce time during testing
+    @PerfTest(
+        invocations  = 50,
+        threads      = 1
+    )
+    @Required(
+        percentile95 = 900,
+        average      = 600
+    )
+    public void testCountItems() throws SQLException, AuthorizeException {
+
+        // make it an even number, not to high to reduce time during testing
         int totalitems = 4;
 
-        //we create the structure
+        // we create the structure
         context.turnOffAuthorisationSystem();
-        Community parent = Community.create(null, context);
-        Community child1 = Community.create(parent, context);
 
-        Collection col1 = Collection.create(context);
-        Collection col2 = Collection.create(context);
+        Community  parent = Community.create(null, context);
+        Community  child1 = Community.create(parent, context);
+        Collection col1   = Collection.create(context);
+        Collection col2   = Collection.create(context);
 
         child1.addCollection(col1);
         child1.addCollection(col2);
 
-        for(int count = 0; count < totalitems/2; count++)
-        {
+        for (int count = 0; count < totalitems / 2; count++) {
             Item item1 = Item.create(context);
+
             item1.setArchived(true);
             item1.update();
+
             Item item2 = Item.create(context);
+
             item2.setArchived(true);
             item2.update();
-
-            col1.addItem(item1);            
+            col1.addItem(item1);
             col2.addItem(item2);
         }
 
         context.restoreAuthSystemState();
         context.commit();
 
-        //verify it works as expected
-        assertThat("testCountItems 0", col1.countItems(), equalTo(totalitems/2));
-        assertThat("testCountItems 1", col2.countItems(), equalTo(totalitems/2));
+        // verify it works as expected
+        assertThat("testCountItems 0", col1.countItems(), equalTo(totalitems / 2));
+        assertThat("testCountItems 1", col2.countItems(), equalTo(totalitems / 2));
         assertThat("testCountItems 2", child1.countItems(), equalTo(totalitems));
         assertThat("testCountItems 3", parent.countItems(), equalTo(totalitems));
     }
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

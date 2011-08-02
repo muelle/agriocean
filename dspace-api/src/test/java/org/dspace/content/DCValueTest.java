@@ -7,10 +7,15 @@
  */
 package org.dspace.content;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import org.apache.log4j.Logger;
+
 import org.dspace.AbstractUnitTest;
-import static org.junit.Assert.*;
+
 import org.junit.*;
+
+import static org.junit.Assert.*;
 
 /**
  * DCValue is a deprecated class with no methods (just a Data Object). This
@@ -18,8 +23,8 @@ import org.junit.*;
  * and in case the class is refactored and requires some extra testing.
  * @author pvillega
  */
-public class DCValueTest extends AbstractUnitTest
-{
+public class DCValueTest extends AbstractUnitTest {
+
     /** log4j category */
     private final static Logger log = Logger.getLogger(DCValueTest.class);
 
@@ -27,7 +32,6 @@ public class DCValueTest extends AbstractUnitTest
      * Object to use in the tests
      */
     private DCValue dcval;
-
 
     /**
      * This method will be run before every test as per @Before. It will
@@ -38,10 +42,9 @@ public class DCValueTest extends AbstractUnitTest
      */
     @Before
     @Override
-    public void init()
-    {
+    public void init() {
         super.init();
-        dcval =  new DCValue();
+        dcval = new DCValue();
     }
 
     /**
@@ -53,8 +56,7 @@ public class DCValueTest extends AbstractUnitTest
      */
     @After
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         dcval = null;
         super.destroy();
     }
@@ -63,9 +65,10 @@ public class DCValueTest extends AbstractUnitTest
      * Dummy test to avoid initialization errors
      */
     @Test
-    public void testDummy()
-    {
+    public void testDummy() {
         assertTrue(true);
     }
-
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

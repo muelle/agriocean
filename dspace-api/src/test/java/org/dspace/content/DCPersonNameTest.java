@@ -7,25 +7,28 @@
  */
 package org.dspace.content;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import org.dspace.AbstractUnitTest;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.* ;
+
 import static org.hamcrest.CoreMatchers.*;
+
+import static org.junit.Assert.*;
 
 /**
  * Tests DCPersonName class
  * @author pvillega
  */
-public class DCPersonNameTest extends AbstractUnitTest
-{
+public class DCPersonNameTest extends AbstractUnitTest {
 
     /**
      * Object to use in the tests
      */
     private DCPersonName dc;
-
 
     /**
      * This method will be run before every test as per @Before. It will
@@ -36,8 +39,7 @@ public class DCPersonNameTest extends AbstractUnitTest
      */
     @Before
     @Override
-    public void init()
-    {
+    public void init() {
         super.init();
         dc = new DCPersonName("");
     }
@@ -51,8 +53,7 @@ public class DCPersonNameTest extends AbstractUnitTest
      */
     @After
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         dc = null;
         super.destroy();
     }
@@ -61,8 +62,7 @@ public class DCPersonNameTest extends AbstractUnitTest
      * Test of DCPersonName constructor, of class DCPersonName.
      */
     @Test
-    public void testDCPersonName()
-    {
+    public void testDCPersonName() {
         dc = new DCPersonName();
         assertThat("testDCPersonName 0", dc.getFirstNames(), equalTo(""));
         assertThat("testDCPersonName 1", dc.getLastName(), equalTo(""));
@@ -72,24 +72,18 @@ public class DCPersonNameTest extends AbstractUnitTest
      * Test of DCPersonName constructor, of class DCPersonName.
      */
     @Test
-    public void testDCPersonNameValue()
-    {
+    public void testDCPersonNameValue() {
         dc = new DCPersonName(null);
         assertThat("testDCPersonNameValue 0", dc.getFirstNames(), equalTo(""));
         assertThat("testDCPersonNameValue 1", dc.getLastName(), equalTo(""));
-
         dc = new DCPersonName("name");
         assertThat("testDCPersonNameValue 2", dc.getFirstNames(), equalTo(""));
         assertThat("testDCPersonNameValue 3", dc.getLastName(), equalTo("name"));
-
         dc = new DCPersonName("name,firstname");
-        assertThat("testDCPersonNameValue 4", dc.getFirstNames(),
-                equalTo("firstname"));
+        assertThat("testDCPersonNameValue 4", dc.getFirstNames(), equalTo("firstname"));
         assertThat("testDCPersonNameValue 5", dc.getLastName(), equalTo("name"));
-
         dc = new DCPersonName("name  ,   firstname");
-        assertThat("testDCPersonNameValue 6", dc.getFirstNames(),
-                equalTo("firstname"));
+        assertThat("testDCPersonNameValue 6", dc.getFirstNames(), equalTo("firstname"));
         assertThat("testDCPersonNameValue 7", dc.getLastName(), equalTo("name"));
     }
 
@@ -97,24 +91,18 @@ public class DCPersonNameTest extends AbstractUnitTest
      * Test of DCPersonName constructor, of class DCPersonName.
      */
     @Test
-    public void testDCPersonNameValues()
-    {
+    public void testDCPersonNameValues() {
         dc = new DCPersonName(null, null);
         assertThat("testDCPersonNameValues 0", dc.getFirstNames(), equalTo(""));
         assertThat("testDCPersonNameValues 1", dc.getLastName(), equalTo(""));
-
         dc = new DCPersonName("name", null);
         assertThat("testDCPersonNameValues 2", dc.getFirstNames(), equalTo(""));
         assertThat("testDCPersonNameValues 3", dc.getLastName(), equalTo("name"));
-
         dc = new DCPersonName(null, "firstname");
-        assertThat("testDCPersonNameValues 4", dc.getFirstNames(),
-                equalTo("firstname"));
+        assertThat("testDCPersonNameValues 4", dc.getFirstNames(), equalTo("firstname"));
         assertThat("testDCPersonNameValues 5", dc.getLastName(), equalTo(""));
-
-        dc = new DCPersonName("name","firstname");
-        assertThat("testDCPersonNameValues 6", dc.getFirstNames(),
-                equalTo("firstname"));
+        dc = new DCPersonName("name", "firstname");
+        assertThat("testDCPersonNameValues 6", dc.getFirstNames(), equalTo("firstname"));
         assertThat("testDCPersonNameValues 7", dc.getLastName(), equalTo("name"));
     }
 
@@ -122,18 +110,14 @@ public class DCPersonNameTest extends AbstractUnitTest
      * Test of toString method, of class DCPersonName.
      */
     @Test
-    public void testToString()
-    {
+    public void testToString() {
         dc = new DCPersonName(null, null);
         assertThat("testToString 0", dc.toString(), equalTo(""));
-
         dc = new DCPersonName("name", null);
         assertThat("testToString 1", dc.toString(), equalTo("name"));
-
         dc = new DCPersonName(null, "firstname");
         assertThat("testToString 2", dc.toString(), equalTo(""));
-
-        dc = new DCPersonName("name","firstname");
+        dc = new DCPersonName("name", "firstname");
         assertThat("testToString 3", dc.toString(), equalTo("name, firstname"));
     }
 
@@ -141,40 +125,32 @@ public class DCPersonNameTest extends AbstractUnitTest
      * Test of getFirstNames method, of class DCPersonName.
      */
     @Test
-    public void testGetFirstNames()
-    {
-         dc = new DCPersonName(null, null);
+    public void testGetFirstNames() {
+        dc = new DCPersonName(null, null);
         assertThat("testGetFirstNames 0", dc.getFirstNames(), equalTo(""));
-
         dc = new DCPersonName("name", null);
         assertThat("testGetFirstNames 1", dc.getFirstNames(), equalTo(""));
-
         dc = new DCPersonName(null, "firstname");
-        assertThat("testGetFirstNames 2", dc.getFirstNames(),
-                equalTo("firstname"));
-
-        dc = new DCPersonName("name","firstname");
-        assertThat("testGetFirstNames 3", dc.getFirstNames(),
-                equalTo("firstname"));
+        assertThat("testGetFirstNames 2", dc.getFirstNames(), equalTo("firstname"));
+        dc = new DCPersonName("name", "firstname");
+        assertThat("testGetFirstNames 3", dc.getFirstNames(), equalTo("firstname"));
     }
 
     /**
      * Test of getLastName method, of class DCPersonName.
      */
     @Test
-    public void testGetLastName()
-    {
+    public void testGetLastName() {
         dc = new DCPersonName(null, null);
         assertThat("testGetLastName 0", dc.getLastName(), equalTo(""));
-
         dc = new DCPersonName("name", null);
         assertThat("testGetLastName 1", dc.getLastName(), equalTo("name"));
-
         dc = new DCPersonName(null, "firstname");
         assertThat("testGetLastName 2", dc.getLastName(), equalTo(""));
-
-        dc = new DCPersonName("name","firstname");
+        dc = new DCPersonName("name", "firstname");
         assertThat("testGetLastName 3", dc.getLastName(), equalTo("name"));
     }
-
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

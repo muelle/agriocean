@@ -1,24 +1,29 @@
+
 /**
  * The contents of this file are subject to the license and copyright
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
  *
- * http://www.dspace.org/license/
+ * http://www.dspace.org/license
  */
 package org.dspace.content;
 
-import org.dspace.AbstractUnitTest;
+//~--- non-JDK imports --------------------------------------------------------
+
 import org.apache.log4j.Logger;
-import static org.junit.Assert.*;
+
+import org.dspace.AbstractUnitTest;
+
 import org.junit.*;
+
+import static org.junit.Assert.*;
 
 /**
  * Unit Tests for class NonUniqueMetadataException. Being an exception
  * no tests have to be done, the class is created for coberture purposes
  * @author pvillega
  */
-public class NonUniqueMetadataExceptionTest extends AbstractUnitTest
-{
+public class NonUniqueMetadataExceptionTest extends AbstractUnitTest {
 
     /** log4j category */
     private static final Logger log = Logger.getLogger(NonUniqueMetadataExceptionTest.class);
@@ -32,8 +37,7 @@ public class NonUniqueMetadataExceptionTest extends AbstractUnitTest
      */
     @Before
     @Override
-    public void init()
-    {
+    public void init() {
         super.init();
     }
 
@@ -46,8 +50,7 @@ public class NonUniqueMetadataExceptionTest extends AbstractUnitTest
      */
     @After
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         super.destroy();
     }
 
@@ -55,9 +58,10 @@ public class NonUniqueMetadataExceptionTest extends AbstractUnitTest
      * Dummy test to avoid initialization errors
      */
     @Test
-    public void testDummy()
-    {
+    public void testDummy() {
         assertTrue(true);
     }
-
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

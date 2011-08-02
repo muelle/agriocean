@@ -3,11 +3,14 @@
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
  *
- * http://www.dspace.org/license/
+ * http://www.dspace.org/license
  */
 package org.dspace;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import org.databene.contiperf.junit.ContiPerfRule;
+
 import org.junit.Rule;
 
 /**
@@ -20,11 +23,13 @@ import org.junit.Rule;
  *
  * @author pvillega
  */
-public class AbstractIntegrationTest extends AbstractUnitTest
-{
+public class AbstractIntegrationTest extends AbstractUnitTest {
 
-    //We only enable contiperf in the integration tests, as it doesn't
-    //seem so useful to run them in isolated unit tests
+    // We only enable contiperf in the integration tests, as it doesn't
+    // seem so useful to run them in isolated unit tests
     @Rule
     public ContiPerfRule contiperfRules = new ContiPerfRule();
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

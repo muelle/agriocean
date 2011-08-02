@@ -5,32 +5,35 @@
  *
  * http://www.dspace.org/license/
  */
-
 package org.dspace.content;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import org.junit.*;
-import static org.junit.Assert.* ;
-import static org.hamcrest.CoreMatchers.*;
+//~--- non-JDK imports --------------------------------------------------------
+
 import org.apache.log4j.Logger;
+
 import org.dspace.AbstractUnitTest;
 import org.dspace.authorize.AuthorizeException;
+
+import org.junit.*;
+
+import static org.hamcrest.CoreMatchers.*;
+
+import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.sql.SQLException;
+
+import java.util.ArrayList;
 
 /**
  * Unit Tests for class ItemIterator
  * @author pvillega
  */
-public class ItemIteratorTest extends AbstractUnitTest
-{
+public class ItemIteratorTest extends AbstractUnitTest {
 
     /** log4j category */
     private static final Logger log = Logger.getLogger(ItemIteratorTest.class);
-
-    /**
-     * ItemIterator instance for the tests using a TableRow
-     */
-    private ItemIterator iitr;
 
     /**
      * ItemIterator instance for the tests using an ID array
@@ -42,6 +45,10 @@ public class ItemIteratorTest extends AbstractUnitTest
      */
     private ItemIterator iitnone;
 
+    /**
+     * ItemIterator instance for the tests using a TableRow
+     */
+    private ItemIterator iitr;
 
     /**
      * Number of items in the test
@@ -57,36 +64,32 @@ public class ItemIteratorTest extends AbstractUnitTest
      */
     @Before
     @Override
-    public void init()
-    {
-        try
-        {
+    public void init() {
+        try {
             super.init();
 
-            //create items for the iterator
+            // create items for the iterator
             ArrayList<Integer> list = new ArrayList<Integer>();
+
             numitems = 1;
             context.turnOffAuthorisationSystem();
-            for(int i = 0; i < numitems; i++)
-            {
+
+            for (int i = 0; i < numitems; i++) {
                 Item it = Item.create(context);
+
                 list.add(it.getID());
                 it.setArchived(true);
-                it.update();                
+                it.update();
             }
-            context.restoreAuthSystemState();
 
-            iitr = Item.findAll(context);
-            iitid = new ItemIterator(context, list);
+            context.restoreAuthSystemState();
+            iitr    = Item.findAll(context);
+            iitid   = new ItemIterator(context, list);
             iitnone = new ItemIterator(context, new ArrayList<Integer>());
-        }
-        catch (AuthorizeException ex)
-        {
+        } catch (AuthorizeException ex) {
             log.error("Authorization Error in init", ex);
             fail("Authorization Error in init");
-        }
-        catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             log.error("SQL Error in init", ex);
             fail("SQL Error in init");
         }
@@ -101,8 +104,7 @@ public class ItemIteratorTest extends AbstractUnitTest
      */
     @After
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         super.destroy();
     }
 
@@ -110,19 +112,16 @@ public class ItemIteratorTest extends AbstractUnitTest
      * Test of hasNext method, of class ItemIterator.
      */
     @Test
-    public void testHasNext() throws Exception
-    {
+    public void testHasNext() throws Exception {
         assertFalse("testHasNext iitnone 0", iitnone.hasNext());
 
-        for(int i = 0; i < numitems; i++) 
-        {
-            assertTrue("testHasNext iitr "+i, iitr.hasNext());
+        for (int i = 0; i < numitems; i++) {
+            assertTrue("testHasNext iitr " + i, iitr.hasNext());
             iitr.next();
         }
 
-        for(int i = 0; i < numitems; i++)
-        {
-            assertTrue("testHasNext iitid "+i, iitid.hasNext());
+        for (int i = 0; i < numitems; i++) {
+            assertTrue("testHasNext iitid " + i, iitid.hasNext());
             iitid.next();
         }
     }
@@ -131,18 +130,15 @@ public class ItemIteratorTest extends AbstractUnitTest
      * Test of next method, of class ItemIterator.
      */
     @Test
-    public void testNext() throws Exception
-    {
+    public void testNext() throws Exception {
         assertThat("testNext iitnone 0", iitnone.next(), nullValue());
 
-        for(int i = 0; i < numitems; i++)
-        {
-            assertThat("testNext iitr "+i, iitr.next(), notNullValue());
+        for (int i = 0; i < numitems; i++) {
+            assertThat("testNext iitr " + i, iitr.next(), notNullValue());
         }
 
-        for(int i = 0; i < numitems; i++)
-        {
-            assertThat("testNext iitid "+i, iitid.next(), notNullValue());
+        for (int i = 0; i < numitems; i++) {
+            assertThat("testNext iitid " + i, iitid.next(), notNullValue());
         }
     }
 
@@ -150,18 +146,15 @@ public class ItemIteratorTest extends AbstractUnitTest
      * Test of nextID method, of class ItemIterator.
      */
     @Test
-    public void testNextID() throws Exception
-    {
+    public void testNextID() throws Exception {
         assertThat("testNextID iitnone 0", iitnone.nextID(), equalTo(-1));
 
-        for(int i = 0; i < numitems; i++)
-        {
-            assertTrue("testNextID iitr "+i, iitr.nextID() >= 0);
+        for (int i = 0; i < numitems; i++) {
+            assertTrue("testNextID iitr " + i, iitr.nextID() >= 0);
         }
 
-        for(int i = 0; i < numitems; i++)
-        {
-            assertTrue("testNextID iitid "+i, iitid.nextID() >= 0);
+        for (int i = 0; i < numitems; i++) {
+            assertTrue("testNextID iitid " + i, iitid.nextID() >= 0);
         }
     }
 
@@ -169,12 +162,14 @@ public class ItemIteratorTest extends AbstractUnitTest
      * Test of close method, of class ItemIterator.
      */
     @Test
-    public void testClose()
-    {
-        //TODO: we can't verified it's been closed
+    public void testClose() {
+
+        // TODO: we can't verified it's been closed
         iitnone.close();
         iitr.close();
         iitid.close();
     }
-
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

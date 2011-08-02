@@ -7,20 +7,28 @@
  */
 package org.dspace.content;
 
-import java.io.FileInputStream;
-import java.io.File;
-import org.dspace.AbstractUnitTest;
+//~--- non-JDK imports --------------------------------------------------------
+
 import org.apache.log4j.Logger;
+
+import org.dspace.AbstractUnitTest;
+
 import org.junit.*;
-import static org.junit.Assert.* ;
+
 import static org.hamcrest.CoreMatchers.*;
+
+import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+import java.io.FileInputStream;
 
 /**
  * Unit Tests for class FormatIdentifier
  * @author pvillega
  */
-public class FormatIdentifierTest extends AbstractUnitTest
-{
+public class FormatIdentifierTest extends AbstractUnitTest {
 
     /** log4j category */
     private static final Logger log = Logger.getLogger(FormatIdentifierTest.class);
@@ -34,8 +42,7 @@ public class FormatIdentifierTest extends AbstractUnitTest
      */
     @Before
     @Override
-    public void init()
-    {
+    public void init() {
         super.init();
     }
 
@@ -48,8 +55,7 @@ public class FormatIdentifierTest extends AbstractUnitTest
      */
     @After
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         super.destroy();
     }
 
@@ -57,37 +63,38 @@ public class FormatIdentifierTest extends AbstractUnitTest
      * Test of guessFormat method, of class FormatIdentifier.
      */
     @Test
-    public void testGuessFormat() throws Exception
-    {
-        File f = new File(testProps.get("test.bitstream").toString());
-        Bitstream bs = null; 
+    public void testGuessFormat() throws Exception {
+        File            f      = new File(testProps.get("test.bitstream").toString());
+        Bitstream       bs     = null;
         BitstreamFormat result = null;
-        BitstreamFormat pdf = BitstreamFormat.findByShortDescription(context, "Adobe PDF");
-        
-        //test null filename
-        //TODO: the check if filename is null is wrong, as it checks after using a toLowerCase
-        //which can trigger the NPE
+        BitstreamFormat pdf    = BitstreamFormat.findByShortDescription(context, "Adobe PDF");
+
+        // test null filename
+        // TODO: the check if filename is null is wrong, as it checks after using a toLowerCase
+        // which can trigger the NPE
         bs = Bitstream.create(context, new FileInputStream(f));
         context.commit();
         bs.setName(null);
         result = FormatIdentifier.guessFormat(context, bs);
-        assertThat("testGuessFormat 0",result, nullValue());
+        assertThat("testGuessFormat 0", result, nullValue());
 
-        //test unknown format
+        // test unknown format
         bs = Bitstream.create(context, new FileInputStream(f));
         bs.setName("file_without_extension.");
         context.commit();
         result = FormatIdentifier.guessFormat(context, bs);
-        assertThat("testGuessFormat 1",result, nullValue());
+        assertThat("testGuessFormat 1", result, nullValue());
 
-        //test known format
+        // test known format
         bs = Bitstream.create(context, new FileInputStream(f));
         bs.setName(testProps.get("test.bitstream").toString());
         context.commit();
         result = FormatIdentifier.guessFormat(context, bs);
-        assertThat("testGuessFormat 2",result.getID(), equalTo(pdf.getID()));
-        assertThat("testGuessFormat 3",result.getMIMEType(), equalTo(pdf.getMIMEType()));
-        assertThat("testGuessFormat 4",result.getExtensions(), equalTo(pdf.getExtensions()));
+        assertThat("testGuessFormat 2", result.getID(), equalTo(pdf.getID()));
+        assertThat("testGuessFormat 3", result.getMIMEType(), equalTo(pdf.getMIMEType()));
+        assertThat("testGuessFormat 4", result.getExtensions(), equalTo(pdf.getExtensions()));
     }
-
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

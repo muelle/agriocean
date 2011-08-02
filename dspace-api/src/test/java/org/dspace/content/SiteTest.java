@@ -3,25 +3,33 @@
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
  *
- * http://www.dspace.org/license/
+ * http://www.dspace.org/license
  */
 package org.dspace.content;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.log4j.Logger;
+
 import org.dspace.AbstractUnitTest;
 import org.dspace.core.ConfigurationManager;
-import java.sql.SQLException;
 import org.dspace.core.Constants;
+
 import org.junit.*;
+
 import static org.hamcrest.CoreMatchers.*;
-import org.apache.log4j.Logger;
+
 import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.sql.SQLException;
 
 /**
  * Unit Tests for class Site
  * @author pvillega
  */
-public class SiteTest extends AbstractUnitTest
-{
+public class SiteTest extends AbstractUnitTest {
 
     /** log4j category */
     private static final Logger log = Logger.getLogger(SiteTest.class);
@@ -40,21 +48,22 @@ public class SiteTest extends AbstractUnitTest
      */
     @Before
     @Override
-    public void init()
-    {
+    public void init() {
         super.init();
-         try
-        {
-            //we have to create a new community in the database
+
+        try {
+
+            // we have to create a new community in the database
             context.turnOffAuthorisationSystem();
+
             int id = 0;
-            this.s = (Site) Site.find(context, id);          
-            //we need to commit the changes so we don't block the table for testing
+
+            this.s = (Site) Site.find(context, id);
+
+            // we need to commit the changes so we don't block the table for testing
             context.restoreAuthSystemState();
             context.commit();
-        }
-        catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             log.error("SQL Error in init", ex);
             fail("SQL Error in init");
         }
@@ -69,8 +78,7 @@ public class SiteTest extends AbstractUnitTest
      */
     @After
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         s = null;
         super.destroy();
     }
@@ -79,8 +87,7 @@ public class SiteTest extends AbstractUnitTest
      * Test of getType method, of class Site.
      */
     @Test
-    public void testGetType()
-    {
+    public void testGetType() {
         assertThat("testGetType 0", s.getType(), equalTo(Constants.SITE));
     }
 
@@ -88,8 +95,7 @@ public class SiteTest extends AbstractUnitTest
      * Test of getID method, of class Site.
      */
     @Test
-    public void testGetID() 
-    {
+    public void testGetID() {
         assertTrue("testGetID 0", s.getID() == Site.SITE_ID);
     }
 
@@ -97,41 +103,39 @@ public class SiteTest extends AbstractUnitTest
      * Test of getHandle method, of class Site.
      */
     @Test
-    public void testGetHandle()
-    {
-        assertThat("testGetHandle 0", s.getHandle(), equalTo(ConfigurationManager.getProperty("handle.prefix")
-                +"/"+String.valueOf(Site.SITE_ID)));
+    public void testGetHandle() {
+        assertThat("testGetHandle 0", s.getHandle(),
+                   equalTo(ConfigurationManager.getProperty("handle.prefix") + "/" + String.valueOf(Site.SITE_ID)));
     }
 
     /**
      * Test of getSiteHandle method, of class Site.
      */
     @Test
-    public void testGetSiteHandle()
-    {
-        assertThat("testGetSiteHandle 0", s.getHandle(), equalTo(ConfigurationManager.getProperty("handle.prefix")
-                +"/"+String.valueOf(Site.SITE_ID)));
+    public void testGetSiteHandle() {
+        assertThat("testGetSiteHandle 0", s.getHandle(),
+                   equalTo(ConfigurationManager.getProperty("handle.prefix") + "/" + String.valueOf(Site.SITE_ID)));
     }
 
     /**
      * Test of find method, of class Site.
      */
     @Test
-    public void testSiteFind() throws Exception
-    {
-        int id = 0;
-        Site found = (Site)Site.find(context, id);
-        assertThat("testSiteFind 0",found, notNullValue());
-        assertThat("testSiteFind 1",found, equalTo(s));
+    public void testSiteFind() throws Exception {
+        int  id    = 0;
+        Site found = (Site) Site.find(context, id);
+
+        assertThat("testSiteFind 0", found, notNullValue());
+        assertThat("testSiteFind 1", found, equalTo(s));
     }
 
     /**
      * Test of delete method, of class Site.
      */
     @Test
-    public void testDelete() throws Exception
-    {
-        //The method is empty
+    public void testDelete() throws Exception {
+
+        // The method is empty
         s.delete();
     }
 
@@ -139,9 +143,9 @@ public class SiteTest extends AbstractUnitTest
      * Test of update method, of class Site.
      */
     @Test
-    public void testUpdate() throws Exception
-    {
-        //the method is empty
+    public void testUpdate() throws Exception {
+
+        // the method is empty
         s.update();
     }
 
@@ -149,19 +153,18 @@ public class SiteTest extends AbstractUnitTest
      * Test of getName method, of class Site.
      */
     @Test
-    public void testGetName() 
-    {
-        assertThat("testGetName 0",s.getName(), equalTo(ConfigurationManager.getProperty("dspace.name")));
+    public void testGetName() {
+        assertThat("testGetName 0", s.getName(), equalTo(ConfigurationManager.getProperty("dspace.name")));
     }
-
 
     /**
      * Test of getURL method, of class Site.
      */
     @Test
-    public void testGetURL() 
-    {
-        assertThat("testGetURL 0",s.getURL(), equalTo(ConfigurationManager.getProperty("dspace.url")));
+    public void testGetURL() {
+        assertThat("testGetURL 0", s.getURL(), equalTo(ConfigurationManager.getProperty("dspace.url")));
     }
-
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

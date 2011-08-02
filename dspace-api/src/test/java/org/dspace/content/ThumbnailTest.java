@@ -3,34 +3,37 @@
  * detailed in the LICENSE and NOTICE files at the root of the source
  * tree and available online at
  *
- * http://www.dspace.org/license/
+ * http://www.dspace.org/license
  */
 package org.dspace.content;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.log4j.Logger;
+
+import org.dspace.AbstractUnitTest;
+
+import org.junit.*;
+
+import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
 import java.sql.SQLException;
-import org.junit.*;
-import static org.junit.Assert.* ;
-import org.apache.log4j.Logger;
-import org.dspace.AbstractUnitTest;
 
 /**
  * Unit Test for class Thumbnail. The class is a bean (just getters and setters)
  * so no specific tests are created.
  * @author pvillega
  */
-public class ThumbnailTest extends AbstractUnitTest
-{
+public class ThumbnailTest extends AbstractUnitTest {
 
     /** log4j category */
     private static final Logger log = Logger.getLogger(ThumbnailTest.class);
-
-    /**
-     * Bitstream instance for the tests, thumbnail copy
-     */
-    private Bitstream thumb;
 
     /**
      * Bitstream instance for the tests, original copy
@@ -43,6 +46,11 @@ public class ThumbnailTest extends AbstractUnitTest
     private Thumbnail t;
 
     /**
+     * Bitstream instance for the tests, thumbnail copy
+     */
+    private Bitstream thumb;
+
+    /**
      * This method will be run before every test as per @Before. It will
      * initialize resources required for the tests.
      *
@@ -51,25 +59,23 @@ public class ThumbnailTest extends AbstractUnitTest
      */
     @Before
     @Override
-    public void init()
-    {
+    public void init() {
         super.init();
-        try
-        {
-            //we have to create a new bitstream in the database
+
+        try {
+
+            // we have to create a new bitstream in the database
             File f = new File(testProps.get("test.bitstream").toString());
+
             thumb = Bitstream.create(context, new FileInputStream(f));
             context.commit();
             orig = Bitstream.create(context, new FileInputStream(f));
             context.commit();
-            t = new Thumbnail(thumb, orig);            
-        }
-        catch (IOException ex) {
+            t = new Thumbnail(thumb, orig);
+        } catch (IOException ex) {
             log.error("IO Error in init", ex);
             fail("SQL Error in init");
-        }
-        catch (SQLException ex)
-        {
+        } catch (SQLException ex) {
             log.error("SQL Error in init", ex);
             fail("SQL Error in init");
         }
@@ -84,11 +90,10 @@ public class ThumbnailTest extends AbstractUnitTest
      */
     @After
     @Override
-    public void destroy()
-    {
+    public void destroy() {
         thumb = null;
-        orig = null;
-        t = null;
+        orig  = null;
+        t     = null;
         super.destroy();
     }
 
@@ -96,8 +101,10 @@ public class ThumbnailTest extends AbstractUnitTest
      * Dummy test to avoid initialization errors
      */
     @Test
-    public void testDummy()
-    {
+    public void testDummy() {
         assertTrue(true);
     }
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com
