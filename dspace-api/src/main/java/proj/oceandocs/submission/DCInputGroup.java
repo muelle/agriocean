@@ -7,11 +7,16 @@
  */
 package proj.oceandocs.submission;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.dspace.app.util.DCInput;
+
+//~--- JDK imports ------------------------------------------------------------
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.dspace.app.util.DCInput;
 
 /**
  * This class represents group of DCInput fields grouped in rows.
@@ -30,7 +35,7 @@ public class DCInputGroup {
     private String hint = null;
 
     /**
-     * Label of the group 
+     * Label of the group
      */
     private String label = null;
 
@@ -51,16 +56,14 @@ public class DCInputGroup {
      */
     private HashMap<Integer, List<DCInput>> rows;
 
+    // =============== Methods =======================================
+    public DCInputGroup(String name) {
+        if (name == null) {
+            this.name = "";
+        } else {
+            this.name = name;
+        }
 
-    //=============== Methods =======================================
-    
-    public DCInputGroup (String name)
-    {
-        if (name == null)
-            this.name="";
-        else
-            this.name=name;
-        
         rows = new HashMap<Integer, List<DCInput>>();
     }
 
@@ -75,7 +78,9 @@ public class DCInputGroup {
      * @param set the hint for the group
      */
     public void setHint(String hint) {
-        this.hint = hint == null ? "": hint;
+        this.hint = (hint == null)
+                    ? ""
+                    : hint;
     }
 
     /**
@@ -89,7 +94,9 @@ public class DCInputGroup {
      * @param set group label
      */
     public void setLabel(String label) {
-        this.label = label == null ?"": label;
+        this.label = (label == null)
+                     ? ""
+                     : label;
     }
 
     /**
@@ -106,8 +113,7 @@ public class DCInputGroup {
         this.name = name;
     }
 
-    public int getRowsCount()
-    {
+    public int getRowsCount() {
         return rows.size();
     }
 
@@ -118,13 +124,11 @@ public class DCInputGroup {
         return rows;
     }
 
-    public List<DCInput> getAllInputs()
-    {
+    public List<DCInput> getAllInputs() {
         List<DCInput> result = new ArrayList<DCInput>();
 
-        for(Map.Entry row: rows.entrySet())
-        {
-            result.addAll((List<DCInput>)row.getValue());
+        for (Map.Entry row : rows.entrySet()) {
+            result.addAll((List<DCInput>) row.getValue());
         }
 
         return result;
@@ -137,19 +141,16 @@ public class DCInputGroup {
         this.rows = rows;
     }
 
-    public void mergeRows(HashMap<Integer, List<DCInput>> rows)
-    {
+    public void mergeRows(HashMap<Integer, List<DCInput>> rows) {
         int i = this.rows.size();
 
-        for(Map.Entry row: rows.entrySet())
-        {
-            this.rows.put(i, (List<DCInput>)row.getValue());
+        for (Map.Entry row : rows.entrySet()) {
+            this.rows.put(i, (List<DCInput>) row.getValue());
             ++i;
         }
     }
 
-    public boolean hasRows ()
-    {
+    public boolean hasRows() {
         return rows.isEmpty();
     }
 
@@ -159,17 +160,20 @@ public class DCInputGroup {
      * @param index of required row
      * @return List of DCInput objects
      */
-    public List<DCInput> getRow(int index)
-    {
-        return index < rows.size() ? rows.get(index): null;
+    public List<DCInput> getRow(int index) {
+        return (index < rows.size())
+               ? rows.get(index)
+               : null;
     }
 
     /**
      * Puts a new row into the map
      * @param newRow - List of DCInput objects
      */
-    public void setRow (List<DCInput> newRow)
-    {
+    public void setRow(List<DCInput> newRow) {
         rows.put(rows.size(), newRow);
     }
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

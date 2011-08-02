@@ -60,7 +60,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
+          <plugin>
                 <groupId>com.google.code.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
                 <version>1.4.0</version>
@@ -71,17 +71,18 @@
                     </includes>
                     <excludes>
                         <exclude>src/test/resources/dspaceFolder/**</exclude>
+                        <include>**/test/**</include>
                     </excludes>
                     <properties />
                     <encoding>UTF-8</encoding>
                 </configuration>
-                <executions>
+                <!--<executions>
                     <execution>
                         <goals>
                             <goal>check</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions> -->
             </plugin>
         </plugins>
     </build>

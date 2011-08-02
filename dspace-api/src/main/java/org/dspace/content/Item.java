@@ -43,7 +43,6 @@ import org.dspace.handle.HandleManager;
 import org.dspace.storage.rdbms.DatabaseManager;
 import org.dspace.storage.rdbms.TableRow;
 import org.dspace.storage.rdbms.TableRowIterator;
-import org.omg.CORBA.FieldNameHelper;
 import proj.oceandocs.citation.CitationManager;
 
 /**
@@ -466,7 +465,7 @@ public class Item extends DSpaceObject {
         };
         int i = 0;
         while (dcf.hasMoreTokens()) {
-            tokens[i] = dcf.nextToken().toLowerCase().trim();
+            tokens[i] = dcf.nextToken().trim();//.toLowerCase().trim();
             i++;
         }
         String schema = tokens[0];
@@ -896,7 +895,7 @@ public class Item extends DSpaceObject {
     private boolean match(String schema, String element, String qualifier,
             String language, DCValue dcv) {
         // We will attempt to disprove a match - if we can't we have a match
-        if (!element.equals(Item.ANY) && !element.equals(dcv.element)) {
+        if (!element.equals(Item.ANY) && !element.equalsIgnoreCase(dcv.element)) {
             // Elements do not match, no wildcard
             return false;
         }
@@ -909,26 +908,26 @@ public class Item extends DSpaceObject {
             }
         } else if (!qualifier.equals(Item.ANY)) {
             // Not a wildcard, so qualifier must match exactly
-            if (!qualifier.equals(dcv.qualifier)) {
+            if (!qualifier.equalsIgnoreCase(dcv.qualifier)) {
                 return false;
             }
         }
 
-        if (language == null) {
+        if (language == null || language.equals("")) {
             // Value must be null language to match
-            if (dcv.language != null) {
+            if (dcv.language != null || dcv.language.equals("")) {
                 // Value is qualified, so no match
                 return false;
             }
         } else if (!language.equals(Item.ANY)) {
             // Not a wildcard, so language must match exactly
-            if (!language.equals(dcv.language)) {
+            if (!language.equalsIgnoreCase(dcv.language)) {
                 return false;
             }
         }
 
         if (!schema.equals(Item.ANY)) {
-            if (dcv.schema != null && !dcv.schema.equals(schema)) {
+            if (dcv.schema != null && !dcv.schema.equalsIgnoreCase(schema)) {
                 // The namespace doesn't match
                 return false;
             }

@@ -5,10 +5,8 @@
  *
  * http://www.dspace.org/license/
  */
-
 package proj.oceandocs.citation;
 
-import proj.oceandocs.citation.CitationTemplate;
 import java.util.HashMap;
 
 /**
@@ -16,37 +14,34 @@ import java.util.HashMap;
  * @author Denys SLIPETSKYY
  */
 public class CitationTemplatesCollection {
-    private HashMap<String,CitationTemplate> templates;
+    private HashMap<String, CitationTemplate> templates;
 
     public CitationTemplatesCollection() {
         templates = new HashMap<String, CitationTemplate>();
     }
 
-    public CitationTemplate getTemplateByName(String name)
-    {
-        if (templates.containsKey(name))
-        {
+    public CitationTemplate getTemplateByName(String name) {
+        if (templates.containsKey(name)) {
             return templates.get(name);
-        }else
-        {
+        } else {
             return null;
         }
     }
 
-    public boolean addTemplate(String name, CitationTemplate template)
-    {
-        if (!templates.containsKey(name))
-        {
+    public boolean addTemplate(String name, CitationTemplate template) {
+        if (!templates.containsKey(name)) {
             templates.put(name, template);
+
             return true;
-        }else
-        {
+        } else {
             return false;
         }
     }
 
-    public int getTemplatesCount()
-    {
+    public int getTemplatesCount() {
         return templates.size();
     }
 }
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

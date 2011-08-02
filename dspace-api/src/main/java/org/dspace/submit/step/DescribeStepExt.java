@@ -606,7 +606,7 @@ public class DescribeStepExt extends AbstractProcessingStep
         {
             String f = firsts.get(i);
             String l = lasts.get(i);
-            String ll = "";
+            String ll = "*";
             if (i < langs.size())
             {
                 ll = langs.get(i);

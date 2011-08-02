@@ -48,7 +48,8 @@ import org.dspace.core.ConfigurationManager;
  * @author  Brian S. Hughes
  * @version $Revision: 4365 $
  */
-public class DCInputsReaderExt {
+public class DCInputsReaderExt
+{
 
     /**
      * The ID of the default collection. Will never be the ID of a named
@@ -94,7 +95,8 @@ public class DCInputsReaderExt {
      * form, and lists of pairs of values that populate selection boxes.
      */
     public DCInputsReaderExt()
-            throws DCInputsReaderException {
+            throws DCInputsReaderException
+    {
         type2Forms = new HashMap<String, String>();
         col2Types = new HashMap<String, List<String>>();
         formDefns = new HashMap<String, DCInputSetExt>();
@@ -104,7 +106,8 @@ public class DCInputsReaderExt {
     }
 
     public DCInputsReaderExt(String fileName)
-            throws DCInputsReaderException {
+            throws DCInputsReaderException
+    {
         type2Forms = new HashMap<String, String>();
         col2Types = new HashMap<String, List<String>>();
         formDefns = new HashMap<String, DCInputSetExt>();
@@ -113,9 +116,11 @@ public class DCInputsReaderExt {
         buildInputs(fileName);
     }
 
-    private void buildInputs(String fileName) throws DCInputsReaderException {
+    private void buildInputs(String fileName) throws DCInputsReaderException
+    {
         String uri = "file:" + new File(fileName).getAbsolutePath();
-        try {
+        try
+        {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(false);
             factory.setIgnoringComments(true);
@@ -131,9 +136,11 @@ public class DCInputsReaderExt {
             processTypeMap((Node) xPath.evaluate("/input-forms/type-form", doc, XPathConstants.NODE));
             processValuePairs((Node) xPath.evaluate("/input-forms/form-value-pairs", doc, XPathConstants.NODE));
             processForms(doc);
-        } catch (FactoryConfigurationError fe) {
+        } catch (FactoryConfigurationError fe)
+        {
             throw new DCInputsReaderException("Cannot create Submission form parser", fe);
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             throw new DCInputsReaderException("Error creating submission forms: " + e);
         }
     }
@@ -147,37 +154,45 @@ public class DCInputsReaderExt {
      * input-type name, required text, and repeatable flag.
      */
     private void processForms(Document doc)
-            throws XPathExpressionException, SAXException, DCInputsReaderException {
+            throws XPathExpressionException, SAXException, DCInputsReaderException
+    {
         XPathFactory xfactory = XPathFactory.newInstance();
         XPath xPath = xfactory.newXPath();
 
         NodeList forms = (NodeList) xPath.evaluate("/input-forms/form-definitions/form", doc, XPathConstants.NODESET);
-        for (int i = 0; i < forms.getLength(); i++) {
+        for (int i = 0; i < forms.getLength(); i++)
+        {
             processDefinition(forms.item(i), doc);
         }
     }
 
     private void processDefinition(Node e, Document doc)
-            throws SAXException, XPathExpressionException, DCInputsReaderException {
-        if (e != null) {
+            throws SAXException, XPathExpressionException, DCInputsReaderException
+    {
+        if (e != null)
+        {
             String formName = getAttribute(e, "name");
             String baseForm = getAttribute(e, "baseForm");
 
-            if (formName == null) {
+            if (formName == null)
+            {
                 throw new SAXException("form element has no name attribute");
             }
 
             /* if base form defined we check  is it processed already,
              * if not - call processDefinition for base form first (recursion).
              */
-            if (baseForm != null && !formDefns.containsKey(baseForm)) {
+            if (baseForm != null && !formDefns.containsKey(baseForm))
+            {
                 XPathFactory xfactory = XPathFactory.newInstance();
                 XPath xPath = xfactory.newXPath();
 
                 Node baseFormNode = (Node) xPath.evaluate("/input-forms/form-definitions/form[@name='" + baseForm + "']", doc, XPathConstants.NODE);
-                if (baseFormNode != null) {
+                if (baseFormNode != null)
+                {
                     processDefinition(baseFormNode, doc);
-                } else {
+                } else
+                {
                     throw new DCInputsReaderException("base form definition is missing. baseForm='" + baseForm + "'");
                 }
                 /* Now we have baseForm processed and can merge input pages/groups
@@ -188,10 +203,13 @@ public class DCInputsReaderExt {
 
             HashMap<Integer, List<DCInputGroup>> pages = new HashMap<Integer, List<DCInputGroup>>();
 
-            if (baseForm != null) {
-                if (formDefns.containsKey(baseForm)) {
+            if (baseForm != null)
+            {
+                if (formDefns.containsKey(baseForm))
+                {
                     pages = formDefns.get(baseForm).copyAllPages();
-                } else {
+                } else
+                {
                     throw new DCInputsReaderException("base form definition is missing. baseForm='" + baseForm + "'");
                 }
             }
@@ -199,59 +217,75 @@ public class DCInputsReaderExt {
             NodeList pl = e.getChildNodes();
             int lenpg = pl.getLength();
 
-            for (int j = 0; j < lenpg; j++) {
+            for (int j = 0; j < lenpg; j++)
+            {
                 Node npg = pl.item(j);
                 //get form hint if provided
-                if (npg.getNodeName().equals("hint")) {
+                if (npg.getNodeName().equals("hint"))
+                {
                     formHint = getValue(npg);
                 }
                 // process each page definition
-                if (npg.getNodeName().equals("page")) {
+                if (npg.getNodeName().equals("page"))
+                {
                     String pgNum = getAttribute(npg, "number");
                     int pgNumInt = -1;
-                    if (pgNum == null) {
+                    if (pgNum == null)
+                    {
                         throw new SAXException("Form " + formName + " has no identified pages");
-                    } else {
-                        try {
+                    } else
+                    {
+                        try
+                        {
                             pgNumInt = Integer.parseInt(pgNum);
-                        } catch (Exception ex) {
+                        } catch (Exception ex)
+                        {
                             throw new SAXException("Form " + formName + " has no non integer page number " + pgNum);
                         }
                     }
                     /* Check if page with number pgNumInt not in pages then add */
-                    if (!pages.containsKey(pgNumInt)) {
+                    if (!pages.containsKey(pgNumInt))
+                    {
                         pages.put(pgNumInt, new ArrayList<DCInputGroup>());
                     }
 
                     // process each fields group on the given page
                     NodeList gl = npg.getChildNodes();
                     int lengl = gl.getLength();
-                    for (int g = 0; g < lengl; g++) {
+                    for (int g = 0; g < lengl; g++)
+                    {
                         Node ng = gl.item(g); // get fieldgroup node
-                        if (ng.getNodeName().equals("fieldgroup")) {
+                        if (ng.getNodeName().equals("fieldgroup"))
+                        {
                             String groupName = getAttribute(ng, "name");
                             // go inside <fieldgroup> element
                             DCInputGroup group = new DCInputGroup(groupName);
 
                             NodeList frl = ng.getChildNodes();
                             int lenfrl = frl.getLength();
-                            for (int f = 0; f < lenfrl; f++) {
+                            for (int f = 0; f < lenfrl; f++)
+                            {
                                 Node nfr = frl.item(f);
-                                if (nfr.getNodeName().equals("label")) {
+                                if (nfr.getNodeName().equals("label"))
+                                {
                                     group.setLabel(getValue(nfr));
                                 }
-                                if (nfr.getNodeName().equals("hint")) {
+                                if (nfr.getNodeName().equals("hint"))
+                                {
                                     group.setHint(getValue(nfr));
                                 }
 
-                                if (nfr.getNodeName().equals("fieldrow")) {
+                                if (nfr.getNodeName().equals("fieldrow"))
+                                {
                                     ArrayList<DCInput> row = new ArrayList<DCInput>();
                                     // process each row of fields, at last
                                     NodeList fl = nfr.getChildNodes();
                                     int lenfl = fl.getLength();
-                                    for (int l = 0; l < lenfl; l++) {
+                                    for (int l = 0; l < lenfl; l++)
+                                    {
                                         Node nfld = fl.item(l);
-                                        if (nfld.getNodeName().equals("field")) {
+                                        if (nfld.getNodeName().equals("field"))
+                                        {
                                             // process each field definition
                                             DCInput curField = processField(formName, pgNum, nfld);
                                             row.add(curField);
@@ -264,7 +298,8 @@ public class DCInputsReaderExt {
                              * groupName already present then replace it with just created one
                              * else just add
                              */
-                            if (getDuplicateGroup(pages.get(pgNumInt), group) != null) {
+                            if (getDuplicateGroup(pages.get(pgNumInt), group) != null)
+                            {
                                 pages.get(pgNumInt).remove(group);
                             }
                             pages.get(pgNumInt).add(group);
@@ -274,7 +309,8 @@ public class DCInputsReaderExt {
             }
 
             // sanity check number of pages
-            if (pages.size() < 1) {
+            if (pages.size() < 1)
+            {
                 throw new DCInputsReaderException("Form " + formName + " has no pages");
             }
             DCInputSetExt form = new DCInputSetExt(formName, formHint, baseForm, pages);
@@ -295,29 +331,38 @@ public class DCInputsReaderExt {
      * @see DCInputsReader#col2Types
      */
     private void processColMap(Node e)
-            throws SAXException {
+            throws SAXException
+    {
         NodeList nl = e.getChildNodes(); //<collection handle="...">
         int len = nl.getLength();
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++)
+        {
             String nodeName = nl.item(i).getNodeName();
-            if (nodeName.equals("collection")) {
+            if (nodeName.equals("collection"))
+            {
                 String colhandle = getAttribute(nl.item(i), "handle");
-                if (colhandle == null) {
+                if (colhandle == null)
+                {
                     throw new SAXException("collection element is missing handle attribute");
                 }
                 NodeList cols = nl.item(i).getChildNodes(); //<type name="..." />
                 int colsnum = cols.getLength();
-                for (int j = 0; j < colsnum; j++) {
+                for (int j = 0; j < colsnum; j++)
+                {
                     Node nd = cols.item(j);
-                    if (nd.getNodeName().equals("type")) {
+                    if (nd.getNodeName().equals("type"))
+                    {
                         String typename = getAttribute(nd, "name");
 
-                        if (typename == null) {
+                        if (typename == null)
+                        {
                             throw new SAXException("type element is missing name attribute");
                         }
-                        if (col2Types.containsKey(colhandle)) {
+                        if (col2Types.containsKey(colhandle))
+                        {
                             col2Types.get(colhandle).add(typename);
-                        } else {
+                        } else
+                        {
                             ArrayList<String> types = new ArrayList<String>();
                             types.add(typename);
                             col2Types.put(colhandle, types);
@@ -336,25 +381,32 @@ public class DCInputsReaderExt {
      * by the type name.
      */
     private void processTypeMap(Node e)
-            throws SAXException {
+            throws SAXException
+    {
         NodeList nl = e.getChildNodes(); //<type name="" form=""/>
         int len = nl.getLength();
-        for (int i = 0; i < len; i++) {
-            if (nl.item(i).getNodeName().equals("type")) {
+        for (int i = 0; i < len; i++)
+        {
+            if (nl.item(i).getNodeName().equals("type"))
+            {
                 String name = getAttribute(nl.item(i), "name");
                 String form = getAttribute(nl.item(i), "form");
 
-                if (name == null) {
+                if (name == null)
+                {
                     throw new SAXException("type element is missing name attribute");
                 }
-                if (form == null) {
+                if (form == null)
+                {
                     throw new SAXException("type element is missing form attribute");
                 }
 
-                if (type2Forms.containsKey(name)) {
+                if (type2Forms.containsKey(name))
+                {
                     type2Forms.remove(name);
                     type2Forms.put(name, form);
-                } else {
+                } else
+                {
                     type2Forms.put(name, form);
                 }
             }
@@ -368,24 +420,30 @@ public class DCInputsReaderExt {
      * or input-type are missing.
      */
     private DCInput processField(String formName, String page, Node n)
-            throws SAXException {
+            throws SAXException
+    {
         HashMap field = new HashMap();
         Integer inputSize = 0;
         NodeList nl = n.getChildNodes();
         int len = nl.getLength();
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++)
+        {
             Node nd = nl.item(i);
-            if (!isEmptyTextNode(nd)) {
+            if (!isEmptyTextNode(nd))
+            {
                 String tagName = nd.getNodeName();
                 String value = getValue(nd);
                 field.put(tagName, value);
-                if (tagName.equals("input-type")) {
-                    try {
+                if (tagName.equals("input-type"))
+                {
+                    try
+                    {
                         String size = getAttribute(nd, "size");
 
                         inputSize = size != null ? Integer.parseInt(size) : 0;
 
-                    } catch (NumberFormatException e) {
+                    } catch (NumberFormatException e)
+                    {
                         inputSize = 0;
                         log.info("invalid value of size attribute = "
                                 + getAttribute(nd, "size") + " of <input-type> "
@@ -396,43 +454,51 @@ public class DCInputsReaderExt {
 
                     if (value.equals("dropdown")
                             || value.equals("qualdrop_value")
-                            || value.equals("list")) {
+                            || value.equals("list"))
+                    {
                         String pairTypeName = getAttribute(nd, PAIR_TYPE_NAME);
-                        if (pairTypeName == null) {
+                        if (pairTypeName == null)
+                        {
                             throw new SAXException("Form " + formName + ", field "
                                     + field.get("dc-element")
                                     + "." + field.get("dc-qualifier")
                                     + " has no name attribute");
-                        } else if (!valuePairs.containsKey(pairTypeName)) {
+                        } else if (!valuePairs.containsKey(pairTypeName))
+                        {
                             throw new SAXException("Form " + formName + ", field "
                                     + field.get("dc-element")
                                     + "." + field.get("dc-qualifier")
                                     + " has wrong name attribute. "
                                     + "Such value-pairs is not defined.");
-                        } else {
+                        } else
+                        {
                             field.put(PAIR_TYPE_NAME, pairTypeName);
                         }
                     }
-                } else if (tagName.equals("vocabulary")) {
+                } else if (tagName.equals("vocabulary"))
+                {
                     String closedVocabularyString = getAttribute(nd, "closed");
                     field.put("closedVocabulary", closedVocabularyString);
-                } else if (tagName.equals("ask-language")) {
+                } else if (tagName.equals("ask-language"))
+                {
                     String flag = getValue(nd);
-                    if (flag.toLowerCase().equals("true") || flag.toLowerCase().equals("yes")) {
+                    if (flag.toLowerCase().equals("true") || flag.toLowerCase().equals("yes"))
+                    {
                         field.put("asklang", "true");
-                    } else {
+                    } else
+                    {
                         field.put("asklang", "false");
                     }
-                }else if (tagName.equals("authority"))
+                } else if (tagName.equals("authority"))
                 {
                     String suffix = getValue(nd);
                     String presentation = getAttribute(nd, "presentation");
                     String limit = getAttribute(nd, "limit");
                     String editable = getAttribute(nd, "editable");
                     String closed = getAttribute(nd, "closed");
-                    
+
                     field.put("authority", "true");
-                    field.put("aclosed",closed);
+                    field.put("aclosed", closed);
                     field.put("aeditable", editable);
                     field.put("choices", limit);
                     field.put("authURL", suffix);
@@ -441,25 +507,31 @@ public class DCInputsReaderExt {
             }
         }
         String missing = null;
-        if (field.get("dc-element") == null) {
+        if (field.get("dc-element") == null)
+        {
             missing = "dc-element";
         }
-        if (field.get("label") == null) {
+        if (field.get("label") == null)
+        {
             missing = "label";
         }
-        if (field.get("input-type") == null) {
+        if (field.get("input-type") == null)
+        {
             missing = "input-type";
         }
-        if (missing != null) {
+        if (missing != null)
+        {
             String msg = "Required field " + missing + " missing on page " + page + " of form " + formName;
             throw new SAXException(msg);
         }
         String type = (String) field.get("input-type");
-        if (type.equals("twobox") || type.equals("qualdrop_value")) {
+        if (type.equals("twobox") || type.equals("qualdrop_value"))
+        {
             String rpt = (String) field.get("repeatable");
             if ((rpt == null)
                     || ((!rpt.equalsIgnoreCase("yes"))
-                    && (!rpt.equalsIgnoreCase("true")))) {
+                    && (!rpt.equalsIgnoreCase("true"))))
+            {
                 String msg = "The field \'" + field.get("label") + "\' must be repeatable";
                 throw new SAXException(msg);
             }
@@ -492,10 +564,13 @@ public class DCInputsReaderExt {
     If no specific rules defined for given collection, list of submission types
     for default collection will be returned.
      */
-    public List<String> getTypesListforCollection(String collectionHandle) {
-        if (col2Types.containsKey(collectionHandle)) {
+    public List<String> getTypesListforCollection(String collectionHandle)
+    {
+        if (col2Types.containsKey(collectionHandle))
+        {
             return col2Types.get(collectionHandle);
-        } else {
+        } else
+        {
             return col2Types.get(DEFAULT_COLLECTION);
         }
     }
@@ -512,38 +587,66 @@ public class DCInputsReaderExt {
      * @see DCInputSet
      */
     public DCInputSetExt getInputs(String collectionHandle, String documentType)
-            throws DCInputsReaderException {
-        if (documentType != null && !"".equals(documentType)) {
-            if (getTypesListforCollection(collectionHandle).contains(documentType)) {
-                String formName = type2Forms.get(documentType);
-                if (formName == null) {
+            throws DCInputsReaderException
+    {
+        String ch = (collectionHandle != null && !collectionHandle.equals("")) ? collectionHandle : DEFAULT_COLLECTION;
+        if (documentType != null && !"".equals(documentType))
+        {
+            String formName;
+            if (getTypesListforCollection(ch).contains(documentType))
+            {
+                formName = type2Forms.get(documentType);
+            } else
+            {
+
+                if (!getTypesListforCollection(ch).isEmpty())
+                {
+                    formName = getTypesListforCollection(ch).get(0);
+                } else
+                {
+                    throw new DCInputsReaderException(documentType + " is not allowed for collection "
+                            + collectionHandle + " check [dspace]/config/input-forms.xml");
+                }
+            }
+            if (formName == null)
+            {
+                if (type2Forms.size() > 0)
+                {
+                    formName = (String) type2Forms.values().toArray()[0];
+                } else
+                {
                     throw new DCInputsReaderException("No form designated as default");
                 }
-
-                if (formDefns.containsKey(formName)) {
-                    return formDefns.get(formName);
-                } else {
-                    throw new DCInputsReaderException("Form definition is missing for " + formName);
-                }
-            } else {
-                throw new DCInputsReaderException(documentType + " is not allowed for collection "
-                        + collectionHandle + " check [dspace]/config/input-forms.xml");
             }
-        } else {
+
+            if (formDefns.containsKey(formName))
+            {
+                return formDefns.get(formName);
+            } else
+            {
+                throw new DCInputsReaderException("Form definition is missing for " + formName);
+            }
+
+        } else
+        {
             return null;
         }
     }
 
     public DCInputSetExt getInputs(String documentType)
-            throws DCInputsReaderException {
+            throws DCInputsReaderException
+    {
         String formName = type2Forms.get(documentType);
-        if (formName == null) {
+        if (formName == null)
+        {
             throw new DCInputsReaderException("No form designated as default");
         }
 
-        if (formDefns.containsKey(formName)) {
+        if (formDefns.containsKey(formName))
+        {
             return formDefns.get(formName);
-        } else {
+        } else
+        {
             throw new DCInputsReaderException("Form definition is missing for " + formName);
         }
     }
@@ -555,19 +658,24 @@ public class DCInputsReaderExt {
      * @throws DCInputsReaderException if no default set defined
      */
     public int getNumberInputPages(String collectionHandle, String docType)
-            throws DCInputsReaderException {
-        if (getInputs(collectionHandle, docType) != null) {
+            throws DCInputsReaderException
+    {
+        if (getInputs(collectionHandle, docType) != null)
+        {
             return getInputs(collectionHandle, docType).getNumberPages();
-        } else {
+        } else
+        {
             return 0;
         }
     }
 
-    public Iterator getPairsNameIterator() {
+    public Iterator getPairsNameIterator()
+    {
         return valuePairs.keySet().iterator();
     }
 
-    public List getPairs(String name) {
+    public List getPairs(String name)
+    {
         return (List) valuePairs.get(name);
     }
 
@@ -585,19 +693,24 @@ public class DCInputsReaderExt {
      * in the passed in hashmap.
      */
     private void processValuePairs(Node e)
-            throws SAXException {
+            throws SAXException
+    {
         NodeList nl = e.getChildNodes();
-        if (nl != null) {
+        if (nl != null)
+        {
             int len = nl.getLength();
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; i < len; i++)
+            {
                 Node nd = nl.item(i);
                 String tagName = nd.getNodeName();
 
                 // process each value-pairs set
-                if (tagName.equals("value-pairs")) {
+                if (tagName.equals("value-pairs"))
+                {
                     String pairsName = getAttribute(nd, PAIR_TYPE_NAME);
                     String dcTerm = getAttribute(nd, "dc-term");
-                    if (pairsName == null) {
+                    if (pairsName == null)
+                    {
                         String errString =
                                 "Missing name attribute for value-pairs for DC term " + dcTerm;
                         throw new SAXException(errString);
@@ -607,22 +720,28 @@ public class DCInputsReaderExt {
                     valuePairs.put(pairsName, pairs);
                     NodeList cl = nd.getChildNodes();
                     int lench = cl.getLength();
-                    for (int j = 0; j < lench; j++) {
+                    for (int j = 0; j < lench; j++)
+                    {
                         Node nch = cl.item(j);
                         String display = null;
                         String storage = null;
 
-                        if (nch.getNodeName().equals("pair")) {
+                        if (nch.getNodeName().equals("pair"))
+                        {
                             NodeList pl = nch.getChildNodes();
                             int plen = pl.getLength();
-                            for (int k = 0; k < plen; k++) {
+                            for (int k = 0; k < plen; k++)
+                            {
                                 Node vn = pl.item(k);
                                 String vName = vn.getNodeName();
-                                if (vName.equals("displayed-value")) {
+                                if (vName.equals("displayed-value"))
+                                {
                                     display = getValue(vn);
-                                } else if (vName.equals("stored-value")) {
+                                } else if (vName.equals("stored-value"))
+                                {
                                     storage = getValue(vn);
-                                    if (storage == null) {
+                                    if (storage == null)
+                                    {
                                         storage = "";
                                     }
                                 } // ignore any children that aren't 'display' or 'storage'
@@ -636,13 +755,17 @@ public class DCInputsReaderExt {
         }
     }
 
-    private Node getElement(Node nd) {
+    private Node getElement(Node nd)
+    {
         NodeList nl = nd.getChildNodes();
-        if (nl != null) {
+        if (nl != null)
+        {
             int len = nl.getLength();
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; i < len; i++)
+            {
                 Node n = nl.item(i);
-                if (n.getNodeType() == Node.ELEMENT_NODE) {
+                if (n.getNodeType() == Node.ELEMENT_NODE)
+                {
                     return n;
                 }
             }
@@ -650,11 +773,14 @@ public class DCInputsReaderExt {
         return null;
     }
 
-    private boolean isEmptyTextNode(Node nd) {
+    private boolean isEmptyTextNode(Node nd)
+    {
         boolean isEmpty = false;
-        if (nd.getNodeType() == Node.TEXT_NODE) {
+        if (nd.getNodeType() == Node.TEXT_NODE)
+        {
             String text = nd.getNodeValue().trim();
-            if (text.length() == 0) {
+            if (text.length() == 0)
+            {
                 isEmpty = true;
             }
         }
@@ -664,15 +790,20 @@ public class DCInputsReaderExt {
     /**
      * Returns the value of the node's attribute named <name>
      */
-    private String getAttribute(Node e, String name) {
+    private String getAttribute(Node e, String name)
+    {
         NamedNodeMap attrs = e.getAttributes();
-        if (attrs != null) {
+        if (attrs != null)
+        {
             int len = attrs.getLength();
-            if (len > 0) {
+            if (len > 0)
+            {
                 int i;
-                for (i = 0; i < len; i++) {
+                for (i = 0; i < len; i++)
+                {
                     Node attr = attrs.item(i);
-                    if (name.equals(attr.getNodeName())) {
+                    if (name.equals(attr.getNodeName()))
+                    {
                         return attr.getNodeValue().trim();
                     }
                 }
@@ -686,14 +817,18 @@ public class DCInputsReaderExt {
      * Returns the value found in the Text node (if any) in the
      * node list that's passed in.
      */
-    private String getValue(Node nd) {
+    private String getValue(Node nd)
+    {
         NodeList nl = nd.getChildNodes();
-        if (nl != null) {
+        if (nl != null)
+        {
             int len = nl.getLength();
-            for (int i = 0; i < len; i++) {
+            for (int i = 0; i < len; i++)
+            {
                 Node n = nl.item(i);
                 short type = n.getNodeType();
-                if (type == Node.TEXT_NODE) {
+                if (type == Node.TEXT_NODE)
+                {
                     return n.getNodeValue().trim();
                 }
             }
@@ -702,41 +837,53 @@ public class DCInputsReaderExt {
         return null;
     }
 
-    private static <T> List getDuplicate(Collection<T> list) {
+    private static <T> List getDuplicate(Collection<T> list)
+    {
         final List<T> duplicatedObjects = new ArrayList<T>();
-        Set<T> set = new HashSet<T>() {
+        Set<T> set = new HashSet<T>()
+        {
 
             @Override
-            public boolean add(T e) {
-                if (contains(e)) {
+            public boolean add(T e)
+            {
+                if (contains(e))
+                {
                     duplicatedObjects.add(e);
                 }
                 return super.add(e);
             }
         };
-        for (T t : list) {
+        for (T t : list)
+        {
             set.add(t);
         }
         return duplicatedObjects;
     }
 
-    private static <T> boolean hasDuplicate(Collection<T> list) {
-        if (getDuplicate(list).isEmpty()) {
+    private static <T> boolean hasDuplicate(Collection<T> list)
+    {
+        if (getDuplicate(list).isEmpty())
+        {
             return false;
         }
         return true;
     }
 
-    private DCInputGroup getDuplicateGroup(List<DCInputGroup> groups, DCInputGroup g) {
-        if (!"".equals(g.getName())) {
-            for (DCInputGroup group : groups) {
-                if (group.getName().equals(g.getName())) {
+    private DCInputGroup getDuplicateGroup(List<DCInputGroup> groups, DCInputGroup g)
+    {
+        if (!"".equals(g.getName()))
+        {
+            for (DCInputGroup group : groups)
+            {
+                if (group.getName().equals(g.getName()))
+                {
                     return group;
                 }
             }
 
             return null;
-        } else {
+        } else
+        {
             return null;
         }
     }
