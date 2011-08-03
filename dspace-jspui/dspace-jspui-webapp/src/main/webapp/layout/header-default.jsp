@@ -223,7 +223,7 @@
             <%-- HACK: width specified here for non-CSS compliant Netscape 4.x --%>
             <%-- HACK: Width shouldn't really be 100%, but omitting this means --%>
             <%--       navigation bar gets far too wide on certain pages --%>
-            <td class="pageContents" width="100%">
+            <td class="pageContents">
 
                 <%-- Location bar --%>
 <%

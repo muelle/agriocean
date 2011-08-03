@@ -130,7 +130,6 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
     background: white;
     color: black;
     vertical-align: top;
-    width: 100%
 }
 
 .navigationBarTable
@@ -146,6 +145,7 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
     font-size: 10pt;
     font-style: normal;
     font-weight: bold;
+    width: 185px;
     color: #252645;
     text-decoration: none;
     background: white;
@@ -205,6 +205,7 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                 text-decoration: none;
                 text-align: left;
                 vertical-align: middle;
+                border-top: 1px solid #336699;
                 margin-left: 10px;
                 margin-right: 10px }
 
@@ -869,7 +870,10 @@ input.ds-authority-lock.is-unlocked
 {
     list-style-type: none;
 }
-
+.navigatiobarTitle
+{
+   border-bottom: 1px solid black;
+}
 
 .borderBanner
 {
@@ -890,17 +894,6 @@ input.ds-authority-lock.is-unlocked
     background: #5970B2
 }
 
-.navigatiobarRow
-{
-    font-size: 10pt;
-    border-left: 1px solid #000000;
-    border-right: 1px solid #000000;
-    padding: 2px 20px;
-    margin-left: 10px;
-    color: #FFFFFF;
-    margin-left: 10px;
-    background: #5970B2
-}
 .adminNavigatiobarRow
 {
     font-size: 10pt;
@@ -929,7 +922,6 @@ input.ds-authority-lock.is-unlocked
     border-left: 0px solid #FFFFFF;
     border-right: 0px solid #FFFFFF;
     border-top: 1px solid #000000;
-    border-bottom: 1px solid #000000
 }
 
 .latestLayout{
