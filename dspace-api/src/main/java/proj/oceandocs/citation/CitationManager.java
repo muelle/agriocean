@@ -262,15 +262,22 @@ public class CitationManager
                     {
                         authors = (DCValue[]) map.get(m.group(m.groupCount()));
                         String allAuthorsNames = "";
-                        for(DCValue v: authors)
-                            allAuthorsNames += v.value != null ? (v.value + " "): "";
+                        for (int a = 0; i < authors.length; i++)
+                        {
+                            if (a > 0)
+                            {
+                                allAuthorsNames += "; ";
+                            }
+                            allAuthorsNames += authors[a].value != null ? (authors[a].value) : "";
+
+                        }
                         if (!allAuthorsNames.equals(""))
                         {
                             m.appendReplacement(sb, allAuthorsNames);
                             m.appendTail(sb);
                             citation += sb.toString() + " ";
                         }
-                        
+
                     } else
                     {
                         dcv = (DCValue) map.get(m.group(m.groupCount()));

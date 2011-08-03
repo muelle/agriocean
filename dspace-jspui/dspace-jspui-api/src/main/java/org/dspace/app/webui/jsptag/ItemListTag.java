@@ -475,7 +475,7 @@ public class ItemListTag extends TagSupport
                                 log.debug("Limiting output of field " + field + " to " + Integer.toString(loopLimit) + " from an original " + Integer.toString(metadataArray.length));
                             }
 
-                            StringBuffer sb = new StringBuffer();
+                            StringBuilder sb = new StringBuilder();
                             for (int j = 0; j < loopLimit; j++)
                             {
                                 String startLink = "";

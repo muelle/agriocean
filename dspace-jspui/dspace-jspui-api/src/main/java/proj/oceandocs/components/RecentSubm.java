@@ -51,6 +51,8 @@ public class RecentSubm {
 				layout+="<div style=\"margin-left: 0px\">";
                                 for(int t=0;t < result.size(); t++)
                                 {
+                                    if(t > 0)
+                                        layout += "; ";
                                     layout += "<a href=\"" + contextPath + "/browse?type=author&amp;value=" + result.get(t) +"\"> "+
                                     result.get(t) + "</a>";
 				}

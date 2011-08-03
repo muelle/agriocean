@@ -127,6 +127,7 @@ public class DCInputsReaderExt
             factory.setIgnoringElementContentWhitespace(true);
 
             DocumentBuilder db = factory.newDocumentBuilder();
+            db.setErrorHandler(new XMLReadErrorHandler(log, uri));
             Document doc = db.parse(uri);
 
             XPathFactory xfactory = XPathFactory.newInstance();
@@ -887,4 +888,6 @@ public class DCInputsReaderExt
             return null;
         }
     }
+    
+    
 }
