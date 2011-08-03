@@ -15,9 +15,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
@@ -28,10 +31,10 @@ import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.SelfNamedPlugin;
 import org.jdom.Attribute;
-import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
+import proj.oceandocs.utils.utilsXML;
 
 /**
  * Configurable AGRIS Crosswalk
@@ -92,22 +95,15 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
             Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
     public static final Namespace DCTERMS_NS =
             Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/");
-    private static final Namespace namespaces[] = {
-        AGRIS_NS, AGS_NS, AGLS_NS, DC_NS, DCTERMS_NS
-    };
+    private static final Namespace namespaces[] = {AGRIS_NS, AGS_NS, AGLS_NS, DC_NS, DCTERMS_NS};
     /**  URL of ARGIS XML Schema */
     public static final String AGRIS_XSD = "http://www.fao.org/agris/agmes/schemas/agrisap.xsd";
     private static final String schemaLocation = AGRIS_NS.getURI() + " " + AGRIS_XSD;
-    final String prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            + "<ags:resources xmlns:" + AGRIS_NS.getPrefix() + "=\"" + AGRIS_NS.getURI() + "\" "
-            + "xmlns:" + AGS_NS.getPrefix() + "=\"" + AGS_NS.getURI() + "\" "
-            + "xmlns:" + DC_NS.getPrefix() + "=\"" + DC_NS.getURI() + "\" "
-            + "xmlns:" + DCTERMS_NS.getPrefix() + "=\"" + DCTERMS_NS.getURI() + "\" "
-            + "xmlns:" + AGLS_NS.getPrefix() + "=\"" + AGLS_NS.getURI() + "\">";
-    final String postlog = "</ags:resources>";
+    
     //private static XMLOutputter XMLoutputer = new XMLOutputter(Format.getPrettyFormat());
     private static SAXBuilder builder = new SAXBuilder();
-    private HashMap<String, String> agrisMap = null;
+    private Map<String, String> agrisMap = null;
+    private Map<String, String> groupingLimits = null;
 
     static {
         List aliasList = new ArrayList();
@@ -188,6 +184,8 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
             }
 
             agrisMap = new HashMap<String, String>();
+            groupingLimits = new HashMap<String, String>();
+            
             Enumeration pe = modsConfig.propertyNames();
             while (pe.hasMoreElements()) {
                 String qdc = (String) pe.nextElement();
@@ -198,6 +196,10 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
                             + qdc + " = " + val);
                 } else {
                     agrisMap.put(qdc, pair[0]);
+                    if (pair.length >= 2 && (!"".equals(pair[1])))
+                    {
+                        groupingLimits.put(qdc, pair[1].trim());
+                    }
                 }
             }
         }
@@ -227,6 +229,79 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
         return false;
     }
 
+    private Map<String, Element> prepareTags(Map<String, DCValue> metadata)
+    {
+        final String prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            + "<ags:resources xmlns:" + AGRIS_NS.getPrefix() + "=\"" + AGRIS_NS.getURI() + "\" "
+            + "xmlns:" + AGS_NS.getPrefix() + "=\"" + AGS_NS.getURI() + "\" "
+            + "xmlns:" + DC_NS.getPrefix() + "=\"" + DC_NS.getURI() + "\" "
+            + "xmlns:" + DCTERMS_NS.getPrefix() + "=\"" + DCTERMS_NS.getURI() + "\" "
+            + "xmlns:" + AGLS_NS.getPrefix() + "=\"" + AGLS_NS.getURI() + "\">";
+    final String postlog = "</ags:resources>";
+        
+        //$dc.element.qualifier|s$ like constructions will be replased by value of apropriate field
+        Pattern p = Pattern.compile("\\$(\\w+.\\w+)\\|([s,a,l])\\$", Pattern.CASE_INSENSITIVE);
+        Matcher m;
+        DCValue dcv;
+        DCValue tempDCV;
+
+
+        String subst = "";
+        HashMap<String, Element> result = new HashMap<String, Element>();
+
+        for (String field : metadata.keySet())
+        {
+            if (agrisMap.containsKey(field.split("_")[0]))
+            {
+                StringBuffer sb = new StringBuffer();
+                sb.append(prolog);
+
+                String template = agrisMap.get(field.split("_")[0]);
+                dcv = metadata.get(field);
+                template = template.replace("%s", dcv.value != null ? dcv.value : "");
+                template = template.replace("%a", dcv.authority != null ? dcv.authority : "");
+                template = template.replace("%l", dcv.language != null ? dcv.language : "");
+
+                m = p.matcher(template);
+                while (m.find())
+                {
+                    if (m.groupCount() == 2)
+                    {
+                        tempDCV = metadata.get(m.group(1));
+                        if (tempDCV != null)
+                        {
+                            if ("s".equalsIgnoreCase(m.group(2)))
+                            {
+                                subst = tempDCV.value != null ? tempDCV.value : m.group();
+                            } else if ("a".equalsIgnoreCase(m.group(2)))
+                            {
+                                subst = tempDCV.authority != null ? tempDCV.authority : m.group();
+                            } else if ("l".equalsIgnoreCase(m.group(2)))
+                            {
+                                subst = tempDCV.language != null ? tempDCV.language : m.group();
+                            }
+                            m.appendReplacement(sb, subst);
+                        }
+                    }
+                }
+                m.appendTail(sb);
+
+                sb.append(postlog);
+                try
+                {
+                    Element tempRoot = builder.build(new StringReader((sb.toString()))).getRootElement();
+                    result.put(field, tempRoot);
+
+                } catch (Exception e)
+                {
+                    log.error("MODSDisseminationCrosswalk error: " + e.getLocalizedMessage());
+                }
+            }
+        }
+        return result;
+    }
+
+    
     @Override
     public List<Element> disseminateList(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException {
         throw new UnsupportedOperationException("AGRIS dissemination as list of resources tags not applicable.");
@@ -236,10 +311,6 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
     public Element disseminateElement(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException {
         Item item = (Item) dso;
         initMap();
-        Document subdoc = null;
-        Element tempRoot = null;
-        Element tempElement = null;
-        Element currentElement = null;
         DCValue[] dc;
 
         Element root = new Element("resources", AGS_NS);
@@ -266,83 +337,50 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
 
         resource.getAttributes().add(new Attribute("ARN", arn, AGS_NS));
 
-        String template = "";
+        Map<String, DCValue> itemDCVs = new HashMap<String, DCValue>();
+        
+        DCValue[] dcvs = item.getMetadata(Item.ANY, Item.ANY, Item.ANY, Item.ANY);
+        
+        Integer repeats = 0;
 
-        dc = item.getMetadata(Item.ANY, Item.ANY, Item.ANY, Item.ANY);
-        //List result = new ArrayList(dc.length);
-        for (int i = 0; i < dc.length; i++) {
-            /** Compose qualified DC name - schema.element[.qualifier]
-            e.g. "dc.title", "dc.subject.lcc", "lom.Classification.Keyword"*/
-            String qdc = dc[i].schema + "."
-                    + ((dc[i].qualifier == null) ? dc[i].element
-                    : (dc[i].element + "." + dc[i].qualifier));
-
-            if (agrisMap.containsKey(qdc)) {
-                template = agrisMap.get(qdc);
-                if (template.equals("")) {
-                    continue;
-                }
-
-                if (dc[i].value != null) {
-                    template = template.replace("%s", dc[i].value);
-                } else {
-                    template = template.replace("%s", "");
-                }
-
-                if (dc[i].authority != null) {
-                    template = template.replace("%a", dc[i].authority);
-                } else {
-                    template = template.replace("%a", "");
-                }
-
-                if (dc[i].language != null) {
-                    template = template.replace("%l", dc[i].language);
-                } else {
-                    template = template.replace("%l", "");
-                }
-
-                try {
-                    subdoc = builder.build(new StringReader(prolog + template + postlog));
-                    if (subdoc != null) {
-                        if (!subdoc.getRootElement().getChildren().isEmpty()) {
-                            tempRoot = (Element) subdoc.getRootElement().getChildren().get(0);
-                            if (tempRoot.getChildren().isEmpty()) {
-                                resource.addContent(tempRoot.detach());
-                            } else {
-                                if (tagExist(resource, tempRoot) && !tempRoot.getName().equalsIgnoreCase("name")) {
-                                    tempElement = resource.getChild(tempRoot.getName(), tempRoot.getNamespace());
-                                    Iterator itr = tempRoot.getChildren().iterator();
-                                    while (itr.hasNext()) {
-                                        currentElement = (Element) itr.next();
-                                        tempElement.addContent((Element) currentElement.clone());
-                                    }
-                                } else {
-                                    resource.addContent(tempRoot.detach());
-                                }
-                            }
-                        }
-                    }
-                } catch (Exception ex) {
-                    log.error(AGRISDisseminationCrosswalk.class.getName() + ": " + ex.getLocalizedMessage());
-                }
-            } else {
-                log.warn("WARNING: " + getPluginInstanceName() + ": No ARGIS mapping for \"" + qdc + "\"");
+        for (int i = 0; i < dcvs.length; i++)
+        {
+            String qdc = dcvs[i].schema + "." + dcvs[i].element;
+            if (dcvs[i].qualifier != null)
+            {
+                qdc += "." + dcvs[i].qualifier;
+            }
+            
+            if (!itemDCVs.containsKey(qdc))
+            {
+                itemDCVs.put(qdc, dcvs[i]);
+            } else
+            {
+                ++repeats;
+                itemDCVs.put(qdc + "_" + repeats.toString(), dcvs[i]);
             }
         }
 
-        root.addContent(resource);
-        return root;
-    }
+        Map<String, Element> tags = prepareTags(itemDCVs);
+        List temp = null;
 
-    private boolean tagExist(Element parent, Element tag) {
-        Element child;
-        Iterator itr = parent.getChildren().iterator();
-        while (itr.hasNext()) {
-            child = (Element) itr.next();
-            if (child.getNamespacePrefix().equals(tag.getNamespacePrefix()) && child.getName().equals(tag.getName())) {
-                return true;
+        try
+        {
+            String field = "";
+            for(Entry kvp: tags.entrySet())
+            {
+                field = groupingLimits.get(((String) kvp.getKey()).split("_")[0]);
+                temp = ((Element)kvp.getValue()).getChildren();
+                if(temp != null && temp.size() > 0)
+                    utilsXML.mergeXMLTrees(root, (Element)temp.get(0), field);
             }
+
+        } catch (Exception e)
+        {
+            log.error(getPluginInstanceName() + ": " + e.getLocalizedMessage());
+        } finally
+        {
+            return root;
         }
-        return false;
     }
 }
