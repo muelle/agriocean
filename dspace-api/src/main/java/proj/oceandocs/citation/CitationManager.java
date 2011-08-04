@@ -244,48 +244,52 @@ public class CitationManager
         DCValue dcv = null;
         DCValue[] authors = null;
 
-        CitationTemplate tmpTMPL = this.getTemplate(type, name);
-        if (tmpTMPL != null)
+        if (map.containsKey("bibliographicCitation.title") && !map.get("bibliographicCitation.title").equals(""))
         {
-            Pattern p = Pattern.compile("\\$(\\w+.\\w+)\\$", Pattern.CASE_INSENSITIVE);
-            for (int i = 0; i < tmpTMPL.template.size(); i++)
+
+            CitationTemplate tmpTMPL = this.getTemplate(type, name);
+            if (tmpTMPL != null)
             {
-                Matcher m = p.matcher(tmpTMPL.template.get(i));
-                StringBuffer sb = new StringBuffer();
-                while (m.find())
+                Pattern p = Pattern.compile("\\$(\\w+.\\w+)\\$", Pattern.CASE_INSENSITIVE);
+                for (int i = 0; i < tmpTMPL.template.size(); i++)
                 {
-                    /* if metadata field is null - must skip it with related formatting.
-                     * Also in the case of authors names we need put them all (we will 
-                     * have DCValue[] instead of just DCValue) in the map in that case
-                     */
-                    if ("bibliographicCitation.authors".equalsIgnoreCase(m.group(m.groupCount())))
+                    Matcher m = p.matcher(tmpTMPL.template.get(i));
+                    StringBuffer sb = new StringBuffer();
+                    while (m.find())
                     {
-                        authors = (DCValue[]) map.get(m.group(m.groupCount()));
-                        String allAuthorsNames = "";
-                        for (int a = 0; i < authors.length; i++)
+                        /* if metadata field is null - must skip it with related formatting.
+                         * Also in the case of authors names we need put them all (we will 
+                         * have DCValue[] instead of just DCValue) in the map in that case
+                         */
+                        if ("bibliographicCitation.authors".equalsIgnoreCase(m.group(m.groupCount())))
                         {
-                            if (a > 0)
+                            authors = (DCValue[]) map.get(m.group(m.groupCount()));
+                            String allAuthorsNames = "";
+                            for (int a = 0; a < authors.length; a++)
                             {
-                                allAuthorsNames += "; ";
+                                if (a > 0)
+                                {
+                                    allAuthorsNames += "; ";
+                                }
+                                allAuthorsNames += authors[a].value != null ? (authors[a].value) : "";
+
                             }
-                            allAuthorsNames += authors[a].value != null ? (authors[a].value) : "";
+                            if (!allAuthorsNames.equals(""))
+                            {
+                                m.appendReplacement(sb, allAuthorsNames);
+                                m.appendTail(sb);
+                                citation += sb.toString() + " ";
+                            }
 
-                        }
-                        if (!allAuthorsNames.equals(""))
+                        } else
                         {
-                            m.appendReplacement(sb, allAuthorsNames);
-                            m.appendTail(sb);
-                            citation += sb.toString() + " ";
-                        }
-
-                    } else
-                    {
-                        dcv = (DCValue) map.get(m.group(m.groupCount()));
-                        if ((dcv != null) && (dcv.value != null)/*map.containsKey(m.group(m.groupCount()))*/)
-                        {
-                            m.appendReplacement(sb, dcv.value);
-                            m.appendTail(sb);
-                            citation += sb.toString() + " ";
+                            dcv = (DCValue) map.get(m.group(m.groupCount()));
+                            if ((dcv != null) && (dcv.value != null)/*map.containsKey(m.group(m.groupCount()))*/)
+                            {
+                                m.appendReplacement(sb, dcv.value);
+                                m.appendTail(sb);
+                                citation += sb.toString() + " ";
+                            }
                         }
                     }
                 }
@@ -316,37 +320,24 @@ public class CitationManager
                     quals = fillQuals(type);
                     values = getBibliographicValues(item, quals);
 
-                    //lit = values.keySet().iterator();
-
-//                    while (lit.hasNext())
-//                    {
-                    //lang = (String) lit.next();
-                    //HashMap map = (HashMap) values.get(lang);
                     citation = compileCitation(type, values);
-//                        if (values.size() > 0)
-//                        {
-                    item.clearMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", Item.ANY);
-                    //}
-                    item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", Item.ANY, citation);
-                    //}
-
+                    if (!citation.equals(""))
+                    {
+                        item.clearMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", Item.ANY);
+                        item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", Item.ANY, citation);
+                    }
                     if (getTemplate(type, "agscitationNumber") != null)
                     {
                         quals = fillQuals(type, "agscitationNumber");
                         values = getBibliographicValues(item, quals);
-                        //lit = values.keySet().iterator();
                         String agsCitation;
-//                        while (lit.hasNext())
-//                        {
-//                            lang = (String) lit.next();
-//                            HashMap map = (HashMap) values.get(lang);
+
                         agsCitation = compileCitation(type, values, "agscitationNumber");
-//                            if (values.size() > 0)
-//                            {
-                        item.clearMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "agscitationNumber", Item.ANY);
-                        //}
-                        item.addMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "agscitationNumber", Item.ANY, agsCitation);
-                        //}
+                        if (!agsCitation.equals(""))
+                        {
+                            item.clearMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "agscitationNumber", Item.ANY);
+                            item.addMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "agscitationNumber", Item.ANY, agsCitation);
+                        }
                     }
 
                     item.update();
