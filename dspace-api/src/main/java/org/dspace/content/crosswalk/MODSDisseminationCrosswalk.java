@@ -253,7 +253,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
 
         String subst = "";
         HashMap<String, Element> result = new HashMap<String, Element>();
-        
+
         for (String field : metadata.keySet())
         {
             if (modsMap.containsKey(field.split("_")[0]))
@@ -275,15 +275,19 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
                         {
                             if ("s".equalsIgnoreCase(m.group(2)))
                             {
-                                subst = tempDCV.value != null ? tempDCV.value : m.group();
+                                subst = tempDCV.value != null ? tempDCV.value : "";
                             } else if ("a".equalsIgnoreCase(m.group(2)))
                             {
-                                subst = tempDCV.authority != null ? tempDCV.authority : m.group();
+                                subst = tempDCV.authority != null ? tempDCV.authority : "";
                             } else if ("l".equalsIgnoreCase(m.group(2)))
                             {
-                                subst = tempDCV.language != null ? tempDCV.language : m.group();
+                                subst = tempDCV.language != null ? tempDCV.language : "";
                             }
                             m.appendReplacement(sb, subst);
+
+                        }else
+                        {
+                            m.appendReplacement(sb, "");
                         }
                     }
                 }
@@ -355,7 +359,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
             {
                 qdc += "." + dcvs[i].qualifier;
             }
-            
+
             if (!itemDCVs.containsKey(qdc))
             {
                 itemDCVs.put(qdc, dcvs[i]);
