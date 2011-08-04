@@ -46,7 +46,9 @@ public class RecentSubm {
 				if(citation != null && !citation.equals("")){
 					layout +="<div>" + citation +"</div>";
 				}
-
+                                
+                                boolean haveauthors = false;
+                                
                                 result = Item.latestAdditionsText(context,latestId,"contributor","author");
 				layout+="<div style=\"margin-left: 0px\">";
                                 for(int t=0;t < result.size(); t++)
@@ -55,7 +57,31 @@ public class RecentSubm {
                                         layout += "; ";
                                     layout += "<a href=\"" + contextPath + "/browse?type=author&amp;value=" + result.get(t) +"\"> "+
                                     result.get(t) + "</a>";
+                                    haveauthors = true;
 				}
+                                
+                                result = Item.latestAdditionsText(context,latestId,"contributor","editor");
+                                for(int t=0;t < result.size(); t++)
+                                {
+                                    
+                                    if(t > 0 || haveauthors)
+                                        layout += "; ";
+                                    layout += "<a href=\"" + contextPath + "/browse?type=author&amp;value=" + result.get(t) +"\"> "+
+                                    result.get(t) + "</a>";
+                                    haveauthors = true;
+				}
+                                
+                                result = Item.latestAdditionsText(context,latestId,"contributor","corpauthor");
+                                for(int t=0;t < result.size(); t++)
+                                {
+                                    
+                                    if(t > 0 || haveauthors)
+                                        layout += "; ";
+                                    layout += "<a href=\"" + contextPath + "/browse?type=author&amp;value=" + result.get(t) +"\"> "+
+                                    result.get(t) + "</a>";
+                                    haveauthors = true;
+				}
+                                
                                 layout+="</div>";
 				layout +="</td><td align=\"right\" valign=\"top\" width=\"10px\" class=\"latestLayout\">";
                                 result = Item.latestAdditionsText(context,latestId,"type","");
