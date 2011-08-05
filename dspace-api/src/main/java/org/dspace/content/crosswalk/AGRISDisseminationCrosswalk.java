@@ -263,7 +263,7 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
         final String postlog = "</ags:resources>";
 
         //$dc.element.qualifier|s$ like constructions will be replased by value of apropriate field
-        Pattern p = Pattern.compile("\\$(\\w+.\\w+)\\|([s,a,l])\\$", Pattern.CASE_INSENSITIVE);
+        Pattern p = Pattern.compile("\\$(\\w+.\\w+.\\w+)\\|([s,a,l])\\$", Pattern.CASE_INSENSITIVE);
         Matcher m;
         DCValue dcv;
         DCValue tempDCV;
@@ -278,7 +278,6 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
             {
                 StringBuffer sb = new StringBuffer();
                 sb.append(prolog);
-
                 String template = agrisMap.get(field.split("_")[0]);
                 dcv = metadata.get(field);
                 template = template.replace("%s", dcv.value != null ? dcv.value : "");
@@ -304,23 +303,22 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
                                 subst = tempDCV.language != null ? tempDCV.language : "";
                             }
                             m.appendReplacement(sb, subst);
+
                         }else
                         {
                             m.appendReplacement(sb, "");
-                        } 
+                        }
                     }
                 }
                 m.appendTail(sb);
-
                 sb.append(postlog);
                 try
                 {
                     Element tempRoot = builder.build(new StringReader((sb.toString()))).getRootElement();
                     result.put(field, tempRoot);
-
                 } catch (Exception e)
                 {
-                    log.error("MODSDisseminationCrosswalk error: " + e.getLocalizedMessage());
+                    log.error("AGRISDisseminationCrosswalk error: " + e.getLocalizedMessage());
                 }
             }
         }
@@ -406,7 +404,6 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
                     utilsXML.mergeXMLTrees(root, (Element) temp.get(0), field);
                 }
             }
-
         } catch (Exception e)
         {
             log.error(getPluginInstanceName() + ": " + e.getLocalizedMessage());
