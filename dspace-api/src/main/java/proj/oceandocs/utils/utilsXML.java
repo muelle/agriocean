@@ -20,23 +20,39 @@ public class utilsXML
 
     public static void mergeXMLTrees(Element newParent, Element tag, String limitTagName)
     {
-        Element test = newParent.getChild(tag.getName(),tag.getNamespace());
-        if (test != null && equalTagExist(test, tag) && !tag.getName().equals(limitTagName))
-        {
-            for (Element e : (List<Element>) tag.getChildren())
-            {
-                mergeXMLTrees(test, e, limitTagName);
-            }
-        } else
+        if (tag.getQualifiedName().equals(limitTagName) || tag.getChildren().isEmpty())
         {
             newParent.getChildren().add(tag.clone());
         }
+        else
+        {
+            List<Element> testlist = newParent.getChildren();
 
+            if (testlist.isEmpty() || !haveTag(testlist,tag))
+            {
+                newParent.getChildren().add(tag.clone());
+            }
+            else
+            {
+                for (int i = 0; i < testlist.size(); i++)
+                {
+                    Element e = testlist.get(i);
+
+                    if (equalTag((Element) e, tag))
+                    {
+                        for (Element c : (List<Element>) tag.getChildren())
+                        {
+                            mergeXMLTrees(e, c, limitTagName);
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    public static boolean equalTagExist(Element a, Element b)
+    public static boolean equalTag(Element a, Element b)
     {
-        if (a.getNamespacePrefix().equals(b.getNamespacePrefix()) && a.getName().equals(b.getName()))
+        if (a.getQualifiedName().equals(b.getQualifiedName()))
         {
             if (a.getAttributes().size() != b.getAttributes().size())
             {
@@ -45,16 +61,25 @@ public class utilsXML
 
             for (Attribute attr : (List<Attribute>) a.getAttributes())
             {
-                if (!attr.getValue().equals(b.getAttribute(attr.getName()) != null ? b.getAttribute(attr.getName()).getValue():""))
+                if (!attr.getValue().equals((b.getAttribute(attr.getName(),attr.getNamespace()) != null ? b.getAttribute(attr.getName(),attr.getNamespace()).getValue() : "")))
                 {
                     return false;
                 }
             }
             return true;
         }
-
         return false;
     }
     
+    public static boolean haveTag(List<Element> list, Element test)
+    {
+        for(Element e: list)
+        {
+            if(equalTag(e, test))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
-
