@@ -18,7 +18,7 @@
         <template lang="en" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g> <g>$bibliographicCitation.title$,</g> <g> $publisher$,</g> <g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
     <type name="Conference Material">
-        <template lang="en" name="default"><g>$bibliographicCitation.conferencename$,</g><g> $bibliographicCitation.conferenceplace$,</g> <g>$bibliographicCitation.conferencedate$</g>.</template>
+        <template lang="en" name="default"><g>$bibliographicCitation.conferencename$,</g><g> $bibliographicCitation.conferenceplace$,</g> <g> $bibliographicCitation.conferencedate$</g>.</template>
     </type>
     <type name="Book Section">
         <template lang="en" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g><g>$bibliographicCitation.title$,</g><g> $publisher$,</g><g> p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
