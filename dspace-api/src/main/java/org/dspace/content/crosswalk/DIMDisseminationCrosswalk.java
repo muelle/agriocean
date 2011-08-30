@@ -30,38 +30,39 @@ import org.jdom.Namespace;
  * @version $Revision: 1 $
  */
 public class DIMDisseminationCrosswalk
-    implements DisseminationCrosswalk
+        implements DisseminationCrosswalk
 {
     // Non-existant XSD schema
+
     public static final String DIM_XSD = "null";
-    
     // Namespaces 
     public static final Namespace DIM_NS =
-        Namespace.getNamespace("dim", "http://www.dspace.org/xmlns/dspace/dim");
-
-    private static final Namespace namespaces[] = { DIM_NS };
+            Namespace.getNamespace("dim", "http://www.dspace.org/xmlns/dspace/dim");
+    private static final Namespace namespaces[] =
+    {
+        DIM_NS
+    };
 
     public Namespace[] getNamespaces()
     {
         return (Namespace[]) ArrayUtils.clone(namespaces);
     }
 
-    /* No schema for DIM */ 
+    /* No schema for DIM */
     public String getSchemaLocation()
     {
         return DIM_NS.getURI() + " " + DIM_XSD;
     }
 
-    
-    public Element disseminateElement(DSpaceObject dso)	throws CrosswalkException, IOException, SQLException, AuthorizeException 
-	{
-    	if (dso.getType() != Constants.ITEM)
+    public Element disseminateElement(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException
+    {
+        if (dso.getType() != Constants.ITEM)
         {
             throw new CrosswalkObjectNotSupported("DIMDisseminationCrosswalk can only crosswalk an Item.");
         }
-        Item item = (Item)dso;
-        
-    	DCValue[] dc = item.getMetadata(Item.ANY, Item.ANY, Item.ANY, Item.ANY);
+        Item item = (Item) dso;
+
+        DCValue[] dc = item.getMetadata(Item.ANY, Item.ANY, Item.ANY, Item.ANY);
         Element dim = new Element("dim", DIM_NS);
         for (int i = 0; i < dc.length; i++)
         {
@@ -80,27 +81,30 @@ public class DIMDisseminationCrosswalk
             {
                 field.setText(dc[i].value);
             }
+            if (dc[i].authority != null)
+            {
+                field.setAttribute("authority", dc[i].authority);
+            }
             dim.addContent(field);
         }
         return dim;
-	}
-   
+    }
+
     public List<Element> disseminateList(DSpaceObject dso) throws CrosswalkException, IOException, SQLException, AuthorizeException
-	{
-	    List<Element> result = new ArrayList<Element>(1);
-	    result.add(disseminateElement(dso));
-	    return result;
-	}
+    {
+        List<Element> result = new ArrayList<Element>(1);
+        result.add(disseminateElement(dso));
+        return result;
+    }
 
     /* Only interested in disseminating items at this time */
     public boolean canDisseminate(DSpaceObject dso)
     {
-    	return (dso.getType() == Constants.ITEM);
+        return (dso.getType() == Constants.ITEM);
     }
 
     public boolean preferList()
     {
         return false;
     }
-	
 }
