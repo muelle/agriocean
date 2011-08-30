@@ -739,24 +739,6 @@
 
     <dc-type>
         <schema>dc</schema>
-        <element>bibliographicCitation</element>
-        <qualifier>booktitle</qualifier>
-    </dc-type>
-
-    <dc-type>
-        <schema>dc</schema>
-        <element>bibliographicCitation</element>
-        <qualifier>proceedingstitle</qualifier>
-    </dc-type>
-
-    <dc-type>
-        <schema>dc</schema>
-        <element>type</element>
-        <qualifier>thesis</qualifier>
-    </dc-type>
-	
-    <dc-type>
-        <schema>dc</schema>
         <element>identifier</element>
         <qualifier>isan</qualifier>
     </dc-type>
@@ -778,11 +760,24 @@
         <element>publisher</element>
         <qualifier>place</qualifier>
     </dc-type>
-    
+	
+	<dc-type>
+        <schema>dc</schema>
+        <element>relation</element>
+        <qualifier>data</qualifier>
+    </dc-type>
+
     <dc-type>
         <schema>dc</schema>
         <element>relation</element>
         <qualifier>doi</qualifier>
+    </dc-type>
+
+    <dc-type>
+        <schema>dc</schema>
+        <element>contributor</element>
+        <qualifier>institution</qualifier>
+        <scope_note>For theses</scope_note>
     </dc-type>
 
 </dspace-dc-types>
