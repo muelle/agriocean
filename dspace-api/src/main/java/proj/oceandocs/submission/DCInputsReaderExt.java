@@ -587,52 +587,53 @@ public class DCInputsReaderExt
      *             if no default set defined
      * @see DCInputSet
      */
-    public DCInputSetExt getInputs(String collectionHandle, String documentType)
-            throws DCInputsReaderException
-    {
-        String ch = (collectionHandle != null && !collectionHandle.equals("")) ? collectionHandle : DEFAULT_COLLECTION;
-        if (documentType != null && !"".equals(documentType))
-        {
-            String formName;
-            if (getTypesListforCollection(ch).contains(documentType))
-            {
-                formName = type2Forms.get(documentType);
-            } else
-            {
+       public DCInputSetExt getInputs(String collectionHandle, String documentType)
+           throws DCInputsReaderException
+   {
+       String ch = (collectionHandle != null && !collectionHandle.equals("")) ? collectionHandle : DEFAULT_COLLECTION;
+       if (documentType != null && !"".equals(documentType))
+       {
+           String formName;
+           if (getTypesListforCollection(ch).contains(documentType))
+           {
+               formName = type2Forms.get(documentType);
+           } else
+           {
 
-                if (!getTypesListforCollection(ch).isEmpty())
-                {
-                    formName = getTypesListforCollection(ch).get(0);
-                } else
-                {
-                    throw new DCInputsReaderException(documentType + " is not allowed for collection "
-                            + collectionHandle + " check [dspace]/config/input-forms.xml");
-                }
-            }
-            if (formName == null)
-            {
-                if (type2Forms.size() > 0)
-                {
-                    formName = (String) type2Forms.values().toArray()[0];
-                } else
-                {
-                    throw new DCInputsReaderException("No form designated as default");
-                }
-            }
+               if (!getTypesListforCollection(ch).isEmpty())
+               {
+                   documentType = getTypesListforCollection(ch).get(0);
+                   formName = type2Forms.get(documentType);
+               } else
+               {
+                   throw new DCInputsReaderException(documentType + " is not allowed for collection "
+                           + collectionHandle + " check [dspace]/config/input-forms.xml");
+               }
+           }
+           if (formName == null)
+           {
+               if (type2Forms.size() > 0)
+               {
+                   formName = (String) type2Forms.values().toArray()[0];
+               } else
+               {
+                   throw new DCInputsReaderException("No form designated as default");
+               }
+           }
 
-            if (formDefns.containsKey(formName))
-            {
-                return formDefns.get(formName);
-            } else
-            {
-                throw new DCInputsReaderException("Form definition is missing for " + formName);
-            }
+           if (formDefns.containsKey(formName))
+           {
+               return formDefns.get(formName);
+           } else
+           {
+               throw new DCInputsReaderException("Form definition is missing for " + formName);
+           }
 
-        } else
-        {
-            return null;
-        }
-    }
+       } else
+       {
+           return null;
+       }
+   }
 
     public DCInputSetExt getInputs(String documentType)
             throws DCInputsReaderException
