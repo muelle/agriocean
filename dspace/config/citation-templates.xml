@@ -9,18 +9,24 @@
 -->
 
 <citation>
-    <type name="Journal Contribution">
-        <!--<template lang="en" name="default">$BibliographicCitation.title$, $BibliographicCitation.volume$($BibliographicCitation.issue$) p. $BibliographicCitation.stpage$-$BibliographicCitation.endpage$.</template>-->
-        <template lang="en" name="default"><g>$bibliographicCitation.title$,</g><g> $bibliographicCitation.volume$</g><g> ($bibliographicCitation.issue$)</g><g>, p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
-	<template lang="en" name="agscitationNumber"><g>vol. $bibliographicCitation.volume$, </g><g>issue: $bibliographicCitation.issue$, </g><g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    <!--
+    Specifies the content of the DC field dc.identifier.citation as a template, based on the contents of
+    other DC fields. A template contains a list of groups. DC fields are referenced between dollar signs. If
+    the DC field in a group is undefined, the whole group is ignored. If the DC field is defined, the DC field reference
+    is replaced by the actual value.
+    The defining-field attribute specifies the DC field whose language value will be used for the derived dc.identifier.citation field.
+    If the defining-field has no value, the dc.identifier.citation is not set.
+    -->
+    <type name="Article - published">
+        <template defining-field="bibliographicCitation.title" name="default"><g>$bibliographicCitation.title$,</g><g> $bibliographicCitation.volume$</g><g>($bibliographicCitation.issue$)</g><g>, p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
-    <type name="Proceedings Paper">
-        <template lang="en" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g> <g>$bibliographicCitation.title$,</g> <g> $publisher$,</g> <g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    <type name="Conference paper - published">
+        <template defining-field="bibliographicCitation.title" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g> <g>$bibliographicCitation.title$,</g> <g> $publisher$,</g> <g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
-    <type name="Conference Material">
-        <template lang="en" name="default"><g>$bibliographicCitation.conferencename$,</g><g> $bibliographicCitation.conferenceplace$,</g> <g> $bibliographicCitation.conferencedate$</g>.</template>
+    <type name="Conference paper - unpublished">
+        <template defining-field="bibliographicCitation.conferencename" name="default"><g>$bibliographicCitation.conferencename$,</g><g> $bibliographicCitation.conferenceplace$,</g> <g> $bibliographicCitation.conferencedate$</g>.</template>
     </type>
-    <type name="Book Section">
-        <template lang="en" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g><g>$bibliographicCitation.title$,</g><g> $publisher$,</g><g> p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    <type name="Book item">
+        <template defining-field="bibliographicCitation.title" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g><g>$bibliographicCitation.title$,</g><g> $publisher$,</g><g> p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
 </citation>

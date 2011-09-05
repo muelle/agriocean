@@ -26,10 +26,11 @@ import org.dspace.content.MetadataSchema;
 import org.dspace.core.ConfigurationManager;
 
 /**
- * @author Denys SLIPETSKYY
+ *
+ * @author Denys SLIPETSKYY, Dirk Leinders
  */
-public class CitationManager
-{
+public class CitationManager {
+
 
     private HashMap<String, CitationTemplatesCollection> types;
     private org.w3c.dom.Document document;
@@ -133,9 +134,9 @@ public class CitationManager
                             {
                                 tmpTMPL.name = attr.getValue().toString();
                             }
-                            if (attr.getName().equals("lang"))
+                            if (attr.getName().equals("defining-field"))
                             {
-                                tmpTMPL.language = attr.getValue().toString();
+                                tmpTMPL.definingField = attr.getValue().toString();
                             }
                         }
 
@@ -154,7 +155,7 @@ public class CitationManager
                                         org.w3c.dom.Node g_template2 = g_nodes2.item(gg2);
                                         if (g_template2.getNodeType() == org.w3c.dom.Node.TEXT_NODE)
                                         {
-                                            tmpTMPL.template.add(g_template2.getNodeValue().trim());
+                                            tmpTMPL.template.add(g_template2.getNodeValue());
                                         }
                                     }
                                 }
@@ -243,11 +244,12 @@ public class CitationManager
         String citation = "";
         DCValue dcv = null;
         DCValue[] authors = null;
+        CitationTemplate tmpTMPL = this.getTemplate(type, name);
 
-        if (map.containsKey("bibliographicCitation.title") && !map.get("bibliographicCitation.title").equals(""))
+        // do not set identifier.citation when definingField has no value
+        if (map.containsKey(tmpTMPL.definingField) && !map.get(tmpTMPL.definingField).equals(""))
         {
 
-            CitationTemplate tmpTMPL = this.getTemplate(type, name);
             if (tmpTMPL != null)
             {
                 Pattern p = Pattern.compile("\\$(\\w+.\\w+)\\$", Pattern.CASE_INSENSITIVE);
@@ -258,7 +260,7 @@ public class CitationManager
                     while (m.find())
                     {
                         /* if metadata field is null - must skip it with related formatting.
-                         * Also in the case of authors names we need put them all (we will 
+                         * Also in the case of authors names we need put them all (we will
                          * have DCValue[] instead of just DCValue) in the map in that case
                          */
                         if ("bibliographicCitation.authors".equalsIgnoreCase(m.group(m.groupCount())))
@@ -278,7 +280,7 @@ public class CitationManager
                             {
                                 m.appendReplacement(sb, allAuthorsNames);
                                 m.appendTail(sb);
-                                citation += sb.toString() + " ";
+                                citation += sb.toString();
                             }
 
                         } else
@@ -288,7 +290,7 @@ public class CitationManager
                             {
                                 m.appendReplacement(sb, dcv.value);
                                 m.appendTail(sb);
-                                citation += sb.toString() + " ";
+                                citation += sb.toString();
                             }
                         }
                     }
@@ -324,20 +326,7 @@ public class CitationManager
                     if (!citation.equals(""))
                     {
                         item.clearMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", Item.ANY);
-                        item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", Item.ANY, citation);
-                    }
-                    if (getTemplate(type, "agscitationNumber") != null)
-                    {
-                        quals = fillQuals(type, "agscitationNumber");
-                        values = getBibliographicValues(item, quals);
-                        String agsCitation;
-
-                        agsCitation = compileCitation(type, values, "agscitationNumber");
-                        if (!agsCitation.equals(""))
-                        {
-                            item.clearMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "agscitationNumber", Item.ANY);
-                            item.addMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "agscitationNumber", Item.ANY, agsCitation);
-                        }
+                        item.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "citation", this.getDefiningFieldLanguage(item, type), citation);
                     }
 
                     item.update();
@@ -346,6 +335,15 @@ public class CitationManager
         }
 
         return citation;
+    }
+
+    private String getDefiningFieldLanguage(Item item, String type)
+    {
+        CitationTemplate tmpl = this.getTemplate(type, "");
+        HashSet singletonDefiningField = new HashSet();
+        singletonDefiningField.add(tmpl.definingField);
+        HashMap result = this.getBibliographicValues(item, singletonDefiningField);
+        return ((DCValue)result.get(tmpl.definingField)).language;
     }
 
 //    // Added by Walter Brebels
@@ -407,4 +405,5 @@ public class CitationManager
         }
         return result;
     }
+
 }

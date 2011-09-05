@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class CitationTemplate {
     public String type;
     public String name;
-    public String language;
+    public String definingField;
     public ArrayList<String> template;
 
     public CitationTemplate()
