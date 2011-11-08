@@ -118,7 +118,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
         MODS_NS, XLINK_NS
     };
     /**  URL of MODS XML Schema */
-    public static final String MODS_XSD = "http://www.loc.gov/standards/mods/v3/mods-3-1.xsd";
+    public static final String MODS_XSD = "http://www.loc.gov/standards/mods/v3/mods-3-3.xsd";
     private static final String schemaLocation = MODS_NS.getURI() + " " + MODS_XSD;
     private static SAXBuilder builder = new SAXBuilder();
     private Map<String, String> modsMap = null;
@@ -323,7 +323,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
             throws CrosswalkException,
             IOException, SQLException, AuthorizeException
     {
-        Element root = new Element("modsCollection", MODS_NS);
+        Element root = new Element("modsCollection");
         root.addNamespaceDeclaration(XLINK_NS);
         root.addNamespaceDeclaration(XSI_NS);
         root.setAttribute("schemaLocation", schemaLocation, XSI_NS);

@@ -7,18 +7,19 @@
  */
 package org.dspace.content.crosswalk;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,27 +87,28 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
     /**
      * ARGIS namespace.
      */
-    public static final Namespace AGRIS_NS =
-            Namespace.getNamespace("agris", "http://purl.org/agmes/agrisap/schema");
+//    public static final Namespace AGRIS_NS =
+//            Namespace.getNamespace("agris", "http://purl.org/agmes/agrisap/schema");
     public static final Namespace AGS_NS =
-            Namespace.getNamespace("ags", "http://purl.org/agmes/1.1/");
+        Namespace.getNamespace("ags", "http://purl.org/agmes/1.1/");
     public static final Namespace AGLS_NS =
-            Namespace.getNamespace("agls", "http://www.naa.gov.au/recordkeeping/gov_online/agls/1.2");
+        Namespace.getNamespace("agls", "http://www.naa.gov.au/recordkeeping/gov_online/agls/1.2");
     public static final Namespace DC_NS =
-            Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
+        Namespace.getNamespace("dc", "http://purl.org/dc/elements/1.1/");
     public static final Namespace DCTERMS_NS =
-            Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/");
+        Namespace.getNamespace("dcterms", "http://purl.org/dc/terms/");
     private static final Namespace namespaces[] =
     {
-        AGRIS_NS, AGS_NS, AGLS_NS, DC_NS, DCTERMS_NS
+        /*AGRIS_NS,*/ AGS_NS, AGLS_NS, DC_NS, DCTERMS_NS
     };
     /**  URL of ARGIS XML Schema */
-    public static final String AGRIS_XSD = "http://www.fao.org/agris/agmes/schemas/agrisap.xsd";
-    private static final String schemaLocation = AGRIS_NS.getURI() + " " + AGRIS_XSD;
+//    public static final String AGRIS_XSD = "http://www.fao.org/agris/agmes/schemas/agrisap.xsd";
+//    private static final String schemaLocation = AGRIS_NS.getURI() + " " + AGRIS_XSD;
     //private static XMLOutputter XMLoutputer = new XMLOutputter(Format.getPrettyFormat());
     private static SAXBuilder builder = new SAXBuilder();
-    private Map<String, String> agrisMap = null;
+    private LinkedHashMap<String, String> agrisMap = null;
     private Map<String, String> groupingLimits = null;
+    //private LinkedHashMap<String, String> elementsSequence = null;
 
     static
     {
@@ -161,7 +163,7 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
      *
      */
     private void initMap()
-            throws CrosswalkInternalException
+        throws CrosswalkInternalException
     {
         if ((agrisMap != null) && (agrisMap.size() > 0))
         {
@@ -184,40 +186,51 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
         } else
         {
             String parent = ConfigurationManager.getProperty("dspace.dir")
-                    + File.separator + "config" + File.separator;
+                + File.separator + "config" + File.separator;
             File propsFile = new File(parent, propsFilename);
-            Properties modsConfig = new Properties();
+
             try
             {
-                modsConfig.load(new FileInputStream(propsFile));
-            } catch (IOException e)
+                BufferedReader br = new BufferedReader(new FileReader(propsFile));
+
+                agrisMap = new LinkedHashMap<String, String>();
+                groupingLimits = new HashMap<String, String>();
+                String[] props;
+
+                String line;
+                while ((line = br.readLine()) != null)
+                {
+                    line = line.trim();
+                    if (!line.startsWith("#") && !line.equals(""))
+                    {
+                        props = line.split("\\s+=\\s+");
+                        if (props.length == 2)
+                        {
+                            String qdc = props[0].trim();
+                            String val = props[1].trim();
+
+                            String pair[] = val.split("\\s+\\|\\s+", 2);
+                            if (pair.length < 1)
+                            {
+                                log.warn("Illegal ARGIS mapping in " + propsFile.toString() + ", line = "
+                                    + qdc + " = " + val);
+                            } else
+                            {
+                                agrisMap.put(qdc, pair[0]);
+                                if (pair.length >= 2 && (!"".equals(pair[1])))
+                                {
+                                    groupingLimits.put(qdc, pair[1].trim());
+                                }
+                            }
+                        }
+                    }
+                }
+
+            } catch (Exception e)
             {
                 log.error("Error opening or reading ARGIS properties file: " + propsFile.toString() + ": " + e.toString());
                 throw new CrosswalkInternalException("ARGIS crosswalk cannot "
-                        + "open config file: " + e.toString());
-            }
-
-            agrisMap = new HashMap<String, String>();
-            groupingLimits = new HashMap<String, String>();
-
-            Enumeration pe = modsConfig.propertyNames();
-            while (pe.hasMoreElements())
-            {
-                String qdc = (String) pe.nextElement();
-                String val = modsConfig.getProperty(qdc);
-                String pair[] = val.split("\\s+\\|\\s+", 2);
-                if (pair.length < 1)
-                {
-                    log.warn("Illegal ARGIS mapping in " + propsFile.toString() + ", line = "
-                            + qdc + " = " + val);
-                } else
-                {
-                    agrisMap.put(qdc, pair[0]);
-                    if (pair.length >= 2 && (!"".equals(pair[1])))
-                    {
-                        groupingLimits.put(qdc, pair[1].trim());
-                    }
-                }
+                    + "open config file: " + e.toString());
             }
         }
     }
@@ -231,7 +244,7 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
     @Override
     public String getSchemaLocation()
     {
-        return schemaLocation;
+        return "http://purl.org/agmes/agrisap/schema";
     }
 
     @Override
@@ -252,73 +265,76 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
         return false;
     }
 
-    private Map<String, Element> prepareTags(Map<String, DCValue> metadata)
+    private Map<String, Element> prepareTags(Map<String, ArrayList<DCValue>> metadata)
     {
         final String prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                + "<ags:resources xmlns:" + AGRIS_NS.getPrefix() + "=\"" + AGRIS_NS.getURI() + "\" "
-                + "xmlns:" + AGS_NS.getPrefix() + "=\"" + AGS_NS.getURI() + "\" "
-                + "xmlns:" + DC_NS.getPrefix() + "=\"" + DC_NS.getURI() + "\" "
-                + "xmlns:" + DCTERMS_NS.getPrefix() + "=\"" + DCTERMS_NS.getURI() + "\" "
-                + "xmlns:" + AGLS_NS.getPrefix() + "=\"" + AGLS_NS.getURI() + "\">";
+            + "<ags:resources "
+            + "xmlns:" + AGS_NS.getPrefix() + "=\"" + AGS_NS.getURI() + "\" "
+            + "xmlns:" + DC_NS.getPrefix() + "=\"" + DC_NS.getURI() + "\" "
+            + "xmlns:" + AGLS_NS.getPrefix() + "=\"" + AGLS_NS.getURI() + "\" "
+            + "xmlns:" + DCTERMS_NS.getPrefix() + "=\"" + DCTERMS_NS.getURI() + "\">";
         final String postlog = "</ags:resources>";
 
         //$dc.element.qualifier|s$ like constructions will be replased by value of apropriate field
         Pattern p = Pattern.compile("\\$(\\w+.\\w+.\\w+)\\|([s,a,l])\\$", Pattern.CASE_INSENSITIVE);
         Matcher m;
-        DCValue dcv;
         DCValue tempDCV;
 
 
         String subst = "";
-        HashMap<String, Element> result = new HashMap<String, Element>();
+        Map<String, Element> result = new LinkedHashMap<String, Element>();
 
-        for (String field : metadata.keySet())
+        for (String field : agrisMap.keySet())
         {
-            if (agrisMap.containsKey(field.split("_")[0]))
+            if (metadata.containsKey(field))
             {
-                StringBuffer sb = new StringBuffer();
-                sb.append(prolog);
-                String template = agrisMap.get(field.split("_")[0]);
-                dcv = metadata.get(field);
-                template = template.replace("%s", dcv.value != null ? dcv.value : "");
-                template = template.replace("%a", dcv.authority != null ? dcv.authority : "");
-                template = template.replace("%l", dcv.language != null ? dcv.language : "");
-
-                m = p.matcher(template);
-                while (m.find())
+                for (DCValue dcv : metadata.get(field))
                 {
-                    if (m.groupCount() == 2)
+                    StringBuffer sb = new StringBuffer();
+                    sb.append(prolog);
+                    String template = agrisMap.get(field);
+                    template = template.replace("%s", dcv.value != null ? dcv.value : "");
+                    template = template.replace("%a", dcv.authority != null ? dcv.authority : "");
+                    template = template.replace("%l", dcv.language != null ? dcv.language : "");
+                    
+                    template = template.replace("xml:lang=\"\"", "");
+                    
+                    m = p.matcher(template);
+                    while (m.find())
                     {
-                        tempDCV = metadata.get(m.group(1));
-                        if (tempDCV != null)
+                        if (m.groupCount() == 2)
                         {
-                            if ("s".equalsIgnoreCase(m.group(2)))
+                            tempDCV = metadata.get(m.group(1)) != null ? metadata.get(m.group(1)).get(0) : null;
+                            if (tempDCV != null)
                             {
-                                subst = tempDCV.value != null ? tempDCV.value : "";
-                            } else if ("a".equalsIgnoreCase(m.group(2)))
-                            {
-                                subst = tempDCV.authority != null ? tempDCV.authority : "";
-                            } else if ("l".equalsIgnoreCase(m.group(2)))
-                            {
-                                subst = tempDCV.language != null ? tempDCV.language : "";
-                            }
-                            m.appendReplacement(sb, subst);
+                                if ("s".equalsIgnoreCase(m.group(2)))
+                                {
+                                    subst = tempDCV.value != null ? tempDCV.value : "";
+                                } else if ("a".equalsIgnoreCase(m.group(2)))
+                                {
+                                    subst = tempDCV.authority != null ? tempDCV.authority : "";
+                                } else if ("l".equalsIgnoreCase(m.group(2)))
+                                {
+                                    subst = tempDCV.language != null ? tempDCV.language : "";
+                                }
+                                m.appendReplacement(sb, subst);
 
-                        }else
-                        {
-                            m.appendReplacement(sb, "");
+                            } else
+                            {
+                                m.appendReplacement(sb, "");
+                            }
                         }
                     }
-                }
-                m.appendTail(sb);
-                sb.append(postlog);
-                try
-                {
-                    Element tempRoot = builder.build(new StringReader((sb.toString()))).getRootElement();
-                    result.put(field, tempRoot);
-                } catch (Exception e)
-                {
-                    log.error("AGRISDisseminationCrosswalk error: " + e.getLocalizedMessage());
+                    m.appendTail(sb);
+                    sb.append(postlog);
+                    try
+                    {
+                        Element tempRoot = builder.build(new StringReader((sb.toString()))).getRootElement();
+                        result.put(field, tempRoot);
+                    } catch (Exception e)
+                    {
+                        log.error("AGRISDisseminationCrosswalk error: " + e.getLocalizedMessage());
+                    }
                 }
             }
         }
@@ -339,7 +355,7 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
         DCValue[] dc;
 
         Element root = new Element("resources", AGS_NS);
-        root.setAttribute("schemaLocation", schemaLocation, XSI_NS);
+        //root.setAttribute("schemaLocation", schemaLocation, XSI_NS);
         root.addNamespaceDeclaration(DC_NS);
         root.addNamespaceDeclaration(DCTERMS_NS);
         root.addNamespaceDeclaration(AGLS_NS);
@@ -363,13 +379,14 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
             arn = ARNcountry + year + ARNinstitute + String.format("%5s", ((item.getHandle().split("/").length == 2) ? item.getHandle().split("/")[1] : "")).replace(' ', '0');
         }
 
-        resource.getAttributes().add(new Attribute("ARN", arn, AGS_NS));
+        if (!"".equals(arn))
+        {
+            resource.getAttributes().add(new Attribute("ARN", arn, AGS_NS));
+        }
 
-        Map<String, DCValue> itemDCVs = new HashMap<String, DCValue>();
+        HashMap<String, ArrayList<DCValue>> itemDCVs = new HashMap<String, ArrayList<DCValue>>();
 
         DCValue[] dcvs = item.getMetadata(Item.ANY, Item.ANY, Item.ANY, Item.ANY);
-
-        Integer repeats = 0;
 
         for (int i = 0; i < dcvs.length; i++)
         {
@@ -381,29 +398,33 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
 
             if (!itemDCVs.containsKey(qdc))
             {
-                itemDCVs.put(qdc, dcvs[i]);
+                ArrayList al = new ArrayList();
+                al.add(dcvs[i]);
+                itemDCVs.put(qdc, al);
             } else
             {
-                ++repeats;
-                itemDCVs.put(qdc + "_" + repeats.toString(), dcvs[i]);
+                itemDCVs.get(qdc).add(dcvs[i]);
             }
         }
 
         Map<String, Element> tags = prepareTags(itemDCVs);
         List temp = null;
-
+        String curKey = "";
         try
         {
             String field = "";
             for (Entry kvp : tags.entrySet())
             {
-                field = groupingLimits.get(((String) kvp.getKey()).split("_")[0]);
+                curKey = ((String) kvp.getKey()).split("_")[0];
+                field = groupingLimits.get(curKey);
                 temp = ((Element) kvp.getValue()).getChildren();
                 if (temp != null && temp.size() > 0)
                 {
-                    utilsXML.mergeXMLTrees(root, (Element) temp.get(0), field);
+                    utilsXML.mergeXMLTrees(resource, (Element) temp.get(0), field);
                 }
             }
+            root.addContent(resource);
+
         } catch (Exception e)
         {
             log.error(getPluginInstanceName() + ": " + e.getLocalizedMessage());
