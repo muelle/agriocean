@@ -175,7 +175,7 @@
 
     <%-- <h2>Collections in this community</h2> --%>
     <h2><fmt:message key="jsp.community-home.heading2"/></h2>
-    <ul class="collectionListItem">
+    <ul class="collectionListItem-home">
         <%
                 for (int i = 0; i < collections.length; i++)
                 {
@@ -215,7 +215,7 @@
                     </td>
                 </tr>
             </table>
-            <p class="collectionDescription"><%= collections[i].getMetadata("short_description")%></p>
+ 
         </li>
         <%
                 }
@@ -232,7 +232,7 @@
     <%--<h2>Sub-communities within this community</h2>--%>
     <h2><fmt:message key="jsp.community-home.heading3"/></h2>
 
-    <ul class="collectionListItem">
+    <ul class="collectionListItem-home">
         <%
                 for (int j = 0; j < subcommunities.length; j++)
                 {

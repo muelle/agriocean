@@ -231,7 +231,7 @@ context = UIUtil.obtainContext(request);
   <%= intro %>
 
   <p class="copyrightText"><%= copyright %></p>
-    <%= intro %>
+
     <%-- Added by Dimitri Surinx --%>
     <%--<dspace:include page="overviewcol.jsp" /> --%>
             </td>

@@ -219,12 +219,8 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
 .communityLink { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                  /*font-size: 10pt;*/
                  font-weight: bold;
-                 background-image: url(./image/blue_arrow.png);
-                 background-repeat: no-repeat;
-                 background-position: 0 .4em;
                  padding-left: 1em;
-                 list-style-type: none;
- }
+                 list-style-type: none; }
 
 .communityStrength {
     font-family: "verdana", "Arial", "Helvetica", sans-serif;
@@ -242,6 +238,10 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                       /*font-size: 12pt;*/
                       font-weight: normal }
 
+.collectionListItem-home { font-family: "verdana", "Arial", "Helvetica", sans-serif;
+                      /*font-size: 12pt;*/
+                      font-weight: normal;
+		      list-style-type: none }
 .collectionDescription { margin-left: 20px;
                          margin-right: 10px;
                          font-family: "verdana", "Arial", "Helvetica", sans-serif;
