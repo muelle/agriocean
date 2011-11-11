@@ -265,7 +265,7 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
         return false;
     }
 
-    private Map<String, Element> prepareTags(Map<String, ArrayList<DCValue>> metadata)
+    private Map<String, ArrayList<Element>> prepareTags(Map<String, ArrayList<DCValue>> metadata)
     {
         final String prolog = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<ags:resources "
@@ -282,12 +282,14 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
 
 
         String subst = "";
-        Map<String, Element> result = new LinkedHashMap<String, Element>();
+        Map<String, ArrayList<Element>> result = new LinkedHashMap<String, ArrayList<Element>>();
 
         for (String field : agrisMap.keySet())
         {
             if (metadata.containsKey(field))
             {
+                ArrayList<Element> elements = new ArrayList<Element>();
+
                 for (DCValue dcv : metadata.get(field))
                 {
                     StringBuffer sb = new StringBuffer();
@@ -296,9 +298,9 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
                     template = template.replace("%s", dcv.value != null ? dcv.value : "");
                     template = template.replace("%a", dcv.authority != null ? dcv.authority : "");
                     template = template.replace("%l", dcv.language != null ? dcv.language : "");
-                    
+
                     template = template.replace("xml:lang=\"\"", "");
-                    
+
                     m = p.matcher(template);
                     while (m.find())
                     {
@@ -330,12 +332,14 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
                     try
                     {
                         Element tempRoot = builder.build(new StringReader((sb.toString()))).getRootElement();
-                        result.put(field, tempRoot);
+                        elements.add(tempRoot);
                     } catch (Exception e)
                     {
                         log.error("AGRISDisseminationCrosswalk error: " + e.getLocalizedMessage());
                     }
                 }
+
+                result.put(field, elements);
             }
         }
         return result;
@@ -407,20 +411,25 @@ public class AGRISDisseminationCrosswalk extends SelfNamedPlugin implements Diss
             }
         }
 
-        Map<String, Element> tags = prepareTags(itemDCVs);
-        List temp = null;
+        Map<String, ArrayList<Element>> tags = prepareTags(itemDCVs);
+        ArrayList<Element> temp = null;
+        List children;
         String curKey = "";
         try
         {
             String field = "";
             for (Entry kvp : tags.entrySet())
             {
-                curKey = ((String) kvp.getKey()).split("_")[0];
+                curKey = (String) kvp.getKey();
                 field = groupingLimits.get(curKey);
-                temp = ((Element) kvp.getValue()).getChildren();
-                if (temp != null && temp.size() > 0)
+                temp = (ArrayList<Element>) kvp.getValue();
+                for (Element e : temp)
                 {
-                    utilsXML.mergeXMLTrees(resource, (Element) temp.get(0), field);
+                    children = e.getChildren();
+                    if (children != null && children.size() > 0)
+                    {
+                        utilsXML.mergeXMLTrees(resource, (Element) children.get(0), field);
+                    }
                 }
             }
             root.addContent(resource);
