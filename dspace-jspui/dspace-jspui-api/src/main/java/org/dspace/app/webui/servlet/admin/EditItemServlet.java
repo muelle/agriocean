@@ -212,6 +212,11 @@ public class EditItemServlet extends DSpaceServlet {
                     collections[i].removeItem(item);
                 }
 
+                // Due to "virtual" owning collection, item.getCollections() could have excluded the owning collection
+                // so delete the item from it's owning collection
+                if (item.getOwningCollection() != null)
+                    item.getOwningCollection().removeItem(item);
+
                 JSPManager.showJSP(request, response, "/tools/get-item-id.jsp");
                 context.complete();
 
@@ -314,8 +319,9 @@ public class EditItemServlet extends DSpaceServlet {
                 if (doctype != null && !"".equals(doctype)) {
                     item.clearMetadata("dc", "type", null, Item.ANY);
                     item.addMetadata("dc", "type", null, Item.ANY, doctype);
-
+                    item.update();
                     showEditForm(context, request, response, item);
+                    context.complete();
                 }
 
                 break;
@@ -544,7 +550,6 @@ public class EditItemServlet extends DSpaceServlet {
             String element = inputs.get(j).getElement();
             String qualifier = inputs.get(j).getQualifier();
             String schema = inputs.get(j).getSchema();
-            boolean authority = inputs.get(j).isAuthority();
             if (qualifier != null && !qualifier.equals(Item.ANY)) {
                 fieldName = schema + "_" + element + '_' + qualifier;
             } else {
@@ -553,7 +558,7 @@ public class EditItemServlet extends DSpaceServlet {
 
             String language_qual = request.getParameter(fieldName + "_lang");
 
-            String fieldKey = MetadataField.formKey(schema, element, qualifier);
+            String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
             ChoiceAuthorityManager cmgr = ChoiceAuthorityManager.getManager();
             String inputType = inputs.get(j).getInputType();
             if (inputType.equals("name")) {
@@ -598,7 +603,7 @@ public class EditItemServlet extends DSpaceServlet {
             } else if ((inputType.equals("onebox"))
                     || (inputType.equals("twobox"))
                     || (inputType.equals("textarea"))) {
-                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual, authority);
+                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual);
             } else {
                 throw new ServletException("Field " + fieldName
                         + " has an unknown input type: " + inputType);
@@ -613,7 +618,7 @@ public class EditItemServlet extends DSpaceServlet {
                 item.update();
 //                if(request.getAttribute("moreInputs") == null)
 //                    request.setAttribute("moreInputs", true);
-                showEditForm(context, request, response, item);
+//                showEditForm(context, request, response, item);
             }
             // was XMLUI's "remove" button pushed?
             else if (button.equals("submit_" + fieldName + "_delete"))
@@ -745,6 +750,8 @@ public class EditItemServlet extends DSpaceServlet {
         
         for(DCValue dcv: otherDC)
         {
+            // only if the value is nonempty
+            if (dcv.value != null && !dcv.value.trim().equals(""))
             item.addMetadata(dcv.schema, dcv.element, dcv.qualifier, dcv.language, dcv.value);
         }
 
@@ -772,7 +779,7 @@ public class EditItemServlet extends DSpaceServlet {
             MetadataSchema mschema = MetadataSchema.find(context, field.getSchemaID());
             item.addMetadata(mschema.getName(), field.getElement(), field.getQualifier(), lang, value);
             item.update();
-            showEditForm(context, request, response, item);
+//            showEditForm(context, request, response, item);
         }
 
 
@@ -1090,12 +1097,13 @@ public class EditItemServlet extends DSpaceServlet {
      *            language to set (ISO code)
      */
     protected void readText(HttpServletRequest request, Item item, String schema,
-            String element, String qualifier, boolean repeated, String lang, boolean authority) {
+            String element, String qualifier, boolean repeated, String lang) {
         // FIXME: Of course, language should be part of form, or determined
         // some other way
         String metadataField = MetadataField.formKey(schema, element, qualifier);
-        String fieldKey = MetadataField.formKey(schema, element, qualifier);
-        boolean isAuthorityControlled = authority;
+
+        String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
+        boolean isAuthorityControlled = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
 
         // Values to add
         List<String> vals = null;
@@ -1170,15 +1178,15 @@ public class EditItemServlet extends DSpaceServlet {
                 if (isAuthorityControlled) {
                     String authKey = auths.size() > i ? auths.get(i) : null;
                     String sconf = (authKey != null && confs.size() > i) ? confs.get(i) : null;
-//                    if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
-//                            && (authKey == null || authKey.length() == 0)) {
-//                        log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
-//                        //addErrorField(request, metadataField);
-//                    } else {
+                    if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
+                            && (authKey == null || authKey.length() == 0)) {
+                        log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
+                        //addErrorField(request, metadataField);
+                    } else {
                         item.addMetadata(schema, element, qualifier, l, s,
-                                authKey, /*(sconf != null && sconf.length() > 0)
-                                ? Choices.getConfidenceValue(sconf) :*/ Choices.CF_ACCEPTED, isAuthorityControlled);
-                    //}
+                                authKey, (sconf != null && sconf.length() > 0)
+                                ? Choices.getConfidenceValue(sconf) : Choices.CF_ACCEPTED);
+                    }
                 } else {
                     item.addMetadata(schema, element, qualifier, l, s);
                 }

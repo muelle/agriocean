@@ -111,18 +111,19 @@ public class DescribeStepExt extends AbstractProcessingStep
      */
     @Override
     public int doProcessing(Context context, HttpServletRequest request,
-                            HttpServletResponse response, SubmissionInfo subInfo)
+        HttpServletResponse response, SubmissionInfo subInfo)
         throws ServletException, IOException, SQLException,
         AuthorizeException
     {
         boolean newDocType = false;
         // check what submit button was pressed in User Interface
-        String buttonPressed = Util.getSubmitButton(request, DOCTYPE_BUTTON);//NEXT_BUTTON);
+        String buttonPressed = Util.getSubmitButton(request, DOCTYPE_BUTTON);
         Collection c = subInfo.getSubmissionItem().getCollection();
         // get the item and current page
         Item item = subInfo.getSubmissionItem().getItem();
         int currentPage = getCurrentPage(request);
         String doctype = request.getParameter(DOCTYPE_BUTTON);
+        String formerDocType = null;
 
 
         if (DOCTYPE_BUTTON.equals(buttonPressed))
@@ -132,45 +133,29 @@ public class DescribeStepExt extends AbstractProcessingStep
 
         if (doctype == null)
         {
-            DCValue[] itemsTypes = item.getMetadata("dc", "type", null, Item.ANY);
-            if (itemsTypes.length > 0)
-            {
-                doctype = itemsTypes[0].value;
-            }
-            else
-            {
-
-                List<String> types = inputsReader.getTypesListforCollection(c.getHandle());
-                if (types.size() > 0)
-                {
-                    if (!types.contains(doctype))
-                    {
-                        doctype = types.get(0);
-                    }
-                }
-                else
-                {
-                    doctype = "";
-                }
-            }
-        }
-        else
+            doctype = getCurrentDocType(item, c);
+            // the document type did not change
+            formerDocType = doctype;
+        } else
         {
+            // the document type has changed. Save former document type.
+            formerDocType = getCurrentDocType(item, c); // the type returned is the type stored in the DB, i.e., the type before it changed
             item.clearMetadata("dc", "type", null, Item.ANY);
-            item.addMetadata("dc", "type", null, Item.ANY, doctype);
+            item.addMetadata("dc", "type", null, Item.ANY, doctype); // set the new doctype
             item.update();
         }
         // lookup applicable inputs
         List<DCInput> inputs = null;
         try
         {
-            DCInputSetExt inset = inputsReader.getInputs(c.getHandle(), doctype);
+            // the inputs on the current page of the FORMER document type
+            // (possibly the same as the current one) must be updated!
+            DCInputSetExt inset = inputsReader.getInputs(c.getHandle(), formerDocType);
             if (inset != null)
             {
                 inputs = inset.getPageInputs(currentPage);
             }
-        }
-        catch (DCInputsReaderException e)
+        } catch (DCInputsReaderException e)
         {
             throw new ServletException(e);
         }
@@ -191,7 +176,7 @@ public class DescribeStepExt extends AbstractProcessingStep
                 qualifier = Item.ANY;
             }
             item.clearMetadata(inputs.get(i).getSchema(), inputs.get(i).getElement(),
-                               qualifier, Item.ANY);
+                qualifier, Item.ANY);
         }
 
         // Clear required-field errors first since missing authority
@@ -212,30 +197,26 @@ public class DescribeStepExt extends AbstractProcessingStep
             String element = inputs.get(j).getElement();
             String qualifier = inputs.get(j).getQualifier();
             String schema = inputs.get(j).getSchema();
-            boolean authority = inputs.get(j).isAuthority();
             if (qualifier != null && !qualifier.equals(Item.ANY))
             {
                 fieldName = schema + "_" + element + '_' + qualifier;
-            }
-            else
+            } else
             {
                 fieldName = schema + "_" + element;
             }
 
             String language_qual = request.getParameter(fieldName + "_lang");
 
-            String fieldKey =  MetadataField.formKey(schema, element, qualifier);
+            String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
             ChoiceAuthorityManager cmgr = ChoiceAuthorityManager.getManager();
             String inputType = inputs.get(j).getInputType();
             if (inputType.equals("name"))
             {
                 readNames(request, item, schema, element, qualifier, inputs.get(j).getRepeatable());
-            }
-            else if (inputType.equals("date"))
+            } else if (inputType.equals("date"))
             {
                 readDate(request, item, schema, element, qualifier);
-            }
-            // choice-controlled input with "select" presentation type is
+            } // choice-controlled input with "select" presentation type is
             // always rendered as a dropdown menu
             else if (inputType.equals("dropdown") || inputType.equals("list")
                 || (cmgr.isChoicesConfigured(fieldKey)
@@ -249,17 +230,15 @@ public class DescribeStepExt extends AbstractProcessingStep
                         if (!vals[z].equals(""))
                         {
                             item.addMetadata(schema, element, qualifier, language_qual == null ? LANGUAGE_QUALIFIER : language_qual,
-                                             vals[z]);
+                                vals[z]);
                         }
                     }
                 }
-            }
-            else if (inputType.equals("series"))
+            } else if (inputType.equals("series"))
             {
                 readSeriesNumbers(request, item, schema, element, qualifier,
-                                  inputs.get(j).getRepeatable());
-            }
-            else if (inputType.equals("qualdrop_value"))
+                    inputs.get(j).getRepeatable());
+            } else if (inputType.equals("qualdrop_value"))
             {
                 List<String> quals = getRepeatedParameter(request, schema + "_"
                     + element, schema + "_" + element + "_qualifier");
@@ -278,17 +257,15 @@ public class DescribeStepExt extends AbstractProcessingStep
                         && !thisVal.equals(""))
                     {
                         item.addMetadata(schema, element, thisQual, null,
-                                         thisVal);
+                            thisVal);
                     }
                 }
-            }
-            else if ((inputType.equals("onebox"))
+            } else if ((inputType.equals("onebox"))
                 || (inputType.equals("twobox"))
                 || (inputType.equals("textarea")))
             {
-                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual, authority);
-            }
-            else
+                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual);
+            } else
             {
                 throw new ServletException("Field " + fieldName
                     + " has an unknown input type: " + inputType);
@@ -301,8 +278,7 @@ public class DescribeStepExt extends AbstractProcessingStep
                 subInfo.setMoreBoxesFor(fieldName);
                 subInfo.setJumpToField(fieldName);
                 moreInput = true;
-            }
-            // was XMLUI's "remove" button pushed?
+            } // was XMLUI's "remove" button pushed?
             else if (buttonPressed.equals("submit_" + fieldName + "_delete"))
             {
                 subInfo.setJumpToField(fieldName);
@@ -320,7 +296,7 @@ public class DescribeStepExt extends AbstractProcessingStep
             for (int i = 0; i < inputs.size(); i++)
             {
                 DCValue[] values = item.getMetadata(inputs.get(i).getSchema(),
-                                                    inputs.get(i).getElement(), inputs.get(i).getQualifier(), Item.ANY);
+                    inputs.get(i).getElement(), inputs.get(i).getQualifier(), Item.ANY);
 
                 if (inputs.get(i).isRequired() && values.length == 0)
                 {
@@ -341,19 +317,47 @@ public class DescribeStepExt extends AbstractProcessingStep
         if (moreInput)
         {
             return STATUS_MORE_INPUT_REQUESTED;
-        }
-        // if one or more fields errored out, return
+        } // if one or more fields errored out, return
         else if (getErrorFields(request) != null && getErrorFields(request).size() > 0)
         {
             return STATUS_MISSING_REQUIRED_FIELDS;
-        }
-        else if (newDocType)
+        } else if (newDocType)
         {
             return NEW_DOC_TYPE;
         }
 
         // completed without errors
         return STATUS_COMPLETE;
+    }
+
+    /**
+     * Gets the document type (value for dc.type) for the given item, or a default one if type absent
+     * @param item the item whose type to return
+     * @param c the collection the item belongs to
+     * @return the document type of the item, or a default one for the given collection
+     */
+    private String getCurrentDocType(Item item, Collection c)
+    {
+        String doctype = null;
+        DCValue[] itemsTypes = item.getMetadata("dc", "type", null, Item.ANY);
+        if (itemsTypes.length > 0)
+        {
+            doctype = itemsTypes[0].value;
+        } else
+        {
+            List<String> types = inputsReader.getTypesListforCollection(c.getHandle());
+            if (types.size() > 0)
+            {
+                if (!types.contains(doctype))
+                {
+                    doctype = types.get(0);
+                }
+            } else
+            {
+                doctype = "";
+            }
+        }
+        return doctype;
     }
 
     /**
@@ -380,7 +384,7 @@ public class DescribeStepExt extends AbstractProcessingStep
      */
     @Override
     public int getNumberOfPages(HttpServletRequest request,
-                                SubmissionInfo subInfo) throws ServletException
+        SubmissionInfo subInfo) throws ServletException
     {
         // by default, use the "default" collection handle
         String collectionHandle = DCInputsReaderExt.DEFAULT_COLLECTION;
@@ -409,8 +413,7 @@ public class DescribeStepExt extends AbstractProcessingStep
                 }
             }
             return inputsReader.getNumberInputPages(collectionHandle, documentType);
-        }
-        catch (DCInputsReaderException e)
+        } catch (DCInputsReaderException e)
         {
             throw new ServletException(e);
         }
@@ -429,8 +432,7 @@ public class DescribeStepExt extends AbstractProcessingStep
             try
             {
                 inputsReader = new DCInputsReaderExt();
-            }
-            catch (DCInputsReaderException e)
+            } catch (DCInputsReaderException e)
             {
                 throw new ServletException(e);
             }
@@ -449,8 +451,7 @@ public class DescribeStepExt extends AbstractProcessingStep
         try
         {
             inputsReader = new DCInputsReaderExt(filename);
-        }
-        catch (DCInputsReaderException e)
+        } catch (DCInputsReaderException e)
         {
             throw new ServletException(e);
         }
@@ -517,7 +518,7 @@ public class DescribeStepExt extends AbstractProcessingStep
      *            set to true if the field is repeatable on the form
      */
     protected void readNames(HttpServletRequest request, Item item,
-                             String schema, String element, String qualifier, boolean repeated)
+        String schema, String element, String qualifier, boolean repeated)
     {
         String metadataField = MetadataField.formKey(schema, element, qualifier);
 
@@ -571,8 +572,7 @@ public class DescribeStepExt extends AbstractProcessingStep
                     confs.remove(valToRemove);
                 }
             }
-        }
-        else
+        } else
         {
             // Just a single name
             String lastName = request.getParameter(metadataField + "_last");
@@ -644,23 +644,21 @@ public class DescribeStepExt extends AbstractProcessingStep
                     String authKey = auths.size() > i ? auths.get(i) : null;
                     String sconf = (authKey != null && confs.size() > i) ? confs.get(i) : null;
                     if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
-                            && (authKey == null || authKey.length() == 0))
+                        && (authKey == null || authKey.length() == 0))
                     {
                         log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
                         addErrorField(request, metadataField);
-                    }
-                    else
+                    } else
                     {
                         item.addMetadata(schema, element, qualifier, ll,
-                                         new DCPersonName(l, f).toString(), authKey,
-                                         (sconf != null && sconf.length() > 0)
+                            new DCPersonName(l, f).toString(), authKey,
+                            (sconf != null && sconf.length() > 0)
                             ? Choices.getConfidenceValue(sconf) : Choices.CF_ACCEPTED);
                     }
-                }
-                else
+                } else
                 {
                     item.addMetadata(schema, element, qualifier, ll,
-                                     new DCPersonName(l, f).toString());
+                        new DCPersonName(l, f).toString());
                 }
             }
         }
@@ -699,14 +697,14 @@ public class DescribeStepExt extends AbstractProcessingStep
      *            language to set (ISO code)
      */
     protected void readText(HttpServletRequest request, Item item, String schema,
-                            String element, String qualifier, boolean repeated, String lang, boolean authority)
+        String element, String qualifier, boolean repeated, String lang)
     {
         // FIXME: Of course, language should be part of form, or determined
         // some other way
         String metadataField = MetadataField.formKey(schema, element, qualifier);
 
-        String fieldKey = MetadataField.formKey(schema, element, qualifier);
-        boolean isAuthorityControlled = authority;
+        String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
+        boolean isAuthorityControlled = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
 
         // Values to add
         List<String> vals = null;
@@ -747,8 +745,7 @@ public class DescribeStepExt extends AbstractProcessingStep
                     confs.remove(valToRemove);
                 }
             }
-        }
-        else
+        } else
         {
             // Just a single name
             vals = new LinkedList<String>();
@@ -795,20 +792,18 @@ public class DescribeStepExt extends AbstractProcessingStep
                 {
                     String authKey = auths.size() > i ? auths.get(i) : null;
                     String sconf = (authKey != null && confs.size() > i) ? confs.get(i) : null;
-//                    if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
-//                        && (authKey == null || authKey.length() == 0))
-//                    {
-//                        log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
-//                        addErrorField(request, metadataField);
-//                    }
-//                    else
-//                    {
+                    if (MetadataAuthorityManager.getManager().isAuthorityRequired(fieldKey)
+                        && (authKey == null || authKey.length() == 0))
+                    {
+                        log.warn("Skipping value of " + metadataField + " because the required Authority key is missing or empty.");
+                        addErrorField(request, metadataField);
+                    } else
+                    {
                         item.addMetadata(schema, element, qualifier, l, s,
-                                authKey, /*(sconf != null && sconf.length() > 0)
-                                ? Choices.getConfidenceValue(sconf) :*/ Choices.CF_ACCEPTED, isAuthorityControlled);
-                    //}
-                }
-                else
+                            authKey, (sconf != null && sconf.length() > 0)
+                            ? Choices.getConfidenceValue(sconf) : Choices.CF_ACCEPTED);
+                    }
+                } else
                 {
                     item.addMetadata(schema, element, qualifier, l, s);
                 }
@@ -838,7 +833,7 @@ public class DescribeStepExt extends AbstractProcessingStep
      * @throws SQLException
      */
     protected void readDate(HttpServletRequest request, Item item, String schema,
-                            String element, String qualifier) throws SQLException
+        String element, String qualifier) throws SQLException
     {
         String metadataField = MetadataField.formKey(schema, element, qualifier);
 
@@ -895,7 +890,7 @@ public class DescribeStepExt extends AbstractProcessingStep
      *            set to true if the field is repeatable on the form
      */
     protected void readSeriesNumbers(HttpServletRequest request, Item item,
-                                     String schema, String element, String qualifier, boolean repeated)
+        String schema, String element, String qualifier, boolean repeated)
     {
         String metadataField = MetadataField.formKey(schema, element, qualifier);
 
@@ -908,7 +903,7 @@ public class DescribeStepExt extends AbstractProcessingStep
             series = getRepeatedParameter(request, metadataField, metadataField
                 + "_series");
             numbers = getRepeatedParameter(request, metadataField,
-                                           metadataField + "_number");
+                metadataField + "_number");
 
             // Find out if the relevant "remove" button was pressed
             String buttonPressed = Util.getSubmitButton(request, "");
@@ -921,8 +916,7 @@ public class DescribeStepExt extends AbstractProcessingStep
                 series.remove(valToRemove);
                 numbers.remove(valToRemove);
             }
-        }
-        else
+        } else
         {
             // Just a single name
             String s = request.getParameter(metadataField + "_series");
@@ -955,7 +949,7 @@ public class DescribeStepExt extends AbstractProcessingStep
             if (!s.equals("") || !n.equals(""))
             {
                 item.addMetadata(schema, element, qualifier, null,
-                                 new DCSeriesNumber(s, n).toString());
+                    new DCSeriesNumber(s, n).toString());
             }
         }
     }
@@ -979,7 +973,7 @@ public class DescribeStepExt extends AbstractProcessingStep
      * @return a List of Strings
      */
     protected List<String> getRepeatedParameter(HttpServletRequest request,
-                                                String metadataField, String param)
+        String metadataField, String param)
     {
         List<String> vals = new LinkedList<String>();
 
@@ -1056,8 +1050,7 @@ public class DescribeStepExt extends AbstractProcessingStep
         if (dcQualifier != null && !dcQualifier.equals(Item.ANY))
         {
             return dcSchema + "_" + dcElement + '_' + dcQualifier;
-        }
-        else
+        } else
         {
             return dcSchema + "_" + dcElement;
         }
