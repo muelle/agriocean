@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.dspace</groupId>
     <artifactId>dspace</artifactId>
-    <name>DSpace Assembly and Configuration</name>
+    <name>A DSpace Assembly and Configuration</name>
     <packaging>pom</packaging>
     <description>
         The DSpace Project provides all the functionality required to

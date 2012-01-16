@@ -16,9 +16,6 @@ import org.dspace.core.Context;
 import org.dspace.plugin.CollectionHomeProcessor;
 import org.dspace.plugin.PluginException;
 
-import org.dspace.app.webui.components.RecentSubmissionsManager;
-
-
 /**
  * This class obtains recent submissions to the given collection by
  * implementing the CollectionHomeProcessor.

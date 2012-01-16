@@ -3,7 +3,7 @@
    <groupId>org.dspace</groupId>
    <artifactId>dspace-oai-webapp</artifactId>
    <packaging>war</packaging>
-   <name>DSpace OAI :: Web Application Resources</name>
+   <name>A DSpace OAI :: Web Application Resources</name>
    <description>DSpace OAI Service Provider Webapplication Resources</description>
    <url>http://projects.dspace.org/dspace-oai/dspace-oai-webapp</url>
 
