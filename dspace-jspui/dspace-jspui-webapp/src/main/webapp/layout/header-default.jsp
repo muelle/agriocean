@@ -26,6 +26,8 @@
 <%@ page import="javax.servlet.jsp.jstl.fmt.*" %>
 
 <%
+    String supportedLocales = ConfigurationManager.getProperty("webui.supported.locales");
+    
     String title = (String) request.getAttribute("dspace.layout.title");
     String navbar = (String) request.getAttribute("dspace.layout.navbar");
     boolean locbar = ((Boolean) request.getAttribute("dspace.layout.locbar")).booleanValue();
@@ -163,15 +165,22 @@
                                     <a href="<%=request.getContextPath()%>/advanced-search"><fmt:message
                                             key="jsp.layout.navbar-default.advanced" /></a></div>
                             </li>
+                                                        
                             <li><a href="#" onmouseover="mopen('m3')"
                                    onmouseout="mclosetime()"><fmt:message
                                         key="org.dspace.app.webui.jsptag.ItemTag.lang" /> </a>
                                 <div id="m3" onmouseover="mcancelclosetime()" onmouseout="mclosetime()">
-                                    <a href="<%=currentPage%>?locale=es"><fmt:message key="oceandocs.jsp.layout.header-default.es" /></a>
-                                    <a href="<%=currentPage%>?locale=fr"><fmt:message key="oceandocs.jsp.layout.header-default.fr" /></a>
-                                    <a href="<%=currentPage%>?locale=en"><fmt:message key="oceandocs.jsp.layout.header-default.en" /></a>
-                                    <a href="<%=currentPage%>?locale=uk"><fmt:message key="oceandocs.jsp.layout.header-default.uk" /></a>
-                                    <a href="<%=currentPage%>?locale=ru"><fmt:message key="oceandocs.jsp.layout.header-default.ru" /></a>
+                                    
+                                    <% 
+                                        String[] langs = supportedLocales.split(",");
+                                        
+                                        for(String l: langs)
+                                        {
+                                    %>
+                                    <a href="<%=currentPage%>?locale=<%=l.trim()%>"> <%=l.trim()%><%--<fmt:message key="oceandocs.jsp.layout.header-default.<%=l.trim()%>" /> --%></a>
+                                   <%
+                                        }
+                                   %>
                                 </div>
                             </li>
 
