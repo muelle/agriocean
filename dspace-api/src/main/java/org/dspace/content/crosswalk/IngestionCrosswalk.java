@@ -10,7 +10,6 @@ package org.dspace.content.crosswalk;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.DSpaceObject;
 import org.dspace.core.Context;

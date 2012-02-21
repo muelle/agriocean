@@ -173,14 +173,16 @@
                                     
                                     <% 
                                         String[] langs = supportedLocales.split(",");
+                                        String key;
                                         
                                         for(String l: langs)
                                         {
+                                            key = "oceandocs.jsp.layout.header-default." + l.trim();
                                     %>
-                                    <a href="<%=currentPage%>?locale=<%=l.trim()%>"> <%=l.trim()%><%--<fmt:message key="oceandocs.jsp.layout.header-default.<%=l.trim()%>" /> --%></a>
-                                   <%
+                                            <a href="<%=currentPage%>?locale=<%=l.trim()%>"> <%=l.trim()%> - <fmt:message key="<%=key %>"/></a>
+                                    <%
                                         }
-                                   %>
+                                    %>
                                 </div>
                             </li>
 

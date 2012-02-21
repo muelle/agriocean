@@ -391,6 +391,11 @@
         <servlet-name>AuthorityServlet</servlet-name>
         <servlet-class>org.dspace.app.webui.servlet.AuthorityServlet</servlet-class>
     </servlet>
+    <servlet>
+        <description>batch import servlet</description>
+        <servlet-name>proj.agriocean.batchimport.BatchImportServlet</servlet-name>
+        <servlet-class>proj.agriocean.batchimport.BatchImportServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>shibboleth-login</servlet-name>
         <url-pattern>/shibboleth-login</url-pattern>
@@ -617,6 +622,10 @@
         <servlet-name>AuthorityServlet</servlet-name>
         <url-pattern>/authority/*</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>proj.agriocean.batchimport.BatchImportServlet</servlet-name>
+        <url-pattern>/submit/batchimport</url-pattern>
+    </servlet-mapping>
     <mime-mapping>
         <extension>ico</extension>
         <mime-type>image/x-icon</mime-type>
@@ -634,16 +643,4 @@
         <exception-type>java.lang.Exception</exception-type>
         <location>/internal-error</location>
     </error-page>
-    <jsp-config>
-        <!-- JSTL Format tag, for i18n -->
-        <taglib>
-            <taglib-uri>http://java.sun.com/jsp/jstl/fmt</taglib-uri>
-            <taglib-location>/WEB-INF/fmt.tld</taglib-location>
-        </taglib>
-        <!-- DSpace JSP Tag Library -->
-        <taglib>
-            <taglib-uri>http://www.dspace.org/dspace-tags.tld</taglib-uri>
-            <taglib-location>/WEB-INF/dspace-tags.tld</taglib-location>
-        </taglib>
-    </jsp-config>
 </web-app>

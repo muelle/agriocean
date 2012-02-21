@@ -169,7 +169,7 @@ public class Item extends DSpaceObject {
      * @throws SQLException
      * @throws AuthorizeException
      */
-    static Item create(Context context) throws SQLException, AuthorizeException {
+    public static Item create(Context context) throws SQLException, AuthorizeException {
         TableRow row = DatabaseManager.create(context, "item");
         Item i = new Item(context, row);
 

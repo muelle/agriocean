@@ -7,28 +7,17 @@
  */
 package org.dspace.content.crosswalk;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.DCValue;
-import org.dspace.content.DSpaceObject;
 import org.dspace.content.Collection;
-import org.dspace.content.Community;
-import org.dspace.content.Item;
-import org.dspace.content.Site;
+import org.dspace.content.*;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.SelfNamedPlugin;
@@ -36,12 +25,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Verifier;
 import org.jdom.input.SAXBuilder;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 import proj.oceandocs.utils.utilsXML;
 
 /**
@@ -378,14 +361,14 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
         }
 
         Map<String, ArrayList<Element>> tags = prepareTags(itemDCVs);
-        ArrayList<Element> temp = null;
-        String curKey = "";
+        ArrayList<Element> temp;
+        String curKey;
         try
         {
             Element mods = new Element("mods");
             mods.setAttribute("version", "3.3");
             root.getChildren().add(mods);
-            String field = "";
+            String field;
 
             for (Entry kvp : tags.entrySet())
             {
@@ -419,7 +402,7 @@ public class MODSDisseminationCrosswalk extends SelfNamedPlugin
     }
 
     /**
-     * ModsCrosswalk prefer's element form over list.
+     * ModsCrosswalk prefer element form over list.
      */
     @Override
     public boolean preferList()
