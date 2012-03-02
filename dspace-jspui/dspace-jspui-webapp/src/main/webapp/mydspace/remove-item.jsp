@@ -12,12 +12,12 @@
   -
   -  Attributes:
   -      workspace.item - the workspace item the user wishes to delete
-  --%>
+--%>
 
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt"
-    prefix="fmt" %>
+           prefix="fmt" %>
 
 <%@ taglib uri="http://www.dspace.org/dspace-tags.tld" prefix="dspace" %>
 
@@ -34,26 +34,26 @@
                titlekey="jsp.mydspace.remove-item.title"
                nocache="true">
 
-<h1><fmt:message key="jsp.mydspace.remove-item.title"/></h1>
-    
+    <h1><fmt:message key="jsp.mydspace.remove-item.title"/></h1>
+
     <%-- <p>Are you sure you want to remove the following incomplete item?</p> --%>
     <p><fmt:message key="jsp.mydspace.remove-item.confirmation"/></p>
 
-    <dspace:item item="<%= wi.getItem() %>"/>
+    <dspace:item item="<%= wi.getItem()%>"/>
 
-    <form action="<%= request.getContextPath() %>/mydspace" method="post">
-        <input type="hidden" name="workspace_id" value="<%= wi.getID() %>"/>
-        <input type="hidden" name="step" value="<%= MyDSpaceServlet.REMOVE_ITEM_PAGE %>"/>
+    <form action="<%= request.getContextPath()%>/mydspace" method="post">
+        <input type="hidden" name="workspace_id" value="<%= wi.getID()%>"/>
+        <input type="hidden" name="step" value="<%= MyDSpaceServlet.REMOVE_ITEM_PAGE%>"/>
 
         <table align="center" border="0" width="90%">
             <tr>
                 <td align="left">
                     <%-- <input type="submit" name="submit_delete" value="Remove the Item" /> --%>
-					<input type="submit" name="submit_delete" value="<fmt:message key="jsp.mydspace.remove-item.remove.button"/>" />
+                    <input type="submit" name="submit_delete" value="<fmt:message key="jsp.mydspace.remove-item.remove.button"/>" />
                 </td>
                 <td align="right">
                     <%-- <input type="submit" name="submit_cancel" value="Cancel Removal" /> --%>
-					<input type="submit" name="submit_cancel" value="<fmt:message key="jsp.mydspace.remove-item.cancel.button"/>" />
+                    <input type="submit" name="submit_cancel" value="<fmt:message key="jsp.mydspace.remove-item.cancel.button"/>" />
                 </td>
             </tr>
         </table>

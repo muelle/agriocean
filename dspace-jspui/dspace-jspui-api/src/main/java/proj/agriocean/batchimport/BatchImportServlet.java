@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,15 +28,16 @@ import org.dspace.app.webui.servlet.DSpaceServlet;
 import org.dspace.app.webui.util.JSPManager;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeManager;
-import org.dspace.content.Collection;
-import org.dspace.content.DCValue;
-import org.dspace.content.Item;
-import org.dspace.content.WorkspaceItem;
+import org.dspace.content.*;
+import org.dspace.content.authority.Choices;
 import org.dspace.content.crosswalk.DIMIngestionCrosswalk;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
+import org.dspace.storage.rdbms.DatabaseManager;
+import org.dspace.storage.rdbms.TableRow;
+import org.dspace.storage.rdbms.TableRowIterator;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -45,7 +47,7 @@ import proj.agriocean.batchimport.processors.RISBIBTEXProcessor;
 public class BatchImportServlet extends DSpaceServlet {
 
     private static Logger log = Logger.getLogger(BatchImportServlet.class);
-    private static long maxFileSize = 1024 * 1024 * 20;
+    private static long maxFileSize = 1024 * 1024 * 20; //20MB import file size limit
     private static final Namespace DIM_NS = Namespace.getNamespace("http://www.dspace.org/xmlns/dspace/dim");
 
     static enum MetadataType {
@@ -188,7 +190,7 @@ public class BatchImportServlet extends DSpaceServlet {
                 case ENDNOTE:
                     RISBIBTEXProcessor processor = new RISBIBTEXProcessor();
                     return processor.process(context, collection, fileToImport).toString();
-                    
+
                 case XML:
                     return processXML(context, collection);
                 default:
@@ -243,17 +245,23 @@ public class BatchImportServlet extends DSpaceServlet {
 
             DIMIngestionCrosswalk DIMcrosswalk = new DIMIngestionCrosswalk();
 
-            WorkspaceItem workspaceItem = null;
+            WorkspaceItem workspaceItem;
             Item item = null;
             DCValue dcvs[];
             for (Element dim : list) {
-                
+
                 switch (importMode) {
                     case WORKSPASE:
                         workspaceItem = WorkspaceItem.create(context, collection, false);
                         item = workspaceItem.getItem();
                         DIMcrosswalk.ingest(context, item, dim);
                         item.update();
+                        workspaceItem.update();
+
+                        //fix authority values
+                        KeywordsAuthority(context, item);
+                        ISSNAuthority(context, item);
+                        
                         workspaceItem.update();
                         break;
 //                    case DIRECT:
@@ -264,18 +272,18 @@ public class BatchImportServlet extends DSpaceServlet {
                 }
 
                 context.commit();
-                
+
                 if (item != null) {
                     result.append("<p>");
                     dcvs = item.getMetadata(Item.ANY, Item.ANY, Item.ANY, Item.ANY);
-                    for(DCValue dcv: dcvs) {
+                    for (DCValue dcv : dcvs) {
                         result.append("<div>").append(dcv.schema).append(".").append(dcv.element);
-                        if(dcv.qualifier != null) {
+                        if (dcv.qualifier != null) {
                             result.append(".").append(dcv.qualifier).append(" = ");
                         } else {
                             result.append(" = ");
                         }
-                        
+
                         result.append(dcv.value);
                         if (dcv.authority != null && !"".equals(dcv.authority)) {
                             result.append(" | authority = ").append(dcv.authority);
@@ -294,4 +302,120 @@ public class BatchImportServlet extends DSpaceServlet {
             return "XML file processing error during batch import: " + e.getLocalizedMessage();
         }
     }
+
+    
+    protected void ISSNAuthority(Context context, Item item) throws SQLException, IOException {
+        String sqlISSN = ConfigurationManager.getProperty("sql.onematch.issn");
+        String issn = "";
+        String language;
+
+        if (sqlISSN != null && !"".equals(sqlISSN)) {
+            DCValue[] titles = item.getMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", Item.ANY);
+            if (titles.length > 0) {
+                DCValue[] dcvs = item.getMetadata("dc.identifier.issn");
+                if (dcvs.length > 0) {
+                    if (dcvs[0].value != null) {
+                        issn = dcvs[0].value;
+                    }
+                }
+                for (DCValue jtitle : titles) {
+                    if (jtitle.value != null) {
+                        if ("".equals(issn)) {
+                            if (sqlISSN != null) {
+                                issn = getExactMatch(context, sqlISSN, jtitle.value);
+                            }
+                        }
+                        jtitle.authority = issn;
+                        language = jtitle.language == null ? Item.ANY: jtitle.language;
+                        item.clearMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", language);
+                        item.addMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", language, jtitle.value, jtitle.authority, Choices.CF_ACCEPTED, true);
+                    }
+                }
+            }
+        }
+
+        try {
+            item.update();
+        } catch (AuthorizeException ex) {
+            log.error("Batch import: journal title & ISSN authority update exception: " + ex.getLocalizedMessage());
+        }
+    }
+
+    protected void KeywordsAuthority(Context context, Item item) throws SQLException, IOException {
+        String sqlASFA = ConfigurationManager.getProperty("sql.onematch.asfa");
+        String sqlAgrovoc = ConfigurationManager.getProperty("sql.onematch.agrovoc");
+        String language;
+
+        if (sqlASFA != null && !"".equals(sqlASFA)) {
+            DCValue dcvs[];
+
+            dcvs = item.getMetadata("dc.subject.asfa");
+            item.clearMetadata("dc", "subject", "asfa", Item.ANY);
+            for (DCValue dcv : dcvs) {
+                if (dcv.value != null) {
+                    language = dcv.language == null ? Item.ANY: dcv.language;
+                    dcv.authority = getExactMatch(context, sqlASFA, dcv.value);
+                    item.addMetadata(MetadataSchema.DC_SCHEMA, "subject", "asfa", language, dcv.value, dcv.authority, Choices.CF_ACCEPTED, true);
+                }
+            }
+        }
+
+        if (sqlAgrovoc != null && !"".equals(sqlAgrovoc)) {
+            DCValue dcvs[];
+
+            dcvs = item.getMetadata("dc.subject.agrovoc");
+            item.clearMetadata("dc", "subject", "agrovoc", Item.ANY);
+            for (DCValue dcv : dcvs) {
+                if (dcv.value != null) {
+                    language = dcv.language == null ? "en": dcv.language;
+                    dcv.authority = getExactMatchLang(context, sqlAgrovoc, dcv.value, language);
+                    item.addMetadata(MetadataSchema.DC_SCHEMA, "subject", "agrovoc", language, dcv.value, dcv.authority, Choices.CF_ACCEPTED, true);
+                }
+            }
+        }
+        try {
+            item.update();
+        } catch (AuthorizeException ex) {
+            log.error("Batch import: keywords authority update exception: " + ex.getLocalizedMessage());
+        }
+    }
+    
+    private String getExactMatch(Context context, String sql, String query) {
+        String result = "";
+        try {
+            if (context != null) {
+                TableRowIterator tri = DatabaseManager.query(context, sql, query);
+
+                List<TableRow> trs = tri.toList();
+
+                if (trs.size() == 1) {
+                    result = trs.get(0).getStringColumn("authority");
+                }
+            }
+        } catch (SQLException ex) {
+            log.error("Batch import: authority update exception - getExactMatch: " + ex.getLocalizedMessage());
+        } finally {
+            return result;
+        }
+    }
+
+    private String getExactMatchLang(Context context, String sql, String query, String language) {
+        String result = "";
+        try {
+            if (context != null) {
+                TableRowIterator tri = DatabaseManager.query(context, sql, query, language);
+
+                List<TableRow> trs = tri.toList();
+
+                if (trs.size() == 1) {
+                    result = trs.get(0).getStringColumn("authority");
+                }
+            }
+        } catch (SQLException ex) {
+            log.error("Batch import: authority update exception - getExactMatchLang: " + ex.getLocalizedMessage());
+        } finally {
+            return result;
+        }
+    }
+
 }

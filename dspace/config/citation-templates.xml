@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 
 <!--
     Document   : citation-templates.xml
@@ -17,16 +17,16 @@
     The defining-field attribute specifies the DC field whose language value will be used for the derived dc.identifier.citation field.
     If the defining-field has no value, the dc.identifier.citation is not set.
     -->
-    <type name="Article - published">
-        <template defining-field="bibliographicCitation.title" name="default"><g>$bibliographicCitation.title$,</g><g> $bibliographicCitation.volume$</g><g>($bibliographicCitation.issue$)</g><g>, p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    <type name="Journal Contribution">
+        <template defining-field="bibliographicCitation.title" name="default"><g>$bibliographicCitation.title$</g><g>, $bibliographicCitation.volume$</g><g> ($bibliographicCitation.issue$)</g><g>, p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
-    <type name="Conference paper - published">
-        <template defining-field="bibliographicCitation.title" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g> <g>$bibliographicCitation.title$,</g> <g> $publisher$,</g> <g>p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    <type name="Proceedings Paper">
+        <template defining-field="bibliographicCitation.title" name="default"><g>$bibliographicCitation.title$</g><g>: $bibliographicCitation.conferenceplace$</g><g>, $bibliographicCitation.conferencedate$</g><g>, p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
-    <type name="Conference paper - unpublished">
-        <template defining-field="bibliographicCitation.conferencename" name="default"><g>$bibliographicCitation.conferencename$,</g><g> $bibliographicCitation.conferenceplace$,</g> <g> $bibliographicCitation.conferencedate$</g>.</template>
+    <type name="Conference Material">
+        <template defining-field="bibliographicCitation.conferencename" name="default"><g>$bibliographicCitation.conferencename$</g><g>, $bibliographicCitation.conferenceplace$</g><g>, $bibliographicCitation.conferencedate$</g>.</template>
     </type>
-    <type name="Book item">
-        <template defining-field="bibliographicCitation.title" name="default"><g>$bibliographicCitation.authors$ (Ed.). </g><g>$bibliographicCitation.title$,</g><g> $publisher$,</g><g> p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
+    <type name="Book Section">
+        <template defining-field="bibliographicCitation.title" name="default"><g>$bibliographicCitation.title$</g><g>, p. $bibliographicCitation.stpage$</g><g>-$bibliographicCitation.endpage$</g>.</template>
     </type>
 </citation>

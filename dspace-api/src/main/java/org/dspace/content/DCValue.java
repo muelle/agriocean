@@ -31,7 +31,7 @@ public class DCValue {
     /** The schema name of the metadata element */
     public String schema;
     /** Authority control key */
-    public String authority = null;
+    public String authority = "";
     /** Authority control confidence  */
     public int confidence = Choices.CF_UNSET;
 

@@ -1,7 +1,7 @@
 /**
- * The contents of this file are subject to the license and copyright
- * detailed in the LICENSE and NOTICE files at the root of the source
- * tree and available online at
+ * The contents of this file are subject to the license and copyright detailed
+ * in the LICENSE and NOTICE files at the root of the source tree and available
+ * online at
  *
  * http://www.dspace.org/license/
  */
@@ -46,14 +46,13 @@ import org.dspace.storage.rdbms.TableRowIterator;
 import proj.oceandocs.citation.CitationManager;
 
 /**
- * Class representing an item in DSpace.
- * <P>
- * This class holds in memory the item Dublin Core metadata, the bundles in the
- * item, and the bitstreams in those bundles. When modifying the item, if you
- * modify the Dublin Core or the "in archive" flag, you must call
- * <code>update</code> for the changes to be written to the database.
- * Creating, adding or removing bundles or bitstreams has immediate effect in
- * the database.
+ * Class representing an item in DSpace. <P> This class holds in memory the item
+ * Dublin Core metadata, the bundles in the item, and the bitstreams in those
+ * bundles. When modifying the item, if you modify the Dublin Core or the "in
+ * archive" flag, you must call
+ * <code>update</code> for the changes to be written to the database. Creating,
+ * adding or removing bundles or bitstreams has immediate effect in the
+ * database.
  *
  * @author Robert Tansley
  * @author Martin Hald
@@ -65,19 +64,33 @@ public class Item extends DSpaceObject {
      * Wild card for Dublin Core metadata qualifiers/languages
      */
     public static final String ANY = "*";
-    /** log4j category */
+    /**
+     * log4j category
+     */
     private static final Logger log = Logger.getLogger(Item.class);
-    /** Our context */
+    /**
+     * Our context
+     */
     private Context ourContext;
-    /** The table row corresponding to this item */
+    /**
+     * The table row corresponding to this item
+     */
     private TableRow itemRow;
-    /** The e-person who submitted this item */
+    /**
+     * The e-person who submitted this item
+     */
     private EPerson submitter;
-    /** The bundles in this item - kept in sync with DB */
+    /**
+     * The bundles in this item - kept in sync with DB
+     */
     private List<Bundle> bundles;
-    /** The Dublin Core metadata - inner class for lazy loading */
+    /**
+     * The Dublin Core metadata - inner class for lazy loading
+     */
     MetadataCache dublinCore = new MetadataCache();
-    /** Handle, if any */
+    /**
+     * Handle, if any
+     */
     private String handle;
     /**
      * True if the Dublin Core has changed since reading from the DB or the last
@@ -85,18 +98,16 @@ public class Item extends DSpaceObject {
      */
     private boolean dublinCoreChanged;
     /**
-     * True if anything else was changed since last update()
-     * (to drive event mechanism)
+     * True if anything else was changed since last update() (to drive event
+     * mechanism)
      */
     private boolean modified;
 
     /**
      * Construct an item with the given table row
      *
-     * @param context
-     *            the context this object exists in
-     * @param row
-     *            the corresponding row in the table
+     * @param context the context this object exists in
+     * @param row the corresponding row in the table
      * @throws SQLException
      */
     Item(Context context, TableRow row) throws SQLException {
@@ -123,10 +134,8 @@ public class Item extends DSpaceObject {
      * Get an item from the database. The item, its Dublin Core metadata, and
      * the bundle and bitstream metadata are all loaded into memory.
      *
-     * @param context
-     *            DSpace context object
-     * @param id
-     *            Internal ID of the item
+     * @param context DSpace context object
+     * @param id Internal ID of the item
      * @return the item, or null if the internal ID is invalid.
      * @throws SQLException
      */
@@ -163,8 +172,7 @@ public class Item extends DSpaceObject {
      * since items need to be created as workspace items. Authorisation is the
      * responsibility of the caller.
      *
-     * @param context
-     *            DSpace context object
+     * @param context DSpace context object
      * @return the newly created item
      * @throws SQLException
      * @throws AuthorizeException
@@ -191,8 +199,7 @@ public class Item extends DSpaceObject {
      * Get all the items in the archive. Only items with the "in archive" flag
      * set are included. The order of the list is indeterminate.
      *
-     * @param context
-     *            DSpace context object
+     * @param context DSpace context object
      * @return an iterator over the items in the archive.
      * @throws SQLException
      */
@@ -208,10 +215,8 @@ public class Item extends DSpaceObject {
      * Find all the items in the archive by a given submitter. The order is
      * indeterminate. Only items with the "in archive" flag set are included.
      *
-     * @param context
-     *            DSpace context object
-     * @param eperson
-     *            the submitter
+     * @param context DSpace context object
+     * @param eperson the submitter
      * @return an iterator over the items submitted by eperson
      * @throws SQLException
      */
@@ -273,7 +278,7 @@ public class Item extends DSpaceObject {
      * last_modified is null
      *
      * @return the date the item was last modified, or the current date if the
-     *         column is null.
+     * column is null.
      */
     public Date getLastModified() {
         Date myDate = itemRow.getDateColumn("last_modified");
@@ -289,8 +294,7 @@ public class Item extends DSpaceObject {
      * Set the "is_archived" flag. This is public and only
      * <code>WorkflowItem.archive()</code> should set this.
      *
-     * @param isArchived
-     *            new value for the flag
+     * @param isArchived new value for the flag
      */
     public void setArchived(boolean isArchived) {
         itemRow.setColumn("in_archive", isArchived);
@@ -300,8 +304,7 @@ public class Item extends DSpaceObject {
     /**
      * Set the owning Collection for the item
      *
-     * @param c
-     *            Collection
+     * @param c Collection
      */
     public void setOwningCollection(Collection c) {
         itemRow.setColumn("owning_collection", c.getID());
@@ -331,45 +334,38 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Get Dublin Core metadata for the item.
-     * Passing in a <code>null</code> value for <code>qualifier</code>
-     * or <code>lang</code> only matches Dublin Core fields where that
-     * qualifier or languages is actually <code>null</code>.
-     * Passing in <code>Item.ANY</code>
-     * retrieves all metadata fields with any value for the qualifier or
-     * language, including <code>null</code>
-     * <P>
-     * Examples:
-     * <P>
-     * Return values of the unqualified "title" field, in any language.
-     * Qualified title fields (e.g. "title.uniform") are NOT returned:
-     * <P>
-     * <code>item.getDC( "title", null, Item.ANY );</code>
-     * <P>
-     * Return all US English values of the "title" element, with any qualifier
-     * (including unqualified):
-     * <P>
-     * <code>item.getDC( "title", Item.ANY, "en_US" );</code>
-     * <P>
-     * The ordering of values of a particular element/qualifier/language
-     * combination is significant. When retrieving with wildcards, values of a
-     * particular element/qualifier/language combinations will be adjacent, but
-     * the overall ordering of the combinations is indeterminate.
+     * Get Dublin Core metadata for the item. Passing in a
+     * <code>null</code> value for
+     * <code>qualifier</code> or
+     * <code>lang</code> only matches Dublin Core fields where that qualifier or
+     * languages is actually
+     * <code>null</code>. Passing in
+     * <code>Item.ANY</code> retrieves all metadata fields with any value for
+     * the qualifier or language, including
+     * <code>null</code> <P> Examples: <P> Return values of the unqualified
+     * "title" field, in any language. Qualified title fields (e.g.
+     * "title.uniform") are NOT returned: <P>
+     * <code>item.getDC( "title", null, Item.ANY );</code> <P> Return all US
+     * English values of the "title" element, with any qualifier (including
+     * unqualified): <P>
+     * <code>item.getDC( "title", Item.ANY, "en_US" );</code> <P> The ordering
+     * of values of a particular element/qualifier/language combination is
+     * significant. When retrieving with wildcards, values of a particular
+     * element/qualifier/language combinations will be adjacent, but the overall
+     * ordering of the combinations is indeterminate.
      *
-     * @param element
-     *            the Dublin Core element. <code>Item.ANY</code> matches any
-     *            element. <code>null</code> doesn't really make sense as all
-     *            DC must have an element.
-     * @param qualifier
-     *            the qualifier. <code>null</code> means unqualified, and
-     *            <code>Item.ANY</code> means any qualifier (including
-     *            unqualified.)
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means only
-     *            values with no language are returned, and
-     *            <code>Item.ANY</code> means values with any country code or
-     *            no country code are returned.
+     * @param element the Dublin Core element.
+     * <code>Item.ANY</code> matches any element.
+     * <code>null</code> doesn't really make sense as all DC must have an
+     * element.
+     * @param qualifier the qualifier.
+     * <code>null</code> means unqualified, and
+     * <code>Item.ANY</code> means any qualifier (including unqualified.)
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means only values with no language are returned, and
+     * <code>Item.ANY</code> means values with any country code or no country
+     * code are returned.
      * @return Dublin Core fields that match the parameters
      */
     @Deprecated
@@ -378,49 +374,42 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Get metadata for the item in a chosen schema.
-     * See <code>MetadataSchema</code> for more information about schemas.
-     * Passing in a <code>null</code> value for <code>qualifier</code>
-     * or <code>lang</code> only matches metadata fields where that
-     * qualifier or languages is actually <code>null</code>.
-     * Passing in <code>Item.ANY</code>
-     * retrieves all metadata fields with any value for the qualifier or
-     * language, including <code>null</code>
-     * <P>
-     * Examples:
-     * <P>
-     * Return values of the unqualified "title" field, in any language.
-     * Qualified title fields (e.g. "title.uniform") are NOT returned:
-     * <P>
-     * <code>item.getMetadata("dc", "title", null, Item.ANY );</code>
-     * <P>
-     * Return all US English values of the "title" element, with any qualifier
-     * (including unqualified):
-     * <P>
-     * <code>item.getMetadata("dc, "title", Item.ANY, "en_US" );</code>
-     * <P>
-     * The ordering of values of a particular element/qualifier/language
-     * combination is significant. When retrieving with wildcards, values of a
-     * particular element/qualifier/language combinations will be adjacent, but
-     * the overall ordering of the combinations is indeterminate.
+     * Get metadata for the item in a chosen schema. See
+     * <code>MetadataSchema</code> for more information about schemas. Passing
+     * in a
+     * <code>null</code> value for
+     * <code>qualifier</code> or
+     * <code>lang</code> only matches metadata fields where that qualifier or
+     * languages is actually
+     * <code>null</code>. Passing in
+     * <code>Item.ANY</code> retrieves all metadata fields with any value for
+     * the qualifier or language, including
+     * <code>null</code> <P> Examples: <P> Return values of the unqualified
+     * "title" field, in any language. Qualified title fields (e.g.
+     * "title.uniform") are NOT returned: <P>
+     * <code>item.getMetadata("dc", "title", null, Item.ANY );</code> <P> Return
+     * all US English values of the "title" element, with any qualifier
+     * (including unqualified): <P>
+     * <code>item.getMetadata("dc, "title", Item.ANY, "en_US" );</code> <P> The
+     * ordering of values of a particular element/qualifier/language combination
+     * is significant. When retrieving with wildcards, values of a particular
+     * element/qualifier/language combinations will be adjacent, but the overall
+     * ordering of the combinations is indeterminate.
      *
-     * @param schema
-     *            the schema for the metadata field. <em>Must</em> match
-     *            the <code>name</code> of an existing metadata schema.
-     * @param element
-     *            the element name. <code>Item.ANY</code> matches any
-     *            element. <code>null</code> doesn't really make sense as all
-     *            metadata must have an element.
-     * @param qualifier
-     *            the qualifier. <code>null</code> means unqualified, and
-     *            <code>Item.ANY</code> means any qualifier (including
-     *            unqualified.)
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means only
-     *            values with no language are returned, and
-     *            <code>Item.ANY</code> means values with any country code or
-     *            no country code are returned.
+     * @param schema the schema for the metadata field. <em>Must</em> match the
+     * <code>name</code> of an existing metadata schema.
+     * @param element the element name.
+     * <code>Item.ANY</code> matches any element.
+     * <code>null</code> doesn't really make sense as all metadata must have an
+     * element.
+     * @param qualifier the qualifier.
+     * <code>null</code> means unqualified, and
+     * <code>Item.ANY</code> means any qualifier (including unqualified.)
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means only values with no language are returned, and
+     * <code>Item.ANY</code> means values with any country code or no country
+     * code are returned.
      * @return metadata fields that match the parameters
      */
     public DCValue[] getMetadata(String schema, String element, String qualifier,
@@ -450,12 +439,11 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Retrieve metadata field values from a given metadata string
-     * of the form <schema prefix>.<element>[.<qualifier>|.*]
+     * Retrieve metadata field values from a given metadata string of the form
+     * <schema prefix>.<element>[.<qualifier>|.*]
      *
-     * @param mdString
-     *            The metadata string of the form
-     *            <schema prefix>.<element>[.<qualifier>|.*]
+     * @param mdString The metadata string of the form <schema
+     * prefix>.<element>[.<qualifier>|.*]
      */
     public DCValue[] getMetadata(String mdString) {
         StringTokenizer dcf = new StringTokenizer(mdString, ".");
@@ -486,20 +474,17 @@ public class Item extends DSpaceObject {
 
     /**
      * Add Dublin Core metadata fields. These are appended to existing values.
-     * Use <code>clearDC</code> to remove values. The ordering of values
-     * passed in is maintained.
+     * Use
+     * <code>clearDC</code> to remove values. The ordering of values passed in
+     * is maintained.
      *
-     * @param element
-     *            the Dublin Core element
-     * @param qualifier
-     *            the Dublin Core qualifier, or <code>null</code> for
-     *            unqualified
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means the
-     *            value has no language (for example, a date).
-     * @param values
-     *            the values to add.
+     * @param element the Dublin Core element
+     * @param qualifier the Dublin Core qualifier, or
+     * <code>null</code> for unqualified
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means the value has no language (for example, a date).
+     * @param values the values to add.
      */
     @Deprecated
     public void addDC(String element, String qualifier, String lang,
@@ -509,19 +494,16 @@ public class Item extends DSpaceObject {
 
     /**
      * Add a single Dublin Core metadata field. This is appended to existing
-     * values. Use <code>clearDC</code> to remove values.
+     * values. Use
+     * <code>clearDC</code> to remove values.
      *
-     * @param element
-     *            the Dublin Core element
-     * @param qualifier
-     *            the Dublin Core qualifier, or <code>null</code> for
-     *            unqualified
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means the
-     *            value has no language (for example, a date).
-     * @param value
-     *            the value to add.
+     * @param element the Dublin Core element
+     * @param qualifier the Dublin Core qualifier, or
+     * <code>null</code> for unqualified
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means the value has no language (for example, a date).
+     * @param value the value to add.
      */
     @Deprecated
     public void addDC(String element, String qualifier, String lang,
@@ -530,27 +512,21 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Add metadata fields. These are appended to existing values.
-     * Use <code>clearDC</code> to remove values. The ordering of values
-     * passed in is maintained.
-     * <p>
-     * If metadata authority control is available, try to get authority
-     * values.  The authority confidence depends on whether authority is
-     * <em>required</em> or not.
-     * @param schema
-     *            the schema for the metadata field. <em>Must</em> match
-     *            the <code>name</code> of an existing metadata schema.
-     * @param element
-     *            the metadata element name
-     * @param qualifier
-     *            the metadata qualifier name, or <code>null</code> for
-     *            unqualified
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means the
-     *            value has no language (for example, a date).
-     * @param values
-     *            the values to add.
+     * Add metadata fields. These are appended to existing values. Use
+     * <code>clearDC</code> to remove values. The ordering of values passed in
+     * is maintained. <p> If metadata authority control is available, try to get
+     * authority values. The authority confidence depends on whether authority
+     * is <em>required</em> or not.
+     *
+     * @param schema the schema for the metadata field. <em>Must</em> match the
+     * <code>name</code> of an existing metadata schema.
+     * @param element the metadata element name
+     * @param qualifier the metadata qualifier name, or
+     * <code>null</code> for unqualified
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means the value has no language (for example, a date).
+     * @param values the values to add.
      */
     public void addMetadata(String schema, String element, String qualifier, String lang,
             String[] values) {
@@ -588,27 +564,21 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Add metadata fields. These are appended to existing values.
-     * Use <code>clearDC</code> to remove values. The ordering of values
-     * passed in is maintained.
-     * @param schema
-     *            the schema for the metadata field. <em>Must</em> match
-     *            the <code>name</code> of an existing metadata schema.
-     * @param element
-     *            the metadata element name
-     * @param qualifier
-     *            the metadata qualifier name, or <code>null</code> for
-     *            unqualified
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means the
-     *            value has no language (for example, a date).
-     * @param values
-     *            the values to add.
-     * @param authorities
-     *            the external authority key for this value (or null)
-     * @param confidences
-     *            the authority confidence (default 0)
+     * Add metadata fields. These are appended to existing values. Use
+     * <code>clearDC</code> to remove values. The ordering of values passed in
+     * is maintained.
+     *
+     * @param schema the schema for the metadata field. <em>Must</em> match the
+     * <code>name</code> of an existing metadata schema.
+     * @param element the metadata element name
+     * @param qualifier the metadata qualifier name, or
+     * <code>null</code> for unqualified
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means the value has no language (for example, a date).
+     * @param values the values to add.
+     * @param authorities the external authority key for this value (or null)
+     * @param confidences the authority confidence (default 0)
      */
     public void addMetadata(String schema, String element, String qualifier, String lang,
             String[] values, String authorities[], int confidences[]) {
@@ -697,7 +667,7 @@ public class Item extends DSpaceObject {
                     dcv.authority = authorities[i];
                     dcv.confidence = confidences == null ? Choices.CF_NOVALUE : confidences[i];
                 } else {
-                    dcv.authority = null;
+                    dcv.authority = "";
                     dcv.confidence = confidences == null ? Choices.CF_UNSET : confidences[i];
                 }
                 // authority sanity check: if authority is required, was it supplied?
@@ -733,23 +703,18 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Add a single metadata field. This is appended to existing
-     * values. Use <code>clearDC</code> to remove values.
+     * Add a single metadata field. This is appended to existing values. Use
+     * <code>clearDC</code> to remove values.
      *
-     * @param schema
-     *            the schema for the metadata field. <em>Must</em> match
-     *            the <code>name</code> of an existing metadata schema.
-     * @param element
-     *            the metadata element name
-     * @param qualifier
-     *            the metadata qualifier, or <code>null</code> for
-     *            unqualified
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means the
-     *            value has no language (for example, a date).
-     * @param value
-     *            the value to add.
+     * @param schema the schema for the metadata field. <em>Must</em> match the
+     * <code>name</code> of an existing metadata schema.
+     * @param element the metadata element name
+     * @param qualifier the metadata qualifier, or
+     * <code>null</code> for unqualified
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means the value has no language (for example, a date).
+     * @param value the value to add.
      */
     public void addMetadata(String schema, String element, String qualifier,
             String lang, String value) {
@@ -760,27 +725,20 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Add a single metadata field. This is appended to existing
-     * values. Use <code>clearDC</code> to remove values.
+     * Add a single metadata field. This is appended to existing values. Use
+     * <code>clearDC</code> to remove values.
      *
-     * @param schema
-     *            the schema for the metadata field. <em>Must</em> match
-     *            the <code>name</code> of an existing metadata schema.
-     * @param element
-     *            the metadata element name
-     * @param qualifier
-     *            the metadata qualifier, or <code>null</code> for
-     *            unqualified
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means the
-     *            value has no language (for example, a date).
-     * @param value
-     *            the value to add.
-     * @param authority
-     *            the external authority key for this value (or null)
-     * @param confidence
-     *            the authority confidence (default 0)
+     * @param schema the schema for the metadata field. <em>Must</em> match the
+     * <code>name</code> of an existing metadata schema.
+     * @param element the metadata element name
+     * @param qualifier the metadata qualifier, or
+     * <code>null</code> for unqualified
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means the value has no language (for example, a date).
+     * @param value the value to add.
+     * @param authority the external authority key for this value (or null)
+     * @param confidence the authority confidence (default 0)
      */
     public void addMetadata(String schema, String element, String qualifier,
             String lang, String value, String authority, int confidence) {
@@ -807,25 +765,26 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Clear Dublin Core metadata values. As with <code>getDC</code> above,
-     * passing in <code>null</code> only matches fields where the qualifier or
-     * language is actually <code>null</code>.<code>Item.ANY</code> will
-     * match any element, qualifier or language, including <code>null</code>.
-     * Thus, <code>item.clearDC(Item.ANY, Item.ANY, Item.ANY)</code> will
-     * remove all Dublin Core metadata associated with an item.
+     * Clear Dublin Core metadata values. As with
+     * <code>getDC</code> above, passing in
+     * <code>null</code> only matches fields where the qualifier or language is
+     * actually
+     * <code>null</code>.<code>Item.ANY</code> will match any element, qualifier
+     * or language, including
+     * <code>null</code>. Thus,
+     * <code>item.clearDC(Item.ANY, Item.ANY, Item.ANY)</code> will remove all
+     * Dublin Core metadata associated with an item.
      *
-     * @param element
-     *            the Dublin Core element to remove, or <code>Item.ANY</code>
-     * @param qualifier
-     *            the qualifier. <code>null</code> means unqualified, and
-     *            <code>Item.ANY</code> means any qualifier (including
-     *            unqualified.)
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means only
-     *            values with no language are removed, and <code>Item.ANY</code>
-     *            means values with any country code or no country code are
-     *            removed.
+     * @param element the Dublin Core element to remove, or
+     * <code>Item.ANY</code>
+     * @param qualifier the qualifier.
+     * <code>null</code> means unqualified, and
+     * <code>Item.ANY</code> means any qualifier (including unqualified.)
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means only values with no language are removed, and
+     * <code>Item.ANY</code> means values with any country code or no country
+     * code are removed.
      */
     @Deprecated
     public void clearDC(String element, String qualifier, String lang) {
@@ -833,28 +792,28 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Clear metadata values. As with <code>getDC</code> above,
-     * passing in <code>null</code> only matches fields where the qualifier or
-     * language is actually <code>null</code>.<code>Item.ANY</code> will
-     * match any element, qualifier or language, including <code>null</code>.
-     * Thus, <code>item.clearDC(Item.ANY, Item.ANY, Item.ANY)</code> will
-     * remove all Dublin Core metadata associated with an item.
+     * Clear metadata values. As with
+     * <code>getDC</code> above, passing in
+     * <code>null</code> only matches fields where the qualifier or language is
+     * actually
+     * <code>null</code>.<code>Item.ANY</code> will match any element, qualifier
+     * or language, including
+     * <code>null</code>. Thus,
+     * <code>item.clearDC(Item.ANY, Item.ANY, Item.ANY)</code> will remove all
+     * Dublin Core metadata associated with an item.
      *
-     * @param schema
-     *            the schema for the metadata field. <em>Must</em> match
-     *            the <code>name</code> of an existing metadata schema.
-     * @param element
-     *            the Dublin Core element to remove, or <code>Item.ANY</code>
-     * @param qualifier
-     *            the qualifier. <code>null</code> means unqualified, and
-     *            <code>Item.ANY</code> means any qualifier (including
-     *            unqualified.)
-     * @param lang
-     *            the ISO639 language code, optionally followed by an underscore
-     *            and the ISO3166 country code. <code>null</code> means only
-     *            values with no language are removed, and <code>Item.ANY</code>
-     *            means values with any country code or no country code are
-     *            removed.
+     * @param schema the schema for the metadata field. <em>Must</em> match the
+     * <code>name</code> of an existing metadata schema.
+     * @param element the Dublin Core element to remove, or
+     * <code>Item.ANY</code>
+     * @param qualifier the qualifier.
+     * <code>null</code> means unqualified, and
+     * <code>Item.ANY</code> means any qualifier (including unqualified.)
+     * @param lang the ISO639 language code, optionally followed by an
+     * underscore and the ISO3166 country code.
+     * <code>null</code> means only values with no language are removed, and
+     * <code>Item.ANY</code> means values with any country code or no country
+     * code are removed.
      */
     public void clearMetadata(String schema, String element, String qualifier,
             String lang) {
@@ -872,25 +831,25 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Utility method for pattern-matching metadata elements.  This
-     * method will return <code>true</code> if the given schema,
-     * element, qualifier and language match the schema, element,
-     * qualifier and language of the <code>DCValue</code> object passed
-     * in.  Any or all of the element, qualifier and language passed
-     * in can be the <code>Item.ANY</code> wildcard.
+     * Utility method for pattern-matching metadata elements. This method will
+     * return
+     * <code>true</code> if the given schema, element, qualifier and language
+     * match the schema, element, qualifier and language of the
+     * <code>DCValue</code> object passed in. Any or all of the element,
+     * qualifier and language passed in can be the
+     * <code>Item.ANY</code> wildcard.
      *
-     * @param schema
-     *            the schema for the metadata field. <em>Must</em> match
-     *            the <code>name</code> of an existing metadata schema.
-     * @param element
-     *            the element to match, or <code>Item.ANY</code>
-     * @param qualifier
-     *            the qualifier to match, or <code>Item.ANY</code>
-     * @param language
-     *            the language to match, or <code>Item.ANY</code>
-     * @param dcv
-     *            the Dublin Core value
-     * @return <code>true</code> if there is a match
+     * @param schema the schema for the metadata field. <em>Must</em> match the
+     * <code>name</code> of an existing metadata schema.
+     * @param element the element to match, or
+     * <code>Item.ANY</code>
+     * @param qualifier the qualifier to match, or
+     * <code>Item.ANY</code>
+     * @param language the language to match, or
+     * <code>Item.ANY</code>
+     * @param dcv the Dublin Core value
+     * @return
+     * <code>true</code> if there is a match
      */
     private boolean match(String schema, String element, String qualifier,
             String language, DCValue dcv) {
@@ -952,11 +911,10 @@ public class Item extends DSpaceObject {
     /**
      * Set the e-person that originally submitted this item. This is a public
      * method since it is handled by the WorkspaceItem class in the ingest
-     * package. <code>update</code> must be called to write the change to the
-     * database.
+     * package.
+     * <code>update</code> must be called to write the change to the database.
      *
-     * @param sub
-     *            the submitter
+     * @param sub the submitter
      */
     public void setSubmitter(EPerson sub) {
         submitter = sub;
@@ -971,6 +929,7 @@ public class Item extends DSpaceObject {
 
     /**
      * See whether this Item is contained by a given Collection.
+     *
      * @param collection
      * @return true if {@code collection} contains this Item.
      * @throws SQLException
@@ -1122,8 +1081,7 @@ public class Item extends DSpaceObject {
     /**
      * Get the bundles matching a bundle name (name corresponds roughly to type)
      *
-     * @param name
-     *            name of bundle (ORIGINAL/TEXT/THUMBNAIL)
+     * @param name name of bundle (ORIGINAL/TEXT/THUMBNAIL)
      *
      * @return the bundles in an unordered array
      */
@@ -1147,8 +1105,7 @@ public class Item extends DSpaceObject {
     /**
      * Create a bundle in this item, with immediate effect
      *
-     * @param name
-     *            bundle name (ORIGINAL/TEXT/THUMBNAIL)
+     * @param name bundle name (ORIGINAL/TEXT/THUMBNAIL)
      * @return the newly created bundle
      * @throws SQLException
      * @throws AuthorizeException
@@ -1174,8 +1131,7 @@ public class Item extends DSpaceObject {
     /**
      * Add an existing bundle to this item. This has immediate effect.
      *
-     * @param b
-     *            the bundle to add
+     * @param b the bundle to add
      * @throws SQLException
      * @throws AuthorizeException
      */
@@ -1215,8 +1171,7 @@ public class Item extends DSpaceObject {
      * Remove a bundle. This may result in the bundle being deleted, if the
      * bundle is orphaned.
      *
-     * @param b
-     *            the bundle to remove
+     * @param b the bundle to remove
      * @throws SQLException
      * @throws AuthorizeException
      * @throws IOException
@@ -1282,10 +1237,8 @@ public class Item extends DSpaceObject {
      * Create a single bitstream in a new bundle. Provided as a convenience
      * method for the most common use.
      *
-     * @param is
-     *            the stream to create the new bitstream from
-     * @param name
-     *            is the name of the bundle (ORIGINAL, TEXT, THUMBNAIL)
+     * @param is the stream to create the new bitstream from
+     * @param name is the name of the bundle (ORIGINAL, TEXT, THUMBNAIL)
      * @return Bitstream that is created
      * @throws AuthorizeException
      * @throws IOException
@@ -1306,8 +1259,7 @@ public class Item extends DSpaceObject {
     /**
      * Convenience method, calls createSingleBitstream() with name "ORIGINAL"
      *
-     * @param is
-     *            InputStream
+     * @param is InputStream
      * @return created bitstream
      * @throws AuthorizeException
      * @throws IOException
@@ -1349,9 +1301,8 @@ public class Item extends DSpaceObject {
     /**
      * Remove just the DSpace license from an item This is useful to update the
      * current DSpace license, in case the user must accept the DSpace license
-     * again (either the item was rejected, or resumed after saving)
-     * <p>
-     * This method is used by the org.dspace.submit.step.LicenseStep class
+     * again (either the item was rejected, or resumed after saving) <p> This
+     * method is used by the org.dspace.submit.step.LicenseStep class
      *
      * @throws SQLException
      * @throws AuthorizeException
@@ -1820,18 +1771,17 @@ public class Item extends DSpaceObject {
         ourContext.removeCached(this, getID());
 
         // Remove from browse indices, if appropriate
-        /** XXX FIXME
-         ** Although all other Browse index updates are managed through
-         ** Event consumers, removing an Item *must* be done *here* (inline)
-         ** because otherwise, tables are left in an inconsistent state
-         ** and the DB transaction will fail.
-         ** Any fix would involve too much work on Browse code that
-         ** is likely to be replaced soon anyway.   --lcs, Aug 2006
-         **
-         ** NB Do not check to see if the item is archived - withdrawn /
-         ** non-archived items may still be tracked in some browse tables
-         ** for administrative purposes, and these need to be removed.
-         **/
+        /**
+         * XXX FIXME * Although all other Browse index updates are managed
+         * through * Event consumers, removing an Item *must* be done *here*
+         * (inline) * because otherwise, tables are left in an inconsistent
+         * state * and the DB transaction will fail. * Any fix would involve too
+         * much work on Browse code that * is likely to be replaced soon anyway.
+         * --lcs, Aug 2006 * * NB Do not check to see if the item is archived -
+         * withdrawn / * non-archived items may still be tracked in some browse
+         * tables * for administrative purposes, and these need to be removed.
+         *
+         */
 //               FIXME: there is an exception handling problem here
         try {
 //               Remove from indices
@@ -1863,9 +1813,8 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Remove item and all its sub-structure from the context cache.
-     * Useful in batch processes where a single context has a long,
-     * multi-item lifespan
+     * Remove item and all its sub-structure from the context cache. Useful in
+     * batch processes where a single context has a long, multi-item lifespan
      */
     public void decache() throws SQLException {
         // Remove item and it's submitter from cache
@@ -1887,13 +1836,15 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Return <code>true</code> if <code>other</code> is the same Item as
-     * this object, <code>false</code> otherwise
+     * Return
+     * <code>true</code> if
+     * <code>other</code> is the same Item as this object,
+     * <code>false</code> otherwise
      *
-     * @param obj
-     *            object to compare to
-     * @return <code>true</code> if object passed in represents the same item
-     *         as this object
+     * @param obj object to compare to
+     * @return
+     * <code>true</code> if object passed in represents the same item as this
+     * object
      */
     @Override
     public boolean equals(Object obj) {
@@ -1924,8 +1875,7 @@ public class Item extends DSpaceObject {
     /**
      * Return true if this Collection 'owns' this item
      *
-     * @param c
-     *            Collection
+     * @param c Collection
      * @return true if this Collection owns this item
      */
     public boolean isOwningCollection(Collection c) {
@@ -1940,8 +1890,8 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Utility method to remove all descriptive metadata associated with the item from
-     * the database (regardless of in-memory version)
+     * Utility method to remove all descriptive metadata associated with the
+     * item from the database (regardless of in-memory version)
      *
      * @throws SQLException
      */
@@ -1964,9 +1914,8 @@ public class Item extends DSpaceObject {
      * remove all of the policies for item and replace them with a new list of
      * policies
      *
-     * @param newpolicies -
-     *            this will be all of the new policies for the item and its
-     *            contents
+     * @param newpolicies - this will be all of the new policies for the item
+     * and its contents
      * @throws SQLException
      * @throws AuthorizeException
      */
@@ -1981,9 +1930,8 @@ public class Item extends DSpaceObject {
      * remove all of the policies for item's bitstreams and bundles and replace
      * them with a new list of policies
      *
-     * @param newpolicies -
-     *            this will be all of the new policies for the bundle and
-     *            bitstream contents
+     * @param newpolicies - this will be all of the new policies for the bundle
+     * and bitstream contents
      * @throws SQLException
      * @throws AuthorizeException
      */
@@ -2003,8 +1951,7 @@ public class Item extends DSpaceObject {
      * remove all of the policies for item's bitstreams and bundles that belong
      * to a given Group
      *
-     * @param g
-     *            Group referenced by policies that needs to be removed
+     * @param g Group referenced by policies that needs to be removed
      * @throws SQLException
      */
     public void removeGroupPolicies(Group g) throws SQLException {
@@ -2034,11 +1981,9 @@ public class Item extends DSpaceObject {
      * the DEFAULT_ITEM_READ and DEFAULT_BITSTREAM_READ policies belonging to
      * the collection.
      *
-     * @param c
-     *            Collection
-     * @throws java.sql.SQLException
-     *             if an SQL error or if no default policies found. It's a bit
-     *             draconian, but default policies must be enforced.
+     * @param c Collection
+     * @throws java.sql.SQLException if an SQL error or if no default policies
+     * found. It's a bit draconian, but default policies must be enforced.
      * @throws AuthorizeException
      */
     public void inheritCollectionDefaultPolicies(Collection c)
@@ -2147,7 +2092,7 @@ public class Item extends DSpaceObject {
      * Check the bundle ORIGINAL to see if there are any uploaded files
      *
      * @return true if there is a bundle named ORIGINAL with one or more
-     *         bitstreams inside
+     * bitstreams inside
      * @throws SQLException
      */
     public boolean hasUploadedFiles() throws SQLException {
@@ -2233,8 +2178,8 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Returns an iterator of Items possessing the passed metadata field, or only
-     * those matching the passed value, if value is not Item.ANY
+     * Returns an iterator of Items possessing the passed metadata field, or
+     * only those matching the passed value, if value is not Item.ANY
      *
      * @param context DSpace context object
      * @param schema metadata field schema
@@ -2368,8 +2313,8 @@ public class Item extends DSpaceObject {
     }
 
     /**
-     * Find all the items in the archive with a given authority key value
-     * in the indicated metadata field.
+     * Find all the items in the archive with a given authority key value in the
+     * indicated metadata field.
      *
      * @param context DSpace context object
      * @param schema metadata field schema
@@ -2579,12 +2524,30 @@ public class Item extends DSpaceObject {
 
     public boolean updateISSN() {
         try {
-            DCValue[] titles = this.getMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", Item.ANY);
+            DCValue[] titles = getMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", Item.ANY);
+            String issn = "";
             if (titles.length > 0) {
-                String issn = titles[0].authority;
-                this.clearMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY);
-                if (issn != null && !"".equals(issn)) {
-                    this.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY, issn);
+                DCValue[] dcvs = getMetadata("dc.identifier.issn");
+                if (dcvs.length > 0) {
+                    if (dcvs[0].value != null) {
+                        issn = dcvs[0].value;
+                    }
+                }
+
+                if (!"".equals(issn)) {
+                    for (DCValue jtitle : titles) {
+                        if (jtitle.value != null) {
+                            jtitle.authority = issn;
+                            clearMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", jtitle.language);
+                            addMetadata(MetadataSchema.DC_SCHEMA, "bibliographicCitation", "title", jtitle.language, jtitle.value, jtitle.authority, Choices.CF_ACCEPTED, true);
+                        }
+                    }
+                } else {
+                    issn = titles[0].authority;
+                    this.clearMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY);
+                    if (issn != null && !"".equals(issn)) {
+                        this.addMetadata(MetadataSchema.DC_SCHEMA, "identifier", "issn", Item.ANY, issn);
+                    }
                 }
                 this.update();
             }
@@ -2624,14 +2587,14 @@ public class Item extends DSpaceObject {
                         }
                     }
 
-                    
+
                     qual = splitFieldName(dcMapTo[i]);
                     if (qual.length >= 2) {
                         //clear old uri first
                         this.clearMetadata(qual[0], qual[1], qual.length == 3 ? qual[2] : null, ANY);
                         this.update();
                         for (String authority : authorityDone) {
-                            this.addMetadata(qual[0], qual[1], qual.length == 3 ? qual[2] : null, ANY, dcURIs[i]+authority);
+                            this.addMetadata(qual[0], qual[1], qual.length == 3 ? qual[2] : null, ANY, dcURIs[i] + authority);
                         }
                         this.update();
                     }

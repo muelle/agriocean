@@ -9,12 +9,12 @@
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-xmlns:ags="http://purl.org/agmes/1.1/" 
-xmlns:dc="http://purl.org/dc/elements/1.1/" 
-xmlns:agls="http://www.naa.gov.au/recordkeeping/gov_online/agls/1.2" 
-xmlns:dcterms="http://purl.org/dc/terms/" 
-xmlns:dim="http://www.dspace.org/xmlns/dspace/dim" 
-version="1.0">
+                xmlns:ags="http://purl.org/agmes/1.1/" 
+                xmlns:dc="http://purl.org/dc/elements/1.1/" 
+                xmlns:agls="http://www.naa.gov.au/recordkeeping/gov_online/agls/1.2" 
+                xmlns:dcterms="http://purl.org/dc/terms/" 
+                xmlns:dim="http://www.dspace.org/xmlns/dspace/dim" 
+                version="1.0">
     
     <xsl:output method="xml" encoding="UTF-8"/>
 
@@ -23,8 +23,6 @@ version="1.0">
                 <xsl:copy>
                         <xsl:apply-templates select="@* | node()"/>
                 </xsl:copy>
-                
-                
          -->
     </xsl:template>
     
@@ -117,6 +115,7 @@ version="1.0">
     
     <xsl:template match="dc:publisher">
         <xsl:apply-templates select="ags:publisherName"/>
+        <xsl:apply-templates select="ags:publisherPlace"/>
     </xsl:template>
     
     <xsl:template match="ags:publisherName">
@@ -124,6 +123,12 @@ version="1.0">
             <xsl:attribute name="lang">
                 <xsl:value-of select="@xml:lang"/>
             </xsl:attribute>
+            <xsl:value-of select="text()"/>
+        </dim:field>
+    </xsl:template>
+    
+    <xsl:template match="ags:publisherPlace">
+        <dim:field mdschema="dc" element="publisher" qualifier="place">
             <xsl:value-of select="text()"/>
         </dim:field>
     </xsl:template>
@@ -139,6 +144,14 @@ version="1.0">
     </xsl:template>
     
     <xsl:template match="dc:subject">
+        <xsl:if test="string-length(text()) > 0">
+            <dim:field mdschema="dc" element="subject" qualifier="other">
+                <xsl:attribute name="lang">
+                    <xsl:value-of select="@xml:lang"/>
+                </xsl:attribute>
+                <xsl:value-of select="text()"/>
+            </dim:field>
+        </xsl:if>
         <xsl:apply-templates select="ags:subjectThesaurus"/>
     </xsl:template>
     
@@ -281,11 +294,13 @@ version="1.0">
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template match="dc:type">
+   <!-- We will not process dc.type for now as it is used in completely different
+   way than in AOD.
+   <xsl:template match="dc:type">
         <dim:field mdschema="dc" element="type">
             <xsl:value-of select="text()"/>
         </dim:field>
-    </xsl:template>
+    </xsl:template> -->
     
     <xsl:template match="dc:format">
         <xsl:apply-templates select="dcterms:extent"/>
@@ -307,19 +322,34 @@ version="1.0">
                     <xsl:value-of select="substring-before(text(),'p.')"/>
                 </dim:field>
             </xsl:when> -->
-                    <xsl:when test="starts-with(text(),'p.')">
-                        <dim:field mdschema="dc" element="bibliographicCitation" qualifier="stpage">
-                            <xsl:value-of select="substring-after(substring-before(text(),'-'),'p.')"/>
-                        </dim:field>
-                        <dim:field mdschema="dc" element="bibliographicCitation" qualifier="endpage">
-                            <xsl:value-of select="substring-after(text(),'-')"/>
-                        </dim:field>
+                    <xsl:when test="starts-with(normalize-space(text()),'p.')">
+                        <xsl:choose>
+                            <xsl:when test="contains(text(),'-')">
+                                <dim:field mdschema="dc" element="bibliographicCitation" qualifier="stpage">
+                                    <xsl:value-of select="substring-after(substring-before(text(),'-'),'p.')"/>
+                                </dim:field>
+                                <dim:field mdschema="dc" element="bibliographicCitation" qualifier="endpage">
+                                    <xsl:value-of select="substring-before(substring-after(text(),'-'), ' ')"/>
+                                </dim:field>
+                            </xsl:when>
+
+							            <xsl:otherwise>
+                <dim:field mdschema="dc" element="format" qualifier="pages">
+                    <xsl:value-of select="text()"/>
+                </dim:field>
+            </xsl:otherwise>
+                        </xsl:choose>
                     </xsl:when>
+            <xsl:otherwise>
+                <dim:field mdschema="dc" element="format" qualifier="pages">
+                    <xsl:value-of select="text()"/>
+                </dim:field>
+            </xsl:otherwise>					
                 </xsl:choose>
             </xsl:when>
             
             <xsl:otherwise>
-                <dim:field mdschema="dc" element="format" qualifier="extent">
+                <dim:field mdschema="dc" element="format" qualifier="pages">
                     <xsl:value-of select="text()"/>
                 </dim:field>
             </xsl:otherwise>
@@ -334,8 +364,11 @@ version="1.0">
     </xsl:template>
     
     <xsl:template match="dc:language[@scheme='ags:ISO639-1']">
+        <xsl:variable name="smallcase" select="'abcdefghijklmnopqrstuvwxyz'" />
+        <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'" />
+        
         <dim:field mdschema="dc" element="language" qualifier="iso">
-            <xsl:value-of select="text()"/>
+            <xsl:value-of select="translate(text(), $uppercase, $smallcase)" />
         </dim:field>
     </xsl:template>
     
@@ -364,6 +397,12 @@ version="1.0">
     <xsl:template match="dc:coverage">
         <xsl:apply-templates select="dcterms:spatial"/>
         <xsl:apply-templates select="dcterms:temporal"/>
+        
+        <xsl:if test="string-length(text()) > 0">
+            <dim:field mdschema="dc" element="coverage" qualifier="spatial">
+                <xsl:value-of select="text()"/>
+            </dim:field>
+        </xsl:if>
     </xsl:template>
     
     <xsl:template match="dcterms:spatial">
@@ -401,20 +440,45 @@ version="1.0">
     </xsl:template>
     
     <xsl:template match="ags:citationNumber">
-        <dim:field mdschema="dc" element="bibliographicCitation" qualifier="volume">
-            <xsl:value-of select="substring-before(text(),'(')"/>
-        </dim:field>
-        <xsl:if test="string-length(substring-before(substring-after(text(),'('),')')) > 0">
-            <dim:field mdschema="dc" element="bibliographicCitation" qualifier="issue">
-                <xsl:value-of select="substring-before(substring-after(text(),'('),')')"/>
-            </dim:field>
-        </xsl:if>
+<!--        <xsl:choose> 
+            <xsl:when test="contains(text(), 'vol')"> -->
+                <dim:field mdschema="dc" element="bibliographicCitation" qualifier="volume">
+                    <xsl:value-of select="text()"/>
+                </dim:field>
+ <!--           </xsl:when>
+            <xsl:otherwise>
+                <dim:field mdschema="dc" element="bibliographicCitation" qualifier="volume">
+                    <xsl:value-of select="substring-before(text(),'(')"/>
+                </dim:field>
+                <xsl:if test="string-length(substring-before(substring-after(text(),'('),')')) > 0">
+                    <dim:field mdschema="dc" element="bibliographicCitation" qualifier="issue">
+                        <xsl:value-of select="substring-before(substring-after(text(),'('),')')"/>
+                    </dim:field>
+                </xsl:if>
+            </xsl:otherwise>
+        </xsl:choose> -->
+        
     </xsl:template>
     
     <xsl:template match="ags:citationTitle">
+        <xsl:choose>
+            <xsl:when test="count(preceding-sibling::node()[name()=name(current())])=0">
+                <dim:field mdschema="dc" element="bibliographicCitation" qualifier="title">
+                    <xsl:value-of select="text()"/>
+                </dim:field>
+            </xsl:when>
+            <xsl:otherwise>
+                <!-- It is a question what to do if this element have duplications -->
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template match="dc:source">
         <dim:field mdschema="dc" element="bibliographicCitation" qualifier="title">
             <xsl:value-of select="text()"/>
         </dim:field>
     </xsl:template>
+     
+    
     
 </xsl:stylesheet>

@@ -83,18 +83,18 @@
         if (fieldCount == 0) {
             fieldCount = 1;
         }
-        
-        String acField = "", acIndicator="", acUrl="";
+
+        String acField = "", acIndicator = "", acUrl = "";
 
         for (int i = 0; i < fieldCount; i++) {
             if (i < defaults.length) {
                 val = defaults[i].value.replaceAll("\"", "&quot;");
                 auth = defaults[i].authority;
                 conf = defaults[i].confidence;
-            }else {
-            val = "";
-            auth = "";
-            conf = unknownConfidence;
+            } else {
+                val = "";
+                auth = "";
+                conf = unknownConfidence;
             }
 
 
@@ -104,16 +104,16 @@
                 String fieldAuthority = fieldName + "_authority" + ((repeatable && i != fieldCount - 1) ? "_" + (i + 1) : "");
                 String fieldConfidence = fieldName + "_confidence" + ((repeatable && i != fieldCount - 1) ? "_" + (i + 1) : "");
                 sb.append("<input type=\"text\" name=\"").append(fieldNameIdx).append("\" id=\"").append(fieldNameIdx).append("\" size=\"" + isize + "\" value=\"").append(val + "\"").append(readonly ? " readonly=\"true\" " : "").append("/>").append("\n");
-                
+
                 //autocomplete "magic"
-                acIndicator = fieldNameIdx+"_indicator";
-                acField = "autocomplete_"+fieldNameIdx;
+                acIndicator = fieldNameIdx + "_indicator";
+                acField = "autocomplete_" + fieldNameIdx;
                 acUrl = contextPath + "/authority/" + field.getAuthorityURLsuffix();
                 sb.append("<span id=\"").append(acIndicator).append("\" style=\"display: none;\">").append("<img src=\"").append(contextPath).append("/image/authority/load-indicator.gif\" alt=\"Loading...\"/></span>");
-                sb.append("<div id=\"").append(acField).append("\" class=\"autocomplete\"></div>");                 
+                sb.append("<div id=\"").append(acField).append("\" class=\"autocomplete\"></div>");
                 //====================
                 sb.append("</td>\n");
-                
+
                 //authority value field ... editable if the field value is not in the authority list and authorityis not closed
                 sb.append("<td>").append("<input type=\"text\" name=\"").append(fieldAuthority).append("\" id=\"").append(fieldAuthority).append("\" \" value=\"").append(auth + "\" size=\"10\"").append(field.isAuthorityClosed() ? " readonly=\"true\"" : "").append("/>").append("\n");
                 sb.append("<input type=\"hidden\" name=\"").append(fieldConfidence).append("\" id=\"").append(fieldConfidence).append("\" value=\"").append(conf + "\" />");
@@ -154,7 +154,7 @@
                         sb.append("<td>&nbsp;</td>");
                     }
                 } // put language selection list if neccessary (for the dc lang attribute)
-                
+
                 sb.append("</tr>");
                 sb.append("<script type=\"text/javascript\">");
                 sb.append("authoritySuggest(\"").append(fieldNameIdx).append("\", \"").append(acField).append("\", \"").append(acUrl).append("\", '").append(acIndicator).append("');");
@@ -211,74 +211,93 @@
 
     // Render the choice/authority controlled entry, or, if not indicated,
     // returns the given default inputBlock
- /*  StringBuffer doAuthority(PageContext pageContext, String fieldName,
-    int idx, int fieldCount, String fieldInput, String authorityValue,
-    int confidenceValue, boolean isName, boolean repeatable,
-    DCValue[] dcvs, StringBuffer inputBlock, int collectionID, int size, String contextPath) {
-    MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
-    ChoiceAuthorityManager cam = ChoiceAuthorityManager.getManager();
-    StringBuffer sb = new StringBuffer();
-     
-    if (cam.isChoicesConfigured(fieldName)) {
-    boolean authority = mam.isAuthorityControlled(fieldName);
-    boolean required = authority && mam.isAuthorityRequired(fieldName);
-    boolean isSelect = "select".equals(cam.getPresentation(fieldName)) && !isName;
-     
-    // if this is not the only or last input, append index to input @names
-    String authorityName = fieldName + "_authority";
-    String confidenceName = fieldName + "_confidence";
-    if (repeatable && !isSelect && idx != fieldCount - 1) {
-    fieldInput += '_' + String.valueOf(idx + 1);
-    authorityName += '_' + String.valueOf(idx + 1);
-    confidenceName += '_' + String.valueOf(idx + 1);
-    }
-     
-    String confidenceSymbol = confidenceValue == unknownConfidence ? "blank" : Choices.getConfidenceText(confidenceValue).toLowerCase();
-    String confIndID = fieldInput + "_confidence_indicator_id";
-    if (authority) {
-    sb.append(" <img id=\"" + confIndID + "\" title=\"").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.authority.confidence.description." + confidenceSymbol)).append("\" class=\"ds-authority-confidence cf-") // set confidence to cf-blank if authority is empty
-    .append(authorityValue == null || authorityValue.length() == 0 ? "blank" : confidenceSymbol).append(" \" src=\"").append(contextPath).append("/image/confidence/invisible.gif\" />").append("<input type=\"text\" value=\"").append(authorityValue != null ? authorityValue : "").append("\" id=\"").append(authorityName).append("\" name=\"").append(authorityName).append("\" class=\"ds-authority-value\"/>").append("<input type=\"hidden\" value=\"").append(confidenceSymbol).append("\" id=\"").append(confidenceName).append("\" name=\"").append(confidenceName).append("\" class=\"ds-authority-confidence-input\"/>");
-    }
-     
-    // suggest is not supported for name input type
-    if ("suggest".equals(cam.getPresentation(fieldName)) && !isName) {
-    if (inputBlock != null) {
-    sb.insert(0, inputBlock);
-    }
-    sb.append("<span id=\"").append(fieldInput).append("_indicator\">").append("<img src=\"").append(contextPath).append("/image/authority/load-indicator.gif\" alt=\"Loading...\"/>").append("</span><div id=\"").append(fieldInput).append("_autocomplete\" class=\"autocomplete\" style=\"display: block;\"> </div>");
-     
-    sb.append("<script type=\"text/javascript\">").append("var gigo = DSpaceSetupAutocomplete('edit_metadata',").append("{ metadataField: '").append(fieldName).append("', isClosed: '").append(required ? "true" : "false").append("', inputName: '").append(fieldInput).append("', authorityName: '").append(authorityName).append("', containerID: '").append(fieldInput).append("_autocomplete', indicatorID: '").append(fieldInput).append("_indicator', ").append("contextPath: '").append(contextPath).append("', confidenceName: '").append(confidenceName).append("', confidenceIndicatorID: '").append(confIndID).append("', collection: ").append(String.valueOf(collectionID)).append(" }); </script>");
-    } // put up a SELECT element containing all choices
-    else if (isSelect) {
-    sb.append("<select id=\"").append(fieldInput).append("_id\" name=\"").append(fieldInput).append("\" size=\"").append(String.valueOf(repeatable ? 6 : 1)).append(repeatable ? "\" multiple>\n" : "\">\n");
-    Choices cs = cam.getMatches(fieldName, "", collectionID, 0, 0, null);
-    // prepend unselected empty value when nothing can be selected.
-    if (!repeatable && cs.defaultSelected < 0 && dcvs.length == 0) {
-    sb.append("<option value=\"\"><!-- empty --></option>\n");
-    }
-    for (int i = 0; i < cs.values.length; ++i) {
-    boolean selected = false;
-    for (DCValue dcv : dcvs) {
-    if (dcv.value.equals(cs.values[i].value)) {
-    selected = true;
-    }
-    }
-    sb.append("<option value=\"").append(cs.values[i].value.replaceAll("\"", "\\\"")).append("\"").append(selected ? " selected>" : ">").append(cs.values[i].label).append("</option>\n");
-    }
-    sb.append("</select>\n");
-    } // use lookup for any other presentation style (i.e "select")
-    else {
-    if (inputBlock != null) {
-    sb.insert(0, inputBlock);
-    }
-    sb.append("<input type=\"image\" name=\"").append(fieldInput).append("_lookup\" ").append("onclick=\"javascript: return DSpaceChoiceLookup('").append(contextPath).append("/tools/lookup.jsp','").append(fieldName).append("','edit_metadata','").append(fieldInput).append("','").append(authorityName).append("','").append(confIndID).append("',").append(String.valueOf(collectionID)).append(",").append(String.valueOf(isName)).append(",false);\"").append(" title=\"").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.tools.lookup.lookup")).append("\" width=\"16px\" height=\"16px\" src=\"" + contextPath + "/image/authority/zoom.png\" />");
-    }
-    } else if (inputBlock != null) {
-    sb = inputBlock;
-    }
-    return sb;
-    }
-     * */
+ /*
+     * StringBuffer doAuthority(PageContext pageContext, String fieldName, int
+     * idx, int fieldCount, String fieldInput, String authorityValue, int
+     * confidenceValue, boolean isName, boolean repeatable, DCValue[] dcvs,
+     * StringBuffer inputBlock, int collectionID, int size, String contextPath)
+     * { MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
+     * ChoiceAuthorityManager cam = ChoiceAuthorityManager.getManager();
+     * StringBuffer sb = new StringBuffer();
+     *
+     * if (cam.isChoicesConfigured(fieldName)) { boolean authority =
+     * mam.isAuthorityControlled(fieldName); boolean required = authority &&
+     * mam.isAuthorityRequired(fieldName); boolean isSelect =
+     * "select".equals(cam.getPresentation(fieldName)) && !isName;
+     *
+     * // if this is not the only or last input, append index to input @names
+     * String authorityName = fieldName + "_authority"; String confidenceName =
+     * fieldName + "_confidence"; if (repeatable && !isSelect && idx !=
+     * fieldCount - 1) { fieldInput += '_' + String.valueOf(idx + 1);
+     * authorityName += '_' + String.valueOf(idx + 1); confidenceName += '_' +
+     * String.valueOf(idx + 1); }
+     *
+     * String confidenceSymbol = confidenceValue == unknownConfidence ? "blank"
+     * : Choices.getConfidenceText(confidenceValue).toLowerCase(); String
+     * confIndID = fieldInput + "_confidence_indicator_id"; if (authority) {
+     * sb.append(" <img id=\"" + confIndID + "\"
+     * title=\"").append(LocaleSupport.getLocalizedMessage(pageContext,
+     * "jsp.authority.confidence.description." + confidenceSymbol)).append("\"
+     * class=\"ds-authority-confidence cf-") // set confidence to cf-blank if
+     * authority is empty .append(authorityValue == null ||
+     * authorityValue.length() == 0 ? "blank" : confidenceSymbol).append(" \"
+     * src=\"").append(contextPath).append("/image/confidence/invisible.gif\"
+     * />").append("<input type=\"text\" value=\"").append(authorityValue !=
+     * null ? authorityValue : "").append("\"
+     * id=\"").append(authorityName).append("\"
+     * name=\"").append(authorityName).append("\"
+     * class=\"ds-authority-value\"/>").append("<input type=\"hidden\"
+     * value=\"").append(confidenceSymbol).append("\"
+     * id=\"").append(confidenceName).append("\"
+     * name=\"").append(confidenceName).append("\"
+     * class=\"ds-authority-confidence-input\"/>"); }
+     *
+     * // suggest is not supported for name input type if
+     * ("suggest".equals(cam.getPresentation(fieldName)) && !isName) { if
+     * (inputBlock != null) { sb.insert(0, inputBlock); } sb.append("<span
+     * id=\"").append(fieldInput).append("_indicator\">").append("<img
+     * src=\"").append(contextPath).append("/image/authority/load-indicator.gif\"
+     * alt=\"Loading...\"/>").append("</span><div
+     * id=\"").append(fieldInput).append("_autocomplete\" class=\"autocomplete\"
+     * style=\"display: block;\"> </div>");
+     *
+     * sb.append("<script type=\"text/javascript\">").append("var gigo =
+     * DSpaceSetupAutocomplete('edit_metadata',").append("{ metadataField:
+     * '").append(fieldName).append("', isClosed: '").append(required ? "true" :
+     * "false").append("', inputName: '").append(fieldInput).append("',
+     * authorityName: '").append(authorityName).append("', containerID:
+     * '").append(fieldInput).append("_autocomplete', indicatorID:
+     * '").append(fieldInput).append("_indicator', ").append("contextPath:
+     * '").append(contextPath).append("', confidenceName:
+     * '").append(confidenceName).append("', confidenceIndicatorID:
+     * '").append(confIndID).append("', collection:
+     * ").append(String.valueOf(collectionID)).append(" }); </script>"); } //
+     * put up a SELECT element containing all choices else if (isSelect) {
+     * sb.append("<select id=\"").append(fieldInput).append("_id\"
+     * name=\"").append(fieldInput).append("\"
+     * size=\"").append(String.valueOf(repeatable ? 6 : 1)).append(repeatable ?
+     * "\" multiple>\n" : "\">\n"); Choices cs = cam.getMatches(fieldName, "",
+     * collectionID, 0, 0, null); // prepend unselected empty value when nothing
+     * can be selected. if (!repeatable && cs.defaultSelected < 0 && dcvs.length
+     * == 0) { sb.append("<option value=\"\"><!-- empty --></option>\n"); } for
+     * (int i = 0; i < cs.values.length; ++i) { boolean selected = false; for
+     * (DCValue dcv : dcvs) { if (dcv.value.equals(cs.values[i].value)) {
+     * selected = true; } } sb.append("<option
+     * value=\"").append(cs.values[i].value.replaceAll("\"",
+     * "\\\"")).append("\"").append(selected ? " selected>" :
+     * ">").append(cs.values[i].label).append("</option>\n"); }
+     * sb.append("</select>\n"); } // use lookup for any other presentation
+     * style (i.e "select") else { if (inputBlock != null) { sb.insert(0,
+     * inputBlock); } sb.append("<input type=\"image\"
+     * name=\"").append(fieldInput).append("_lookup\"
+     * ").append("onclick=\"javascript: return
+     * DSpaceChoiceLookup('").append(contextPath).append("/tools/lookup.jsp','").append(fieldName).append("','edit_metadata','").append(fieldInput).append("','").append(authorityName).append("','").append(confIndID).append("',").append(String.valueOf(collectionID)).append(",").append(String.valueOf(isName)).append(",false);\"").append("
+     * title=\"").append(LocaleSupport.getLocalizedMessage(pageContext,
+     * "jsp.tools.lookup.lookup")).append("\" width=\"16px\" height=\"16px\"
+     * src=\"" + contextPath + "/image/authority/zoom.png\" />"); } } else if
+     * (inputBlock != null) { sb = inputBlock; } return sb; }
+     *
+     */
 %>
 <!--doLang-->
 <%!    void doLang(StringBuffer sb, Item item,
@@ -503,14 +522,13 @@
             fieldCount = 1;
         }
 
-        for (int i = 0; i
-                < fieldCount; i++) {
+        for (int i = 0; i < fieldCount; i++) {
             if (i < defaults.length) {
                 dateIssued = new org.dspace.content.DCDate(defaults[i].value);
             } else {
                 dateIssued = new org.dspace.content.DCDate("");
             }
-
+           
             sb.append("<td colspan=\"2\" nowrap=\"nowrap\" class=\"submitFormDateLabel\">").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.edit-metadata.month")).append("<select name=\"").append(fieldName).append("_month");
 
             if (repeatable && i > 0) {
@@ -1055,7 +1073,9 @@
     }
 %>
 <!--doList-->
-<%!    /** Display Checkboxes or Radio buttons, depending on if repeatable! **/
+<%!    /**
+     * Display Checkboxes or Radio buttons, depending on if repeatable! *
+     */
     void doList(javax.servlet.jsp.JspWriter out, Item item,
             String fieldName, String schema, String element, String qualifier, boolean repeatable,
             boolean readonly, List valueList, String label, boolean askLang)
@@ -1203,571 +1223,574 @@
     <%-- <p><strong><fmt:message key="jsp.tools.edit-item-form.note"/></strong></p> --%>
 
     <%-- <p><dspace:popup page="/help/collection-admin.html#editmetadata">More help...</dspace:popup></p>  --%>
-    <div><dspace:popup page="<%= LocaleSupport.getLocalizedMessage(pageContext, \"help.collection-admin\") + \"#editmetadata\"%>"><fmt:message key="jsp.morehelp"/></dspace:popup></div>
+    <div><dspace:popup page="<%= LocaleSupport.getLocalizedMessage(pageContext, 
+        \"help.collection-admin\") + \"#editmetadata\"%>"><fmt:message key="jsp.morehelp"/></dspace:popup></div>
 
-                  <div class="metadataForm">
-                      <center>
-                          <table width="90%" summary="Edit item table">
-                              <tr>
-                              <%-- <td class="submitFormLabel">Item&nbsp;internal&nbsp;ID:</td> --%>
-                              <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.itemID"/></td>
-                              <td class="standard"><%= item.getID()%></td>
-                              <td class="standard" width="100%" align="right" rowspan="5">
-                                  <%
-                                      if (!item.isWithdrawn() && bWithdraw) {
-                                  %>
-                                  <form method="post" action="<%= request.getContextPath()%>/tools/edit-item">
-                                      <input type="hidden" name="item_id" value="<%= item.getID()%>" />
-                                      <input type="hidden" name="action" value="<%= EditItemServlet.START_WITHDRAW%>" />
-                                      <%-- <input type="submit" name="submit" value="Withdraw..."> --%>
-                                      <input type="submit" name="submit" value="<fmt:message key="jsp.tools.edit-item-form.withdraw-w-confirm.button"/>"/>
-                                  </form>
-                                  <%
-                                  } else if (item.isWithdrawn() && bReinstate) {
-                                  %>
-                                  <form method="post" action="<%= request.getContextPath()%>/tools/edit-item">
-                                      <input type="hidden" name="item_id" value="<%= item.getID()%>" />
-                                      <input type="hidden" name="action" value="<%= EditItemServlet.REINSTATE%>" />
-                                      <%-- <input type="submit" name="submit" value="Reinstate"> --%>
-                                      <input type="submit" name="submit" value="<fmt:message key="jsp.tools.edit-item-form.reinstate.button"/>"/>
-                                  </form>
-                                  <%
-                                  }
-                                  %>
+        <div class="metadataForm">
+            <center>
+                <table width="90%" summary="Edit item table">
+                    <tr>
+                    <%-- <td class="submitFormLabel">Item&nbsp;internal&nbsp;ID:</td> --%>
+                    <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.itemID"/></td>
+                    <td class="standard"><%= item.getID()%></td>
+                    <td class="standard" width="100%" align="right" rowspan="5">
+                        <%
+                            if (!item.isWithdrawn() && bWithdraw) {
+                        %>
+                        <form method="post" action="<%= request.getContextPath()%>/tools/edit-item">
+                            <input type="hidden" name="item_id" value="<%= item.getID()%>" />
+                            <input type="hidden" name="action" value="<%= EditItemServlet.START_WITHDRAW%>" />
+                            <%-- <input type="submit" name="submit" value="Withdraw..."> --%>
+                            <input type="submit" name="submit" value="<fmt:message key="jsp.tools.edit-item-form.withdraw-w-confirm.button"/>"/>
+                        </form>
+                        <%
+                        } else if (item.isWithdrawn() && bReinstate) {
+                        %>
+                        <form method="post" action="<%= request.getContextPath()%>/tools/edit-item">
+                            <input type="hidden" name="item_id" value="<%= item.getID()%>" />
+                            <input type="hidden" name="action" value="<%= EditItemServlet.REINSTATE%>" />
+                            <%-- <input type="submit" name="submit" value="Reinstate"> --%>
+                            <input type="submit" name="submit" value="<fmt:message key="jsp.tools.edit-item-form.reinstate.button"/>"/>
+                        </form>
+                        <%
+                            }
+                        %>
 
-                                  <br/>
-                                  <%
-                                      if (bDelete) {
-                                  %>
-                                  <form method="post" action="<%= request.getContextPath()%>/tools/edit-item">
-                                      <input type="hidden" name="item_id" value="<%= item.getID()%>" />
-                                      <input type="hidden" name="action" value="<%= EditItemServlet.START_DELETE%>" />
-                                      <%-- <input type="submit" name="submit" value="Delete (Expunge)..."> --%>
-                                      <input type="submit" name="submit" value="<fmt:message key="jsp.tools.edit-item-form.delete-w-confirm.button"/>"/>
-                                  </form>
-                                  <%
-                                      }
+                        <br/>
+                        <%
+                            if (bDelete) {
+                        %>
+                        <form method="post" action="<%= request.getContextPath()%>/tools/edit-item">
+                            <input type="hidden" name="item_id" value="<%= item.getID()%>" />
+                            <input type="hidden" name="action" value="<%= EditItemServlet.START_DELETE%>" />
+                            <%-- <input type="submit" name="submit" value="Delete (Expunge)..."> --%>
+                            <input type="submit" name="submit" value="<fmt:message key="jsp.tools.edit-item-form.delete-w-confirm.button"/>"/>
+                        </form>
+                        <%
+                            }
 
-                                      if (isItemAdmin) {
-                                  %>                     <form method="post" action="<%= request.getContextPath()%>/tools/edit-item">
-                                      <input type="hidden" name="item_id" value="<%= item.getID()%>" />
-                                      <input type="hidden" name="action" value="<%= EditItemServlet.START_MOVE_ITEM%>" />
-                                      <input type="submit" name="submit" value="<fmt:message key="jsp.tools.edit-item-form.move-item.button"/>"/>
-                                  </form>
-                                  <%
-                                      }
-                                  %>
-                              </td>
-                          </tr>
-                          <tr>
-                              <%-- <td class="submitFormLabel">Handle:</td> --%>
-                              <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.handle"/></td>
-                              <td class="standard"><%= (handle == null ? "None" : handle)%></td>
-                          </tr>
-                          <tr>
-                              <%-- <td class="submitFormLabel">Last modified:</td> --%>
-                              <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.modified"/></td>
-                              <td class="standard"><dspace:date date="<%= new DCDate(item.getLastModified())%>" /></td>
-                          </tr>
-                          <tr>
-                              <%-- <td class="submitFormLabel">In Collections:</td> --%>
-                              <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.collections"/></td>
-                              <td class="standard">
-                                  <%  for (int i = 0; i < collections.length; i++) {%>
-                                  <%= collections[i].getMetadata("name")%><br/>
-                                  <%  }%>
-                              </td>
-                          </tr>
+                            if (isItemAdmin) {
+                        %>                     <form method="post" action="<%= request.getContextPath()%>/tools/edit-item">
+                            <input type="hidden" name="item_id" value="<%= item.getID()%>" />
+                            <input type="hidden" name="action" value="<%= EditItemServlet.START_MOVE_ITEM%>" />
+                            <input type="submit" name="submit" value="<fmt:message key="jsp.tools.edit-item-form.move-item.button"/>"/>
+                        </form>
+                        <%
+                            }
+                        %>
+                    </td>
+                </tr>
+                <tr>
+                    <%-- <td class="submitFormLabel">Handle:</td> --%>
+                    <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.handle"/></td>
+                    <td class="standard"><%= (handle == null ? "None" : handle)%></td>
+                </tr>
+                <tr>
+                    <%-- <td class="submitFormLabel">Last modified:</td> --%>
+                    <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.modified"/></td>
+                    <td class="standard"><dspace:date date="<%= new DCDate(item.getLastModified())%>" /></td>
+                </tr>
+                <tr>
+                    <%-- <td class="submitFormLabel">In Collections:</td> --%>
+                    <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.collections"/></td>
+                    <td class="standard">
+                        <%  for (int i = 0; i < collections.length; i++) {%>
+                        <%= collections[i].getMetadata("name")%><br/>
+                        <%  }%>
+                    </td>
+                </tr>
 
-                          <tr>
-                              <%-- <td class="submitFormLabel">Item page:</td> --%>
-                              <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.itempage"/></td>
-                              <td class="standard">
-                                  <%  if (handle == null) {%>
-                                  <em><fmt:message key="jsp.tools.edit-item-form.na"/></em>
-                                  <%  } else {
+                <tr>
+                    <%-- <td class="submitFormLabel">Item page:</td> --%>
+                    <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.itempage"/></td>
+                    <td class="standard">
+                        <%  if (handle == null) {%>
+                        <em><fmt:message key="jsp.tools.edit-item-form.na"/></em>
+                        <%  } else {
                                       String url = ConfigurationManager.getProperty("dspace.url") + "/handle/" + handle;%>
-                                  <a target="_blank" href="<%= url%>"><%= url%></a>
-                                  <%  }%>
-                              </td>
-                          </tr>
-                          <%
-                              if (bPolicy) {
-                          %>
-                          <%-- ===========================================================
-                               Edit item's policies
-                               =========================================================== --%>
-                          <tr>
-                              <%-- <td class="submitFormLabel">Item's Authorizations:</td> --%>
-                              <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.item"/></td>
-                              <td>
-                                  <form method="post" action="<%= request.getContextPath()%>/tools/authorize">
-                                      <input type="hidden" name="handle" value="<%= ConfigurationManager.getProperty("handle.prefix")%>" />
-                                      <input type="hidden" name="item_id" value="<%= item.getID()%>" />
-                                      <%-- <input type="submit" name="submit_item_select" value="Edit..."> --%>
-                                      <input type="submit" name="submit_item_select" value="<fmt:message key="jsp.tools.general.edit"/>"/>
-                                  </form>
-                              </td>
-                          </tr>
-                          <%
-                              }
-                          %>
-                      </table>
-                  </center>
+                        <a target="_blank" href="<%= url%>"><%= url%></a>
+                        <%  }%>
+                    </td>
+                </tr>
+                <%
+                    if (bPolicy) {
+                %>
+                <%-- ===========================================================
+                     Edit item's policies
+                     =========================================================== --%>
+                <tr>
+                    <%-- <td class="submitFormLabel">Item's Authorizations:</td> --%>
+                    <td class="submitFormLabel"><fmt:message key="jsp.tools.edit-item-form.item"/></td>
+                    <td>
+                        <form method="post" action="<%= request.getContextPath()%>/tools/authorize">
+                            <input type="hidden" name="handle" value="<%= ConfigurationManager.getProperty("handle.prefix")%>" />
+                            <input type="hidden" name="item_id" value="<%= item.getID()%>" />
+                            <%-- <input type="submit" name="submit_item_select" value="Edit..."> --%>
+                            <input type="submit" name="submit_item_select" value="<fmt:message key="jsp.tools.general.edit"/>"/>
+                        </form>
+                    </td>
+                </tr>
+                <%
+                    }
+                %>
+            </table>
+        </center>
 
-                  <%
+        <%
 
-                      if (item.isWithdrawn()) {
-                  %>
-                  <%-- <p align="center"><strong>This item was withdrawn from DSpace</strong></p> --%>
-                  <p align="center"><strong><fmt:message key="jsp.tools.edit-item-form.msg"/></strong></p>
-                  <%    }
-                  %>
-                  <p>&nbsp;</p>
-
-
+            if (item.isWithdrawn()) {
+        %>
+        <%-- <p align="center"><strong>This item was withdrawn from DSpace</strong></p> --%>
+        <p align="center"><strong><fmt:message key="jsp.tools.edit-item-form.msg"/></strong></p>
+        <%    }
+        %>
+        <p>&nbsp;</p>
 
 
-                  <%
-                      String doctype;
-                      DCValue[] values = item.getMetadata("dc", "type", null, Item.ANY);
-
-                      if (values.length > 0) {
-                          doctype = values[0].value; // item already has a type
-
-                          DCInputsReaderExt inputsReader = new DCInputsReaderExt();
-                          String collectionHandle = "";
-                          if (collections.length > 0) {
-                              collectionHandle = collections[0].getHandle();
-                          }
-
-                          DCInputSetExt inputSet = inputsReader.getInputs(collectionHandle, doctype);
-
-                  %>
-
-                  <form id="change_doctype" name="change_doctype" method="post" action="<%= request.getContextPath()%>/tools/edit-item">
-                      <div class="metadataFieldgroup"> <!-- doc type selector -->
-                          <div class="metadataTitlegroup">
-                              <h3 class="metadataFieldgroupTitle">
-                                  <fmt:message key="jsp.submit.edit-metadata.doctype" />
-                              </h3>
-                              <p class="metadataFieldgroupHint"></p>
-                          </div>
-                          <div class="metadataFieldrow">
-                              <div class="metadataField">
-                                  <div class="metadataLabel"></div>
-                                  <table>
-                                      <tr>
-                                          <td>&nbsp;</td>
-                                          <td colspan="2">
-                                              <div class="metadataType">
-                                                  <!-- selection of submission document type -->
-                                                  <select name="select_doctype" id="select_doctype" onchange="updatedoctype()">
-                                                      <%
-                                                          List<String> types = new ArrayList<String>();
-                                                          if (collections.length > 0) {
-                                                              types = inputsReader.getTypesListforCollection(collections[0].getHandle());
-                                                          }
-                                                          StringBuffer sb = new StringBuffer();
-                                                          String isselected = "";
-                                                          if (!types.isEmpty()) {
-                                                              for (int i = 0; i < types.size(); i++) {
-                                                                  isselected = types.get(i).equals(doctype) ? "selected=\"selected\"" : "";
-                                                                  sb.append("<option value=\"" + types.get(i) + "\"" + isselected + ">" + types.get(i) + "</option>");
-                                                              }
-                                                              out.println(sb);
-                                                          }
-                                                      %>
-                                                  </select>
-                                              </div>
-                                          </td>
-                                          <td>&nbsp;</td>
-                                      </tr>
-                                  </table>
-                              </div>
-                          </div>
-                      </div> <!-- doc type selector -->
-                      <input type="hidden" name="item_id" value="<%= item.getID()%>" />
-                      <input type="hidden" name="action" value="<%= EditItemServlet.CHANGE_DOCTYPE%>" />
-                  </form>
-
-                  <form id="edit_metadata" name="edit_metadata" method="post" action="<%= request.getContextPath()%>/tools/edit-item">
-                      <%
 
 
-                          /* we need to add after all non empty fields (as simple input box)
-                          which are not in inputset*/
+        <%
+            String doctype;
+            DCValue[] values = item.getMetadata("dc", "type", null, Item.ANY);
 
-                          String tempField = "";
+            if (values.length > 0) {
+                doctype = values[0].value; // item already has a type
 
-                          for (DCValue dcv : allItemsFields) {
-                              if ((dcv.value != null) && (!"".equals(dcv.value))) {
-                                  tempField = dcv.schema + "." + dcv.element + (dcv.qualifier == null || "".equals(dcv.qualifier) ? "" : ("." + dcv.qualifier));
-                                  if (!tobeAdded.contains(tempField) && (!tempField.equals("dc.type"))) {
-                                      tobeAdded.add(tempField);
-                                  }
-                              }
-                          }
+                DCInputsReaderExt inputsReader = new DCInputsReaderExt();
+                String collectionHandle = "";
+                if (collections.length > 0) {
+                    collectionHandle = collections[0].getHandle();
+                }
 
-                          for (List<DCInputGroup> iGroups : inputSet.getPages().values()) {
+                DCInputSetExt inputSet = inputsReader.getInputs(collectionHandle, doctype);
 
-                              String gLabel = null;
-                              String gHint = null;
-                              DCInputGroup iG = null;
+        %>
 
-                              for (int i = 0; i < iGroups.size(); i++) {
-                                  iG = iGroups.get(i);
-                                  gLabel = iG.getLabel();
-                                  gHint = iG.getHint();
-                      %>
-                      <div class="metadataFieldgroup">
-                          <div class="metadataTitlegroup">
-                              <h3 class="metadataFieldgroupTitle">
-                                  <%out.print(gLabel);%>
-                              </h3>
-                              <p class="metadataFieldgroupHint">
-                                  <%out.print("- " + gHint);%>
-                              </p>
-                          </div>
-                          <!-- fields rows -->
-                          <%
-                              for (int g = 0; g < iG.getRowsCount(); g++) {
-                          %>
-                          <div class="metadataFieldrow">
-                              <%
-                                  List<DCInput> iRow = iG.getRow(g);
-                                  for (int j = 0; j < iRow.size(); j++) {
-                                      DCInput iF = iRow.get(j);
-                              %>
-                              <div class="metadataField">
-                                  <div class="metadataLabel"><%=iF.getLabel()%></div>
-                                  <table>
-                                      <%
-                                          String dcElement = iF.getElement();
-                                          String dcQualifier = iF.getQualifier();
-                                          String dcSchema = iF.getSchema();
-                                          String fieldName;
+        <form id="change_doctype" name="change_doctype" method="post" action="<%= request.getContextPath()%>/tools/edit-item">
+            <div class="metadataFieldgroup"> <!-- doc type selector -->
+                <div class="metadataTitlegroup">
+                    <h3 class="metadataFieldgroupTitle">
+                        <fmt:message key="jsp.submit.edit-metadata.doctype" />
+                    </h3>
+                    <p class="metadataFieldgroupHint"></p>
+                </div>
+                <div class="metadataFieldrow">
+                    <div class="metadataField">
+                        <div class="metadataLabel"></div>
+                        <table>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td colspan="2">
+                                    <div class="metadataType">
+                                        <!-- selection of submission document type -->
+                                        <select name="select_doctype" id="select_doctype" onchange="updatedoctype()">
+                                            <%
+                                                List<String> types = new ArrayList<String>();
+                                                if (collections.length > 0) {
+                                                    types = inputsReader.getTypesListforCollection(collections[0].getHandle());
+                                                }
+                                                StringBuffer sb = new StringBuffer();
+                                                String isselected = "";
+                                                if (!types.isEmpty()) {
+                                                    for (int i = 0; i < types.size(); i++) {
+                                                        isselected = types.get(i).equals(doctype) ? "selected=\"selected\"" : "";
+                                                        sb.append("<option value=\"" + types.get(i) + "\"" + isselected + ">" + types.get(i) + "</option>");
+                                                    }
+                                                    out.println(sb);
+                                                }
+                                            %>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div> <!-- doc type selector -->
+            <input type="hidden" name="item_id" value="<%= item.getID()%>" />
+            <input type="hidden" name="action" value="<%= EditItemServlet.CHANGE_DOCTYPE%>" />
+        </form>
 
-                                          int inputsize = iF.getSize();
-                                          boolean repeatable = iF.getRepeatable();
-                                          String vocabulary = iF.getVocabulary();
-                                          boolean askLang = iF.getAskLanguage();
-                                          boolean readonly = false;
+        <form id="edit_metadata" name="edit_metadata" method="post" action="<%= request.getContextPath()%>/tools/edit-item">
+            <%
 
-                                          if (dcQualifier != null && !dcQualifier.equals("*")) {
-                                              fieldName = dcSchema + "_" + dcElement + '_' + dcQualifier;
 
-                                          } else {
-                                              fieldName = dcSchema + "_" + dcElement;
-                                          }
+                /*
+                 * we need to add after all non empty fields (as
+                 * simple input box) which are not in inputset
+                 */
 
-                                          if (tobeAdded.contains(iF.getFullQualName())) {
-                                              tobeAdded.remove(iF.getFullQualName());
-                                          }
+                String tempField = "";
 
-                                          int fieldCountIncr = 0;
+                for (DCValue dcv : allItemsFields) {
+                    if ((dcv.value != null) && (!"".equals(dcv.value))) {
+                        tempField = dcv.schema + "." + dcv.element + (dcv.qualifier == null || "".equals(dcv.qualifier) ? "" : ("." + dcv.qualifier));
+                        if (!tobeAdded.contains(tempField) && (!tempField.equals("dc.type"))) {
+                            tobeAdded.add(tempField);
+                        }
+                    }
+                }
 
-                                          if (repeatable && !readonly) {
-                                              //if(request.getAttribute("moreInputs") != null)
-                                              fieldCountIncr = 1;
-                                          }
+                for (List<DCInputGroup> iGroups : inputSet.getPages().values()) {
 
-                                          String inputType = iF.getInputType();
-                                          String label = iF.getLabel();
+                    String gLabel = null;
+                    String gHint = null;
+                    DCInputGroup iG = null;
 
-                                          boolean closedVocabulary = iF.isClosedVocabulary();
-                                          out.write("<tr>");
+                    for (int i = 0; i < iGroups.size(); i++) {
+                        iG = iGroups.get(i);
+                        gLabel = iG.getLabel();
+                        gHint = iG.getHint();
+            %>
+            <div class="metadataFieldgroup">
+                <div class="metadataTitlegroup">
+                    <h3 class="metadataFieldgroupTitle">
+                        <%out.print(gLabel);%>
+                    </h3>
+                    <p class="metadataFieldgroupHint">
+                        <%out.print("- " + gHint);%>
+                    </p>
+                </div>
+                <!-- fields rows -->
+                <%
+                    for (int g = 0; g < iG.getRowsCount(); g++) {
+                %>
+                <div class="metadataFieldrow">
+                    <%
+                        List<DCInput> iRow = iG.getRow(g);
+                        for (int j = 0; j < iRow.size(); j++) {
+                            DCInput iF = iRow.get(j);
+                    %>
+                    <div class="metadataField">
+                        <div class="metadataLabel"><%=iF.getLabel()%></div>
+                        <table>
+                            <%
+                                String dcElement = iF.getElement();
+                                String dcQualifier = iF.getQualifier();
+                                String dcSchema = iF.getSchema();
+                                String fieldName;
 
-                                          if (iF.isAuthority()) {
-                                              doAuthorityField(out, item, fieldName, iF, fieldCountIncr, readonly, pageContext, request.getContextPath());
+                                int inputsize = iF.getSize();
+                                boolean repeatable = iF.getRepeatable();
+                                String vocabulary = iF.getVocabulary();
+                                boolean askLang = iF.getAskLanguage();
+                                boolean readonly = false;
 
-                                          } else if (inputType.equals("name")) {
-                                              doPersonalName(out, item, fieldName, dcSchema, dcElement, dcQualifier,
-                                                      repeatable, readonly, fieldCountIncr, label, pageContext, collectionID, inputsize, askLang, request.getContextPath());
+                                if (dcQualifier != null && !dcQualifier.equals("*")) {
+                                    fieldName = dcSchema + "_" + dcElement + '_' + dcQualifier;
 
-                                          } else if (isSelectable(fieldName)) {
-                                              doChoiceSelect(out, pageContext, item, fieldName, dcSchema, dcElement, dcQualifier,
-                                                      repeatable, readonly, iF.getPairs(), label, collectionID, request.getContextPath());
+                                } else {
+                                    fieldName = dcSchema + "_" + dcElement;
+                                }
 
-                                          } else if (inputType.equals("date")) {
-                                              doDate(out, item, fieldName, dcSchema, dcElement, dcQualifier,
-                                                      repeatable, readonly, fieldCountIncr, label, pageContext, request);
+                                if (tobeAdded.contains(iF.getFullQualName())) {
+                                    tobeAdded.remove(iF.getFullQualName());
+                                }
 
-                                          } else if (inputType.equals("series")) {
-                                              doSeriesNumber(out, item, fieldName, dcSchema, dcElement, dcQualifier,
-                                                      repeatable, readonly, fieldCountIncr, label, pageContext, inputsize);
+                                int fieldCountIncr = 0;
 
-                                          } else if (inputType.equals("qualdrop_value")) {
-                                              doQualdropValue(out, item, fieldName, dcSchema, dcElement, inputSet, repeatable,
-                                                      readonly, fieldCountIncr, iF.getPairs(), label, pageContext, inputsize, askLang);
+                                if (repeatable && !readonly) {
+                                    //if(request.getAttribute("moreInputs") != null)
+                                    fieldCountIncr = 1;
+                                }
 
-                                          } else if (inputType.equals("textarea")) {
-                                              doTextArea(out, item, fieldName, dcSchema, dcElement, dcQualifier,
-                                                      repeatable, readonly, fieldCountIncr, label, pageContext, vocabulary,
-                                                      closedVocabulary, collectionID, inputsize, askLang, request.getContextPath());
+                                String inputType = iF.getInputType();
+                                String label = iF.getLabel();
 
-                                          } else if (inputType.equals("dropdown")) {
-                                              doDropDown(out, item, fieldName, dcSchema, dcElement, dcQualifier,
-                                                      repeatable, readonly, iF.getPairs(), label, inputsize, askLang);
+                                boolean closedVocabulary = iF.isClosedVocabulary();
+                                out.write("<tr>");
 
-                                          } else if (inputType.equals("twobox")) {
-                                              doTwoBox(out, item, fieldName, dcSchema, dcElement, dcQualifier,
-                                                      repeatable, readonly, fieldCountIncr, label, pageContext, vocabulary,
-                                                      closedVocabulary, inputsize, askLang);
+                                if (iF.isAuthority()) {
+                                    doAuthorityField(out, item, fieldName, iF, fieldCountIncr, readonly, pageContext, request.getContextPath());
 
-                                          } else if (inputType.equals("list")) {
-                                              doList(out, item, fieldName, dcSchema, dcElement, dcQualifier,
-                                                      repeatable, readonly, iF.getPairs(), label, askLang);
+                                } else if (inputType.equals("name")) {
+                                    doPersonalName(out, item, fieldName, dcSchema, dcElement, dcQualifier,
+                                            repeatable, readonly, fieldCountIncr, label, pageContext, collectionID, inputsize, askLang, request.getContextPath());
 
-                                          } else{
-                                              doOneBox(out, item, fieldName, dcSchema, dcElement, dcQualifier,
-                                                      repeatable, readonly, fieldCountIncr, label, pageContext, vocabulary,
-                                                      closedVocabulary, collectionID, inputsize, askLang, request.getContextPath());
-                                          }
-                                          if (hasVocabulary(vocabulary) && !readonly) {
-                                      %>
+                                } else if (isSelectable(fieldName)) {
+                                    doChoiceSelect(out, pageContext, item, fieldName, dcSchema, dcElement, dcQualifier,
+                                            repeatable, readonly, iF.getPairs(), label, collectionID, request.getContextPath());
 
-                                      <tr>
-                                          <td>&nbsp;</td>
-                                          <td colspan="3" class="submitFormHelpControlledVocabularies">
-                                              <dspace:popup page="/help/index.html#controlledvocabulary"><fmt:message key="jsp.controlledvocabulary.controlledvocabulary.help-link"/></dspace:popup>
-                                              </td>
-                                          </tr>
+                                } else if (inputType.equals("date")) {
+                                    doDate(out, item, fieldName, dcSchema, dcElement, dcQualifier,
+                                            repeatable, readonly, fieldCountIncr, label, pageContext, request);
 
-                                      <%                                } //hasVocabulary
-                                      %>
-                                  </table>
-                              </div> <!-- field -->
-                              <%
-                                  } //row FOR loop
-                              %>
-                          </div> <!-- row -->
-                          <% }%><!-- end fields rows -->
-                      </div> <!--metadataFieldGroup-->
-                      <%
-                                  } // field group for loop
-                              }// pages loop
-                          } //if doctype is not empty
+                                } else if (inputType.equals("series")) {
+                                    doSeriesNumber(out, item, fieldName, dcSchema, dcElement, dcQualifier,
+                                            repeatable, readonly, fieldCountIncr, label, pageContext, inputsize);
+
+                                } else if (inputType.equals("qualdrop_value")) {
+                                    doQualdropValue(out, item, fieldName, dcSchema, dcElement, inputSet, repeatable,
+                                            readonly, fieldCountIncr, iF.getPairs(), label, pageContext, inputsize, askLang);
+
+                                } else if (inputType.equals("textarea")) {
+                                    doTextArea(out, item, fieldName, dcSchema, dcElement, dcQualifier,
+                                            repeatable, readonly, fieldCountIncr, label, pageContext, vocabulary,
+                                            closedVocabulary, collectionID, inputsize, askLang, request.getContextPath());
+
+                                } else if (inputType.equals("dropdown")) {
+                                    doDropDown(out, item, fieldName, dcSchema, dcElement, dcQualifier,
+                                            repeatable, readonly, iF.getPairs(), label, inputsize, askLang);
+
+                                } else if (inputType.equals("twobox")) {
+                                    doTwoBox(out, item, fieldName, dcSchema, dcElement, dcQualifier,
+                                            repeatable, readonly, fieldCountIncr, label, pageContext, vocabulary,
+                                            closedVocabulary, inputsize, askLang);
+
+                                } else if (inputType.equals("list")) {
+                                    doList(out, item, fieldName, dcSchema, dcElement, dcQualifier,
+                                            repeatable, readonly, iF.getPairs(), label, askLang);
+
+                                } else {
+                                    doOneBox(out, item, fieldName, dcSchema, dcElement, dcQualifier,
+                                            repeatable, readonly, fieldCountIncr, label, pageContext, vocabulary,
+                                            closedVocabulary, collectionID, inputsize, askLang, request.getContextPath());
+                                }
+                                if (hasVocabulary(vocabulary) && !readonly) {
+                            %>
+
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td colspan="3" class="submitFormHelpControlledVocabularies">
+                                    <dspace:popup page="/help/index.html#controlledvocabulary"><fmt:message key="jsp.controlledvocabulary.controlledvocabulary.help-link"/></dspace:popup>
+                                    </td>
+                                </tr>
+
+                            <%                                } //hasVocabulary
 %>
+                        </table>
+                    </div> <!-- field -->
+                    <%
+                                  } //row FOR loop
+%>
+                </div> <!-- row -->
+                <% }%><!-- end fields rows -->
+            </div> <!--metadataFieldGroup-->
+            <%
+                        } // field group for loop
+                    }// pages loop
+                } //if doctype is not empty
+            %>
 
-                      <div class="metadataFieldgroup">
-                          <div class="metadataTitlegroup">
-                              <h3 class="metadataFieldgroupTitle">
-                                  <fmt:message key="jsp.edit-mode.others-title"/>
-                              </h3>
-                              <p class="metadataFieldgroupHint">
-                                  <fmt:message key="jsp.edit-mode.others-hint"/>
-                              </p>
-                          </div>
-                          <!-- fields rows -->
-                          <%
-                              String dc = "";
-                              String parm = "", parmVal = "", parmLang = "";
-                              for (int j = 0; j < tobeAdded.size(); j++) {
-                                  dc = tobeAdded.get(j);
-                                  DCValue dcva[] = item.getMetadata(dc);
-                                  for (int i = 0; i < dcva.length; i++) {
-                                      if ((dcva[i].value != null) && (!"".equals(dcva[i].value))) {
-                                          parm = "other_" + i + "_" + dc;
-                                          parmVal = dcva[i].value;
-                                          parmLang = dcva[i].language;
-                          %>
-                          <div class="metadataFieldrow">
-                              <div class="metadataField">
-                                  <div class="metadataLabel"><%=dc%></div>
-                                  <table>
-                                      <tr>
-                                          <td><input type="text" name="<%=parm%>" value="<%=parmVal%>" size="50"/></td>
-                                      </tr>
-                                  </table>
-                              </div> <!-- field -->
-                              <div class="metadataField">
-                                  <div class="metadataLabel"><fmt:message key="jsp.edit-mode.others-lang"/></div>
-                                  <table>
-                                      <tr>
-                                          <td><input type="text" name="<%=parm + "_lang"%>" value="<%=parmLang%>" size="5"/></td>
-                                      </tr>
-                                  </table>
-                              </div>
-                          </div> <!-- field row-->
-                          <%
-                                      }
-                                  }
-                              }
-                          %>
-                      </div> <!-- group -->
+            <div class="metadataFieldgroup">
+                <div class="metadataTitlegroup">
+                    <h3 class="metadataFieldgroupTitle">
+                        <fmt:message key="jsp.edit-mode.others-title"/>
+                    </h3>
+                    <p class="metadataFieldgroupHint">
+                        <fmt:message key="jsp.edit-mode.others-hint"/>
+                    </p>
+                </div>
+                <!-- fields rows -->
+                <%
+                    String dc = "";
+                    String parm = "", parmVal = "", parmLang = "";
+                    for (int j = 0; j < tobeAdded.size(); j++) {
+                        dc = tobeAdded.get(j);
+                        DCValue dcva[] = item.getMetadata(dc);
+                        for (int i = 0; i < dcva.length; i++) {
+                            if ((dcva[i].value != null) && (!"".equals(dcva[i].value))) {
+                                parm = "other_" + i + "_" + dc;
+                                parmVal = dcva[i].value;
+                                parmLang = dcva[i].language;
+                %>
+                <div class="metadataFieldrow">
+                    <div class="metadataField">
+                        <div class="metadataLabel"><%=dc%></div>
+                        <table>
+                            <tr>
+                                <td><input type="text" name="<%=parm%>" value="<%=parmVal%>" size="50"/></td>
+                            </tr>
+                        </table>
+                    </div> <!-- field -->
+                    <div class="metadataField">
+                        <div class="metadataLabel"><fmt:message key="jsp.edit-mode.others-lang"/></div>
+                        <table>
+                            <tr>
+                                <td><input type="text" name="<%=parm + "_lang"%>" value="<%=parmLang%>" size="5"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div> <!-- field row-->
+                <%
+                            }
+                        }
+                    }
+                %>
+            </div> <!-- group -->
 
-                      <p>&nbsp;</p>
+            <p>&nbsp;</p>
 
-                      <div class="metadataFieldgroup">
-                          <div class="metadataTitlegroup">
-                              <h3 class="metadataFieldgroupTitle">
-                                  <fmt:message key="jsp.edit-mode.add-dc-title"/>
-                              </h3>
-                              <p class="metadataFieldgroupHint">
-                                  <fmt:message key="jsp.edit-mode.add-dc-hint"/>
-                              </p>
-                          </div>
-                          <div class="metadataFieldrow">
-                              <div class="metadataField">
-                                  <!-- <div class="metadataLabel"></div> -->
-                                  <table>
-                                      <tr>
-                                          <td headers="t1" colspan="3">
-                                              <select name="addfield_dctype">
-                                                  <%  for (int i = 0; i < dcTypes.length; i++) {
-                                                          Integer fieldID = new Integer(dcTypes[i].getFieldID());
-                                                          String displayName = (String) metadataFields.get(fieldID);
-                                                  %>
-                                                  <option value="<%= fieldID.intValue()%>"><%= displayName%></option>
-                                                  <%  }%>
-                                              </select>
-                                          </td>
-                                          <td headers="t3">
-                                              <textarea name="addfield_value" rows="2" cols="30"></textarea>
-                                          </td>
-                                          <td headers="t4">
-                                              <input type="text" name="addfield_lang" size="5"/>
-                                          </td>
-                                          <td headers="t5">
-                                              <%-- <input type="submit" name="submit_addfield" value="Add"> --%>
-                                              <input type="submit" name="submit_addfield" value="<fmt:message key="jsp.tools.general.add"/>"/>
-                                          </td>
-                                      </tr>
-                                  </table>
-                              </div>
-                          </div>
-                      </div>
+            <div class="metadataFieldgroup">
+                <div class="metadataTitlegroup">
+                    <h3 class="metadataFieldgroupTitle">
+                        <fmt:message key="jsp.edit-mode.add-dc-title"/>
+                    </h3>
+                    <p class="metadataFieldgroupHint">
+                        <fmt:message key="jsp.edit-mode.add-dc-hint"/>
+                    </p>
+                </div>
+                <div class="metadataFieldrow">
+                    <div class="metadataField">
+                        <!-- <div class="metadataLabel"></div> -->
+                        <table>
+                            <tr>
+                                <td headers="t1" colspan="3">
+                                    <select name="addfield_dctype">
+                                        <%  for (int i = 0; i < dcTypes.length; i++) {
+                                                Integer fieldID = new Integer(dcTypes[i].getFieldID());
+                                                String displayName = (String) metadataFields.get(fieldID);
+                                        %>
+                                        <option value="<%= fieldID.intValue()%>"><%= displayName%></option>
+                                        <%  }%>
+                                    </select>
+                                </td>
+                                <td headers="t3">
+                                    <textarea name="addfield_value" rows="2" cols="30"></textarea>
+                                </td>
+                                <td headers="t4">
+                                    <input type="text" name="addfield_lang" size="5"/>
+                                </td>
+                                <td headers="t5">
+                                    <%-- <input type="submit" name="submit_addfield" value="Add"> --%>
+                                    <input type="submit" name="submit_addfield" value="<fmt:message key="jsp.tools.general.add"/>"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
-                      <p>&nbsp;</p>
+            <p>&nbsp;</p>
 
-                      <div class="metadataFieldgroup">
-                          <div class="metadataTitlegroup">
-                              <h3 class="metadataFieldgroupTitle">
-                                  <fmt:message key="jsp.edit-mode.bitstream-title"/>
-                              </h3>
-                              <p class="metadataFieldgroupHint">
-                                  <fmt:message key="jsp.tools.edit-item-form.note3"/>
-                              </p>
-                          </div>
-
-
-                          <%
-                              Bundle[] bundles = item.getBundles();
-
-                              for (int i = 0; i < bundles.length; i++) {
-                                  Bitstream[] bitstreams = bundles[i].getBitstreams();
-                                  for (int j = 0; j < bitstreams.length; j++) {
-                                      // Parameter names will include the bundle and bitstream ID
-                                      // e.g. "bitstream_14_18_desc" is the description of bitstream 18 in bundle 14
-                                      String key = bundles[i].getID() + "_" + bitstreams[j].getID();
-                                      BitstreamFormat bf = bitstreams[j].getFormat();
-                          %>
-                          <div class="metadataFieldgroup">
-                              <div class="metadataFieldrow">
-
-                                  <div class="metadataField">
-                                      <% if (bundles[i].getName().equals("ORIGINAL")) {%>
-                                      <div class="metadataField">
-                                          <input type="radio" name="<%= bundles[i].getID()%>_primary_bitstream_id" value="<%= bitstreams[j].getID()%>"
-                                                 <% if (bundles[i].getPrimaryBitstreamID() == bitstreams[j].getID()) {%>
-                                                 checked="<%="checked"%>"
-                                                 <% }%> />
-                                      </div>
-                                      <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem5"/></div>
-                                      <% }%>
-                                  </div>
-
-                                  <div class="metadataField">
-                                      <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem7"/></div>
-                                      <div class="metadataField">
-                                          <input type="text" name="bitstream_name_<%= key%>" value="<%= (bitstreams[j].getName() == null ? "" : Utils.addEntities(bitstreams[j].getName()))%>"/>
-                                      </div>
-                                      <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem8"/></div>
-                                      <div class="metadataField">
-                                          <input type="text" name="bitstream_source_<%= key%>" value="<%= (bitstreams[j].getSource() == null ? "" : bitstreams[j].getSource())%>" size="25"/>
-                                      </div>
-
-                                  </div>
-
-                                  <div class="metadataField">
-                                      <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem9"/></div>
-                                      <div class="metadataField">
-                                          <input type="text" name="bitstream_description_<%= key%>" value="<%= (bitstreams[j].getDescription() == null ? "" : Utils.addEntities(bitstreams[j].getDescription()))%>" size="64"/>
-                                      </div>
-                                  </div>
-
-                                  <div class="metadataField">
-                                      <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem10"/></div>
-                                      <div class="metadataField">
-                                          <input type="text" name="bitstream_format_id_<%= key%>" value="<%= bf.getID()%>" size="4"/> (<%= Utils.addEntities(bf.getShortDescription())%>)
-                                      </div>
+            <div class="metadataFieldgroup">
+                <div class="metadataTitlegroup">
+                    <h3 class="metadataFieldgroupTitle">
+                        <fmt:message key="jsp.edit-mode.bitstream-title"/>
+                    </h3>
+                    <p class="metadataFieldgroupHint">
+                        <fmt:message key="jsp.tools.edit-item-form.note3"/>
+                    </p>
+                </div>
 
 
-                                      <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem11"/></div>
-                                      <div class="metadataField">
-                                          <input type="text" name="bitstream_user_format_description_<%= key%>" value="<%= (bitstreams[j].getUserFormatDescription() == null ? "" : Utils.addEntities(bitstreams[j].getUserFormatDescription()))%>"/>
-                                      </div>
-                                  </div>
-                                  <div class="metadataField">
-                                      <%-- <a target="_blank" href="<%= request.getContextPath() %>/retrieve/<%= bitstreams[j].getID() %>">View</a>&nbsp;<input type="submit" name="submit_delete_bitstream_<%= key %>" value="Remove"> --%>
-                                      <a target="_blank" href="<%= request.getContextPath()%>/retrieve/<%= bitstreams[j].getID()%>"><fmt:message key="jsp.tools.general.view"/></a>&nbsp;
-                                      <% if (bRemoveBits) {%>
-                                      <input type="submit" name="submit_delete_bitstream_<%= key%>" value="<fmt:message key="jsp.tools.general.remove"/>" />
-                                      <% }%>
-                                  </div>
-                              </div>
-                          </div>
-                          <%
-                                  }
-                              }
-                          %>
+                <%
+                    Bundle[] bundles = item.getBundles();
 
-                          <div class="metadataFieldgroup">
-                              <table>
-                                  <tr>
-                                      <td>
-                                          <%
-                                              if (bCreateBits) {
-                                          %>
-                                          <input type="submit" name="submit_addbitstream" value="<fmt:message key="jsp.tools.edit-item-form.addbit.button"/>"/>
-                                          <%  }
+                    for (int i = 0; i < bundles.length; i++) {
+                        Bitstream[] bitstreams = bundles[i].getBitstreams();
+                        for (int j = 0; j < bitstreams.length; j++) {
+                            // Parameter names will include the bundle and bitstream ID
+                            // e.g. "bitstream_14_18_desc" is the description of bitstream 18 in bundle 14
+                            String key = bundles[i].getID() + "_" + bitstreams[j].getID();
+                            BitstreamFormat bf = bitstreams[j].getFormat();
+                %>
+                <div class="metadataFieldgroup">
+                    <div class="metadataFieldrow">
 
-                                              if (ConfigurationManager.getBooleanProperty("webui.submit.enable-cc") && bccLicense) {
-                                                  String s;
-                                                  Bundle[] ccBundle = item.getBundles("CC-LICENSE");
-                                                  s = ccBundle.length > 0 ? LocaleSupport.getLocalizedMessage(pageContext, "jsp.tools.edit-item-form.replacecc.button") : LocaleSupport.getLocalizedMessage(pageContext, "jsp.tools.edit-item-form.addcc.button");
-                                          %>
-                                          <input type="submit" name="submit_addcc" value="<%= s%>" />
-                                          <input type="hidden" name="handle" value="<%= ConfigurationManager.getProperty("handle.prefix")%>"/>
-                                          <input type="hidden" name="item_id" value="<%= item.getID()%>"/>
-                                          <%
-                                              }
-                                          %>
-                                      </td>
-                                  </tr>
-                              </table>
+                        <div class="metadataField">
+                            <% if (bundles[i].getName().equals("ORIGINAL")) {%>
+                            <div class="metadataField">
+                                <input type="radio" name="<%= bundles[i].getID()%>_primary_bitstream_id" value="<%= bitstreams[j].getID()%>"
+                                       <% if (bundles[i].getPrimaryBitstreamID() == bitstreams[j].getID()) {%>
+                                       checked="<%="checked"%>"
+                                       <% }%> />
+                            </div>
+                            <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem5"/></div>
+                            <% }%>
+                        </div>
 
-                          </div>
-                      </div>
-                      <div>&nbsp;</div>
-                      <input type="hidden" name="item_id" value="<%= item.getID()%>"/>
-                      <input type="hidden" name="action" value="<%= EditItemServlet.UPDATE_ITEM%>"/>
-                      <center>
-                          <table width="70%">
-                              <tr>
-                                  <td align="left">
-                                      <%-- <input type="submit" name="submit" value="Update" /> --%>
-                                      <input type="submit" name="submit" value="<fmt:message key="jsp.tools.general.update"/>" />
-                                  </td>
-                                  <td align="right">
+                        <div class="metadataField">
+                            <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem7"/></div>
+                            <div class="metadataField">
+                                <input type="text" name="bitstream_name_<%= key%>" value="<%= (bitstreams[j].getName() == null ? "" : Utils.addEntities(bitstreams[j].getName()))%>"/>
+                            </div>
+                            <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem8"/></div>
+                            <div class="metadataField">
+                                <input type="text" name="bitstream_source_<%= key%>" value="<%= (bitstreams[j].getSource() == null ? "" : bitstreams[j].getSource())%>" size="25"/>
+                            </div>
 
-                                      <%-- <input type="submit" name="submit_cancel" value="Cancel" /> --%>
-                                      <input type="submit" name="submit_cancel" value="<fmt:message key="jsp.tools.general.cancel"/>" />
-                                  </td>
-                              </tr>
-                          </table>
-                      </center>
+                        </div>
+
+                        <div class="metadataField">
+                            <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem9"/></div>
+                            <div class="metadataField">
+                                <input type="text" name="bitstream_description_<%= key%>" value="<%= (bitstreams[j].getDescription() == null ? "" : Utils.addEntities(bitstreams[j].getDescription()))%>" size="64"/>
+                            </div>
+                        </div>
+
+                        <div class="metadataField">
+                            <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem10"/></div>
+                            <div class="metadataField">
+                                <input type="text" name="bitstream_format_id_<%= key%>" value="<%= bf.getID()%>" size="4"/> (<%= Utils.addEntities(bf.getShortDescription())%>)
+                            </div>
+
+
+                            <div class="editBitstreamTH"><fmt:message key="jsp.tools.edit-item-form.elem11"/></div>
+                            <div class="metadataField">
+                                <input type="text" name="bitstream_user_format_description_<%= key%>" value="<%= (bitstreams[j].getUserFormatDescription() == null ? "" : Utils.addEntities(bitstreams[j].getUserFormatDescription()))%>"/>
+                            </div>
+                        </div>
+                        <div class="metadataField">
+                            <%-- <a target="_blank" href="<%= request.getContextPath() %>/retrieve/<%= bitstreams[j].getID() %>">View</a>&nbsp;<input type="submit" name="submit_delete_bitstream_<%= key %>" value="Remove"> --%>
+                            <a target="_blank" href="<%= request.getContextPath()%>/retrieve/<%= bitstreams[j].getID()%>"><fmt:message key="jsp.tools.general.view"/></a>&nbsp;
+                            <% if (bRemoveBits) {%>
+                            <input type="submit" name="submit_delete_bitstream_<%= key%>" value="<fmt:message key="jsp.tools.general.remove"/>" />
+                            <% }%>
+                        </div>
+                    </div>
+                </div>
+                <%
+                        }
+                    }
+                %>
+
+                <div class="metadataFieldgroup">
+                    <table>
+                        <tr>
+                            <td>
+                                <%
+                                    if (bCreateBits) {
+                                %>
+                                <input type="submit" name="submit_addbitstream" value="<fmt:message key="jsp.tools.edit-item-form.addbit.button"/>"/>
+                                <%  }
+
+                                    if (ConfigurationManager.getBooleanProperty("webui.submit.enable-cc") && bccLicense) {
+                                        String s;
+                                        Bundle[] ccBundle = item.getBundles("CC-LICENSE");
+                                        s = ccBundle.length > 0 ? LocaleSupport.getLocalizedMessage(pageContext, "jsp.tools.edit-item-form.replacecc.button") : LocaleSupport.getLocalizedMessage(pageContext, "jsp.tools.edit-item-form.addcc.button");
+                                %>
+                                <input type="submit" name="submit_addcc" value="<%= s%>" />
+                                <input type="hidden" name="handle" value="<%= ConfigurationManager.getProperty("handle.prefix")%>"/>
+                                <input type="hidden" name="item_id" value="<%= item.getID()%>"/>
+                                <%
+                                    }
+                                %>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+            <div>&nbsp;</div>
+            <input type="hidden" name="item_id" value="<%= item.getID()%>"/>
+            <input type="hidden" name="action" value="<%= EditItemServlet.UPDATE_ITEM%>"/>
+            <center>
+                <table width="70%">
+                    <tr>
+                        <td align="left">
+                            <%-- <input type="submit" name="submit" value="Update" /> --%>
+                            <input type="submit" name="submit" value="<fmt:message key="jsp.tools.general.update"/>" />
+                        </td>
+                        <td align="right">
+
+                            <%-- <input type="submit" name="submit_cancel" value="Cancel" /> --%>
+                            <input type="submit" name="submit_cancel" value="<fmt:message key="jsp.tools.general.cancel"/>" />
+                        </td>
+                    </tr>
+                </table>
+            </center>
 
     </div> <!--  MetadataForm -->
 </form>

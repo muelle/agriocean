@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <input-forms>
 
     <collection-type>
@@ -13,13 +13,24 @@
             <type name="Theses and Dissertations" />
             <type name="Working Paper" />
             <type name="Map" />		
-            <type name="Data Set" />
-            <type name="Audiovisual Material" />
             <type name="Other"  />
         </collection>
-    </collection-type>
 
-    <type-form>
+		<collection handle="0/6">
+            <type name="Library Journal"  />			
+		</collection>
+		<collection handle="0/3">
+            <type name="Journal Contribution"  />
+		</collection>
+	
+		<collection handle="0/5">
+            <type name="Monograph"  />
+			<type name="Journal Article"  />
+			<type name="Monograph contribution"  />
+		</collection>
+		
+	</collection-type>
+	<type-form>
         <type name="Journal Contribution" form="Article"/>
         <type name="Book" form="Book"/>
         <type name="Book Section" form="Book Section"/>
@@ -29,12 +40,16 @@
         <type name="Theses and Dissertations" form="Theses and Dissertations"/>
         <type name="Working Paper" form="Research Report"/>
         <type name="Map" form="Map"/>		
-        <type name="Data Set" form="Data"/>
-        <type name="Audiovisual Material" form="AVM"/>	
         <type name="Preprint" form="Other"/>
         <type name="Other" form="Other"/>
-    </type-form>
 
+		<type name="Library Journal" form="Lib Journal"/>
+		
+		<type name="Monograph" form="Monograph"/>
+		<type name="Journal Article" form="Contribution-Journals" />
+		<type name="Monograph contribution" form="Contribution-Monograph" />
+    </type-form>
+	
     <form-definitions>
         <form name="basic">
             <page number="3">
@@ -194,27 +209,15 @@
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <label>Corporate Authors</label>
-                            <hint>Used when an organization has the authorship of the publication.</hint>
-                            <input-type size="69">onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Editor - Theses Advisor - Corporate Author</label>
+							<input-type value-pairs-name="common_contributors">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
@@ -256,11 +259,11 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>title</dc-qualifier>
-                            <label>Journal Title *</label>
-                            <hint>Enter a word from the journal title and choose the correct title out of the picklist.</hint>
+                            <label>Journal Title + ISSN *</label>
+                            <hint>Enter a word from the journal title and choose the correct title out of the picklist. </hint>
                             <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>Enter a (part of) the keyword and choose from the list</required>
+                            <required>Enter (a part of) the title and choose from the list</required>
                             <authority closed="false" editable="true" presentation="suggest" limit="0">issn</authority>
                             <ask-language>true</ask-language>
                         </field>
@@ -280,7 +283,7 @@
                             <dc-element>bibliographicCitation</dc-element>
                             <dc-qualifier>volume</dc-qualifier>
                             <label>Volume</label>
-                            <input-type size="4">onebox</input-type>
+                            <input-type size="15">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
@@ -374,7 +377,7 @@
                             <required></required>
                         </field>
                     </fieldrow>
-                </fieldgroup>
+				</fieldgroup>
                 <fieldgroup>
                     <label>Characteristics</label>
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
@@ -383,11 +386,10 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-
-                            <input-type>date</input-type>
+                            <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
+                            <required>Year is mandatory: YYYY</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -436,39 +438,15 @@
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>editor</dc-qualifier>
-                            <repeatable>true</repeatable>
-                            <label>Editors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <label>Corporate Authors</label>
-                            <hint>Used when an organization has the authorship of the publication.</hint>
-                            <input-type size="69">onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Editor - Theses Advisor - Corporate Author</label>
+							<input-type value-pairs-name="common_contributors">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
@@ -565,6 +543,18 @@
                             <required></required>
                         </field>
                     </fieldrow>
+					<fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>type</dc-element>
+                            <dc-qualifier>specified</dc-qualifier>
+                            <label>Specified Type</label>
+                            <input-type value-pairs-name="na">dropdown</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+							<visibility>workflow</visibility>
+                        </field>
+                    </fieldrow>					
                 </fieldgroup>
             </page>
             <page  number="2">
@@ -615,12 +605,11 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-
-                            <input-type>date</input-type>
+                            <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
-                        </field>
+                            <required>Year is mandatory: YYYY</required>
+						</field>
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -670,27 +659,15 @@
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <label>Corporate Authors</label>
-                            <hint>Used when an organization has the authorship of the publication.</hint>
-                            <input-type size="69">onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Editor - Theses Advisor - Corporate Author</label>
+							<input-type value-pairs-name="common_contributors">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
@@ -750,7 +727,16 @@
                             <repeatable>false</repeatable>
                             <required>You must enter the title of the book your deposit is a part of.</required>
                         </field>
-
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>edition</dc-qualifier>
+                            <label>Edition</label>
+			    <hint>e.g. 4th</hint>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -780,15 +766,6 @@
                             <repeatable>false</repeatable>
                             <required></required>
                         </field> 
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>bibliographicCitation</dc-element>
-                            <dc-qualifier>edition</dc-qualifier>
-                            <label>Edition</label>
-                            <input-type size="4">onebox</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>   
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -832,6 +809,18 @@
                             <required></required>
                         </field>
                     </fieldrow>
+					<fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>type</dc-element>
+                            <dc-qualifier>specified</dc-qualifier>
+                            <label>Specified Type</label>
+                            <input-type value-pairs-name="na">dropdown</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+							<visibility>workflow</visibility>
+                        </field>
+                    </fieldrow>					
                 </fieldgroup>
             </page>
             <page  number="2">
@@ -882,11 +871,10 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-
-                            <input-type>date</input-type>
+                            <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
+                            <required>Year is mandatory: YYYY</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -935,27 +923,15 @@
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <label>Corporate Authors</label>
-                            <hint>Used when an organization has the authorship of the publication.</hint>
-                            <input-type  size="69">onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Editor - Theses Advisor - Corporate Author</label>
+							<input-type value-pairs-name="common_contributors">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
@@ -1054,6 +1030,16 @@
                             <required>You must enter a proceedings title for this conference paper.</required>
                             <ask-language>true</ask-language>
                         </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>edition</dc-qualifier>
+                            <label>Edition</label>
+			    <hint>e.g. 4th</hint>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
                     </fieldrow>
                     <fieldrow>
                         <field>
@@ -1184,11 +1170,10 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-
-                            <input-type>date</input-type>
+                            <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
+                            <required>Year is mandatory: YYYY</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -1252,27 +1237,15 @@
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <label>Corporate Authors</label>
-                            <hint>Used when an organization has the authorship of the publication.</hint>
-                            <input-type size="69">onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Editor - Theses Advisor - Corporate Author</label>
+							<input-type value-pairs-name="common_contributors">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
@@ -1373,7 +1346,7 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                    </fieldrow>
+                    </fieldrow>					
                 </fieldgroup>
                 <fieldgroup>
                     <label>Characteristics</label>
@@ -1383,10 +1356,10 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-                            <input-type>date</input-type>
+                             <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
+                            <required>Year is mandatory: YYYY</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -1424,39 +1397,15 @@
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>editor</dc-qualifier>
-                            <repeatable>true</repeatable>
-                            <label>Editors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <label>Corporate Authors</label>
-                            <hint>Used when an organization has the authorship of the publication.</hint>
-                            <input-type  size="69">onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Editor - Theses Advisor - Corporate Author</label>
+							<input-type value-pairs-name="common_contributors">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
@@ -1544,6 +1493,18 @@
                             <required></required>
                         </field>
                     </fieldrow>
+					<fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>type</dc-element>
+                            <dc-qualifier>specified</dc-qualifier>
+                            <label>Specified Type</label>
+                            <input-type value-pairs-name="na">dropdown</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+							<visibility>workflow</visibility>
+                        </field>
+                    </fieldrow>					
                 </fieldgroup>
             </page>
             <page  number="2">
@@ -1594,11 +1555,10 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-
-                            <input-type>date</input-type>
+                            <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
+                            <required>Year is mandatory: YYYY</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -1663,39 +1623,17 @@
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Theses Advisor - University/Institute</label>
+							<input-type value-pairs-name="thesis_contributors" size="90">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>advisor</dc-qualifier>
-                            <repeatable>true</repeatable>
-                            <label>Theses Lectors/Promotors</label>
-                            <input-type size="33">name</input-type>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>institution</dc-qualifier>
-                            <label>University/Institute</label>
-                            <hint>Enter the institution from which the author obtained his degree.</hint>
-                            <input-type size="69">onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
+
                 </fieldgroup>
                 <fieldgroup>
                     <label>Title</label>
@@ -1776,10 +1714,10 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-                            <input-type>date</input-type>
+                            <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
+                            <required>Year is mandatory: YYYY</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -1834,30 +1772,18 @@
             <page number="1">
                 <fieldgroup>
                     <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>                    
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <hint></hint>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <label>Corporate Authors</label>
-                            <hint>Used when an organization has the authorship of the publication.</hint>
-                            <input-type size="69">onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Editor - Theses Advisor - Corporate Author</label>
+							<input-type value-pairs-name="common_contributors">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
@@ -1890,6 +1816,18 @@
                             <ask-language>true</ask-language>
                         </field>
                     </fieldrow>
+					<fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>type</dc-element>
+                            <dc-qualifier>specified</dc-qualifier>
+                            <label>Specified Type</label>
+                            <input-type value-pairs-name="na">dropdown</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+							<visibility>workflow</visibility>
+                        </field>
+                    </fieldrow>					
                 </fieldgroup>
             </page>
             <page  number="2">
@@ -1929,11 +1867,10 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-
-                            <input-type>date</input-type>
+                            <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
+                            <required>Year is mandatory: YYYY</required>
                         </field>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -1961,7 +1898,238 @@
             </page>
         </form>
 
-		        <form name="Map" baseForm="basic">
+		<form name="Lib Journal">
+			<page number="1">
+                <fieldgroup>
+                    <label>Title</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>title</dc-element>
+                            <dc-qualifier></dc-qualifier>
+                            <label>Title *</label>
+                            <hint>Enter a word from the journal title and choose the correct title out of the picklist.</hint>
+                            <input-type size="69">onebox</input-type>
+				<authority closed="false" editable="true" presentation="suggest" limit="0">issn</authority>
+                            <ask-language>true</ask-language>			    
+                            <repeatable>false</repeatable>
+                            <required>You must enter a main title for this item.</required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>title</dc-element>
+                            <dc-qualifier>alternative</dc-qualifier>
+                            <label>Alternative Titles</label>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
+                            <input-type size="69">onebox</input-type>
+                            <ask-language>true</ask-language>
+							<repeatable>true</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier></dc-qualifier>
+                            <label>Publishers' name</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>                    
+ 				</fieldgroup>
+				<fieldgroup>
+                    <label>Characteristics</label>
+                    
+					<fieldrow>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>date</dc-element>
+                            <dc-qualifier>issued</dc-qualifier>
+                            <label>Start Date*</label>
+			     <hint>Only year - format: YYYY </hint>
+				<input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required>The year is mandatory (YYYY).</required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>date</dc-element>
+                            <dc-qualifier>period</dc-qualifier>
+                            <label>Library Holdings - Availability</label>
+							<hint>Availability of the journal by period (basic format: YYYY-YYYY) </hint>
+                            <input-type size="12">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>                    
+					
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>language</dc-element>
+                            <dc-qualifier>iso</dc-qualifier>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
+                            <input-type value-pairs-name="common_iso_languages">list</input-type>
+                            <repeatable>true</repeatable>
+                            <required>You must enter the language of the item</required>
+                        </field>
+                    </fieldrow>
+                </fieldgroup>
+
+			</page>
+			<page  number="2">
+					<fieldgroup>
+                    <label>Identifiers &amp; Links</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                         <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>udc</dc-qualifier>
+                            <label>udc</label>
+                            <input-type size="20">onebox</input-type>
+                            <hint>UDC classification number</hint>
+                            <repeatable>false</repeatable>
+                            <required></required>
+						</field>
+                       <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>location</dc-qualifier>
+                            <label>Location</label>
+                            <input-type size="20">onebox</input-type>
+                            <hint>Place on the shelf (based on UDC number)</hint>
+                            <repeatable>false</repeatable>
+                            <required></required>
+						</field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>nrcopies</dc-qualifier>
+                            <label>N° of copies</label>
+							<input-type size="3">onebox</input-type>
+                            <hint></hint>
+                            <repeatable>false</repeatable>
+                            <required></required>
+						</field> 
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>issn</dc-qualifier>
+                            <label>issn</label>
+                            <input-type size="15">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+					 </fieldrow>
+ 					 <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>uri</dc-qualifier>
+                            <label>Alternative Locations (URL)</label>
+                            <hint>If the journal is available from other sites, enter those URLs here.</hint>
+                            <input-type>onebox</input-type>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                        </field>
+                     </fieldrow>
+			</fieldgroup>                 
+			<fieldgroup>
+                    <label>Subject</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>subject</dc-element>
+                            <dc-qualifier>asfa</dc-qualifier>
+                            <label>ASFA Terms</label>
+                            <input-type size="50">onebox</input-type>
+                            <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://www4.fao.org/asfa/asfa.htm" target="_blank"&gt;ASFA website&lt;/a&gt;</hint>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+                            <authority closed="true" editable="false" presentation="suggest" limit="0">asfa</authority>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>subject</dc-element>
+                            <dc-qualifier>agrovoc</dc-qualifier>
+                            <label>AGROVOC Terms</label>
+                            <input-type size="50">onebox</input-type>
+                            <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://aims.fao.org/website/Search-Terms/sub" target="_blank"&gt;Agrovoc website&lt;/a&gt;</hint>	
+                            <repeatable>true</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+                            <authority closed="true" editable="true" presentation="suggest" limit="0">agrovoc</authority>
+                        </field>
+                    </fieldrow>
+					<fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>other</dc-qualifier>
+                            <label>Free Keywords</label>
+                            <input-type  size="69">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+						</field> 
+					</fieldrow>
+				</fieldgroup>
+                <fieldgroup>
+                    <label>Description of Content</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Description_');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>loanpolicy</dc-qualifier>
+                            <label>Loan Policy</label>
+							<input-type value-pairs-name="loanpolicy">dropdown</input-type>
+
+                            <hint></hint>
+                            <repeatable>false</repeatable>
+                            <required></required>
+						</field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>notes</dc-qualifier>
+                            <label>Notes</label>
+                            <hint>Enter here any additional information about your deposit.</hint>
+                            <input-type size="69">textarea</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+						</field>
+                    </fieldrow>
+				</fieldgroup>
+			</page>
+		</form> -->
+		
+		<form name="Map" baseForm="basic">
             <page number="1">
                 <fieldgroup>
                     <label>Type</label>
@@ -1983,26 +2151,15 @@
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <repeatable>true</repeatable>
-                            <label>Corporate Authors</label>
-                            <hint>Used when an organization has the authorship of the object.</hint>
-                            <input-type size="33">name</input-type>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Editor - Theses Advisor - Corporate Author</label>
+							<input-type value-pairs-name="common_contributors">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
@@ -2104,10 +2261,10 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>date</dc-element>
                             <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-                            <input-type>date</input-type>
+                            <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
+                            <required>Year is mandatory: YYYY</required>
                         </field>
                     </fieldrow>
                     <fieldrow>
@@ -2138,48 +2295,22 @@
             </page>
         </form>
 
-        <form name="AVM" baseForm="basic">
-            <page number="1">
-                <fieldgroup>
-                    <label>Type</label>
-                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Type');"&gt;Help&lt;/a&gt;</hint>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>type</dc-element>
-                            <dc-qualifier>specified</dc-qualifier>
-                            <label>Specified Type</label>
-                            <input-type value-pairs-name="type_avm">dropdown</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                </fieldgroup>
-                <fieldgroup>
+		<form name="catalogue">
+			<page number="1">
+				<fieldgroup>
                     <label>Creators</label>
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <repeatable>true</repeatable>
-                            <label>Corporate Authors</label>
-                            <input-type size="33">name</input-type>
-                            <hint>Used when an organization has the authorship of the object.</hint>
-                            <required></required>
-                        </field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>contributor</dc-element>
+							<dc-qualifier></dc-qualifier>							
+							<repeatable>true</repeatable>
+							<label>Personal Author - Editor - Theses Advisor - Corporate Author</label>
+							<input-type value-pairs-name="common_contributors">qualdrop_value</input-type>
+							<hint>Enter the names of the creators (Format for a person: Jones, Jim)</hint>
+							<required></required>
+						</field>
                     </fieldrow>
                 </fieldgroup>
                 <fieldgroup>
@@ -2191,8 +2322,8 @@
                             <dc-element>title</dc-element>
                             <dc-qualifier></dc-qualifier>
                             <label>Title *</label>
-                            <input-type size="69">onebox</input-type>
                             <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
+                            <input-type size="69">onebox</input-type>
                             <ask-language>true</ask-language>			    
                             <repeatable>false</repeatable>
                             <required>You must enter a main title for this item.</required>
@@ -2203,208 +2334,96 @@
                             <dc-schema>dc</dc-schema>
                             <dc-element>title</dc-element>
                             <dc-qualifier>alternative</dc-qualifier>
-                            <label>Alternative titles</label>
+                            <label>Alternative Titles</label>
+                            <hint>Enter here any alternative title(s) (including translations in other languages) of the title.</hint>
                             <input-type size="69">onebox</input-type>
-                            <hint>Enter here the translation(s) of the title.</hint>							
                             <ask-language>true</ask-language>
-                            <repeatable>true</repeatable>
+							<repeatable>true</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
-                </fieldgroup>
-            </page>
-            <page  number="2">
-                <fieldgroup>
-                    <label>Links and identifiers</label>
+                </fieldgroup>		
+		</page>
+		<page  number="2">
+					<fieldgroup>
+                    <label>Identifiers - Links</label>
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>relation</dc-element>
-                            <dc-qualifier>doi</dc-qualifier>
-                            <label>DOI</label>
-                            <input-type>onebox</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>relation</dc-element>
-                            <dc-qualifier>uri</dc-qualifier>
-                            <label>Alternative Locations (URL)</label>
-                            <hint>If your deposit is available from other sites, enter those URLs here.</hint>
-                            <input-type>onebox</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-<!-- New  identifier dc.identifier.isan -->                
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>identifier</dc-element>
-                            <dc-qualifier>isan</dc-qualifier>
-                            <label>ISAN</label>
+                            <dc-qualifier>udc</dc-qualifier>
+                            <label>udc</label>
+                            <input-type size="20">onebox</input-type>
+                            <hint>UDC classification number</hint>
+                            <repeatable>false</repeatable>
+                            <required></required>
+						</field>
+                       <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>location</dc-qualifier>
+                            <label>Location</label>
+                            <input-type size="20">onebox</input-type>
+                            <hint>Place on the shelf (based on UDC number)</hint>
+                            <repeatable>false</repeatable>
+                            <required></required>
+						</field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>nrcopies</dc-qualifier>
+                            <label>N° of copies</label>
+							<input-type size="3">onebox</input-type>
+                            <hint></hint>
+                            <repeatable>false</repeatable>
+                            <required></required>
+						</field> 
+                   </fieldrow>
+					<fieldrow>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>barcode</dc-qualifier>
+                            <label>Bar code</label>
+                            <input-type size="20">onebox</input-type>
+                            <hint></hint>
+                            <repeatable>true</repeatable>
+                            <required></required>
+						</field>
+                   </fieldrow>
+					<fieldrow>
+						<field>						
+							<dc-schema>dc</dc-schema>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>isbn</dc-qualifier>
+                            <label>ISBN</label>
                             <input-type size="15">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-                    </fieldrow> 
-                </fieldgroup>
-                <fieldgroup>
-                    <label>Characteristics</label>
-                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
-                    <fieldrow>
-                        <field>
+						<field>
                             <dc-schema>dc</dc-schema>
-                            <dc-element>publisher</dc-element>
-                            <dc-qualifier></dc-qualifier>
-                            <label>Publisher</label>
-                            <input-type size="35">onebox</input-type>
+                            <dc-element>identifier</dc-element>
+                            <dc-qualifier>issn</dc-qualifier>
+                            <label>issn</label>
+                            <input-type size="15">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>publisher</dc-element>
-                            <dc-qualifier>place</dc-qualifier>
-                            <label>Place of Publication</label>
-                            <input-type size="35">onebox</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>date</dc-element>
-                            <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-                            <input-type>date</input-type>
-                            <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>description</dc-element>
-                            <dc-qualifier>status</dc-qualifier>
-                            <label>Status *</label>
-                            <hint>Please state here whether your deposit has been published, is currently in the process of being published (in press), or has not been published</hint>
-                            <input-type value-pairs-name="status">dropdown</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>language *</dc-element>
-                            <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
-                            <input-type value-pairs-name="common_iso_languages">list</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                </fieldgroup>
-            </page>
-        </form>
-
-        <form name="Data" baseForm="basic">
-            <page number="1">
-                <fieldgroup>
-                    <label>Type</label>
-                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Type');"&gt;Help&lt;/a&gt;</hint>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>type</dc-element>
-                            <dc-qualifier>specified</dc-qualifier>
-                            <label>Specified Type</label>
-                            <input-type size="69">onebox</input-type>
-                            <repeatable>false</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                </fieldgroup>
-                <fieldgroup>
-                    <label>Creators</label>
-                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Creators');"&gt;Help&lt;/a&gt;</hint>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>author</dc-qualifier>
-                            <label>Personal Authors</label>
-                            <input-type size="33">name</input-type>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>contributor</dc-element>
-                            <dc-qualifier>corpauthor</dc-qualifier>
-                            <repeatable>true</repeatable>
-                            <label>Corporate Authors</label>
-                            <hint>Used when an organization has the authorship of the object.</hint>
-                            <input-type size="33">name</input-type>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                </fieldgroup>
-                <fieldgroup>
-                    <label>Title</label>
-                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Title');"&gt;Help&lt;/a&gt;</hint>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>title</dc-element>
-                            <dc-qualifier></dc-qualifier>
-                            <label>Title *</label>
-                            <input-type size="69">onebox</input-type>
-                            <hint>Enter the complete title of your deposit. Title and subtitle are divided by a double colon (:)</hint>
-                            <ask-language>true</ask-language>			    
-                            <repeatable>false</repeatable>
-                            <required>You must enter a main title for this item.</required>
-                        </field>
-                    </fieldrow>
-                    <fieldrow>
-                        <field>
-                            <dc-schema>dc</dc-schema>
-                            <dc-element>title</dc-element>
-                            <dc-qualifier>alternative</dc-qualifier>
-                            <label>Alternative titles</label>
-                            <input-type size="69">onebox</input-type>
-                            <hint>Enter here the translation(s) of the title.</hint>							
-                            <ask-language>true</ask-language>
-                            <repeatable>true</repeatable>
-                            <required></required>
-                        </field>
-                    </fieldrow>
-                </fieldgroup>
-            </page>
-            <page  number="2">
-                <fieldgroup>
-                    <label>Links</label>
-                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Links');"&gt;Help&lt;/a&gt;</hint>
-                    <fieldrow>
+					 </fieldrow>
+					 <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
                             <dc-qualifier>doi</dc-qualifier>
-                            <label>DOI</label>
+                            <label>DOI of published version</label>
                             <input-type>onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-                    </fieldrow>
-                    <fieldrow>
+					 </fieldrow>
+ 					 <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>relation</dc-element>
@@ -2415,11 +2434,402 @@
                             <repeatable>true</repeatable>
                             <required></required>
                         </field>
-                    </fieldrow>
-                </fieldgroup>
-                <fieldgroup>
+                     </fieldrow>
+					</fieldgroup>                 
+					<fieldgroup>
                     <label>Characteristics</label>
                     <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Characteristics');"&gt;Help&lt;/a&gt;</hint>
+					<fieldrow>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>date</dc-element>
+                            <dc-qualifier>issued</dc-qualifier>
+                            <label>Year of Publication  (format: YYYY) *</label>
+                            <input-type size="6">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required>Year is mandatory: YYYY</required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>language</dc-element>
+                            <dc-qualifier>iso</dc-qualifier>
+                            <label>Language *</label>
+                            <hint>Select the language(s) of your deposit.</hint>
+                            <input-type value-pairs-name="common_iso_languages">list</input-type>
+                            <repeatable>true</repeatable>
+                            <required>You must enter the language of the item</required>
+                        </field>
+                    </fieldrow>
+                </fieldgroup>
+		</page>
+		<page  number="3">
+			<fieldgroup>
+                    <label>Subject</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>subject</dc-element>
+                            <dc-qualifier>asfa</dc-qualifier>
+                            <label>ASFA Terms</label>
+                            <input-type size="50">onebox</input-type>
+                            <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://www4.fao.org/asfa/asfa.htm" target="_blank"&gt;ASFA website&lt;/a&gt;</hint>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+                            <authority closed="true" editable="false" presentation="suggest" limit="0">asfa</authority>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>subject</dc-element>
+                            <dc-qualifier>agrovoc</dc-qualifier>
+                            <label>AGROVOC Terms</label>
+                            <input-type size="50">onebox</input-type>
+                            <hint>Enter a (part of) the keyword and choose from the list/ See also at &lt;a href="http://aims.fao.org/website/Search-Terms/sub" target="_blank"&gt;Agrovoc website&lt;/a&gt;</hint>	
+                            <repeatable>true</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+                            <authority closed="true" editable="true" presentation="suggest" limit="0">agrovoc</authority>
+                        </field>
+                    </fieldrow>
+					<fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>other</dc-qualifier>
+                            <label>Free Keywords</label>
+                            <input-type  size="69">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+						</field> 
+					</fieldrow>
+					<fieldrow>
+						<field>
+							<dc-schema>dc</dc-schema>
+							<dc-element>coverage</dc-element>
+							<dc-qualifier>spatial</dc-qualifier>
+							<label>Geographical Terms</label>
+							<input-type size="69">onebox</input-type>
+							<repeatable>true</repeatable>
+							<required></required>
+						</field>
+					</fieldrow>
+				</fieldgroup>
+                <fieldgroup>
+                    <label>Description of Content</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Description_');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>loanpolicy</dc-qualifier>
+                            <label>Loan Policy</label>
+							<input-type value-pairs-name="loanpolicy">dropdown</input-type>
+                            <hint></hint>
+                            <repeatable>false</repeatable>
+                            <required></required>
+						</field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>abstract</dc-qualifier>
+                            <label>Abstract</label>
+                            <hint>Enter here the abstract, a short summary of the content of your deposit.</hint>
+                            <input-type size="69">textarea</input-type>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+						</field> 
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>description</dc-element>
+                            <dc-qualifier>notes</dc-qualifier>
+                            <label>Notes</label>
+                            <hint>Enter here any additional information about your deposit.</hint>
+                            <input-type size="69">textarea</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+						</field>
+                    </fieldrow>
+				</fieldgroup>
+			</page>
+		</form>
+		
+        <form name="Monograph" baseForm="catalogue">
+            <page number="1">
+
+                <fieldgroup>
+                    <label>Reference</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Reference');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>format</dc-element>
+                            <dc-qualifier>pages</dc-qualifier>
+                            <label>Number of Pages</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>                    
+                    <fieldrow>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier></dc-qualifier>
+                            <label>Publishers' name</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>                    
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseries</dc-qualifier>
+                            <label>Series Name</label>
+                            <hint></hint>
+                            <input-type size="33">onebox</input-type>
+                            <ask-language>true</ask-language>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseriesnr</dc-qualifier>
+                            <label>Number</label>
+                            <hint></hint>
+                            <input-type size="33">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+				</fieldgroup>
+                <fieldgroup>
+                    <label>Conference description - only for Proceedings</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Conference_');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>conferencename</dc-qualifier>
+                            <label>Conference Name</label>
+                            <hint>Enter the full name of the conference.</hint>
+                            <input-type size="69">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                            <ask-language>true</ask-language>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>conferenceplace</dc-qualifier>
+                            <label>Conference Place</label>
+                            <hint>Enter the place (City - State) of the conference.</hint>
+                            <input-type size="34">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>conferencedate</dc-qualifier>
+                            <label>Conference Date</label>
+                            <hint>Enter the dates (Day(s)/month/year)of the conference.</hint>
+                            <input-type size="34">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                </fieldgroup>
+				</page>
+        </form>
+
+        <form name="Contribution-Journals" baseForm="catalogue">
+            <page number="1">
+                <fieldgroup>
+                    <label>Reference</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Reference');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>title</dc-qualifier>
+                            <label>Journal Title *</label>
+                            <hint>Enter a word from the journal title and choose the correct title out of the picklist.</hint>
+                            <input-type size="69">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required>Enter (a part of) the title and choose from the list</required>
+                            <authority closed="false" editable="true" presentation="suggest" limit="0">issn</authority>
+                            <ask-language>true</ask-language>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>volume</dc-qualifier>
+                            <label>Volume</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>issue</dc-qualifier>
+                            <label>Issue</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>stpage</dc-qualifier>
+                            <label>Start page</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>endpage</dc-qualifier>
+                            <label>End page</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>                  
+                    <fieldrow>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier></dc-qualifier>
+                            <label>Publishers' name</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+						<field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>publisher</dc-element>
+                            <dc-qualifier>place</dc-qualifier>
+                            <label>Place of Publication</label>
+                            <input-type size="35">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+				</fieldgroup>
+			</page>
+        </form>	
+
+        <form name="Contribution-Monograph" baseForm="catalogue">
+            <page number="1">
+                <fieldgroup>
+                    <label>Reference</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Reference');"&gt;Help&lt;/a&gt;</hint>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>authors</dc-qualifier>
+                            <label>Editors</label>
+                            <hint></hint>
+                            <input-type size="33">name</input-type>
+                            <repeatable>true</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>title</dc-qualifier>
+                            <label>Book Title *</label>
+                            <hint>Enter here the full title that is given to the proceedings publication of which your paper is a part.</hint>
+                            <input-type size="69">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required>You must enter a proceedings title for this conference paper.</required>
+                            <ask-language>true</ask-language>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>edition</dc-qualifier>
+                            <label>Edition</label>
+			    <hint>e.g. 4th</hint>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>stpage</dc-qualifier>
+                            <label>Start Page</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>endpage</dc-qualifier>
+                            <label>End Page</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseries</dc-qualifier>
+                            <label>Series Name</label>
+                            <input-type size="65">onebox</input-type>
+                            <ask-language>true</ask-language>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>relation</dc-element>
+                            <dc-qualifier>ispartofseriesnr</dc-qualifier>
+                            <label>N°</label>
+                            <input-type size="4">onebox</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field>
+                    </fieldrow>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
@@ -2440,43 +2850,49 @@
                             <required></required>
                         </field>
                     </fieldrow>
+                </fieldgroup>            
+				<fieldgroup>
+                    <label>Conference description - Only for proceedings papers</label>
+                    <hint>&lt;a href="javascript:newPopup('/dspace/help/index.html#Conference_');"&gt;Help&lt;/a&gt;</hint>
                     <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
-                            <dc-element>date</dc-element>
-                            <dc-qualifier>issued</dc-qualifier>
-                            <label>Publication Date *</label>
-                            <input-type>date</input-type>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>conferencename</dc-qualifier>
+                            <label>Conference Name</label>
+                            <hint>Enter the full name of the conference.</hint>
+                            <input-type size="69">onebox</input-type>
                             <repeatable>false</repeatable>
-                            <required>The year is mandatory (YYYY).</required>
+                            <required></required>
+                            <ask-language>true</ask-language>
                         </field>
                     </fieldrow>
-<!--                     <fieldrow>
+                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
-                            <dc-element>description</dc-element>
-                            <dc-qualifier>status</dc-qualifier>
-                            <label>Status</label>
-                            <input-type value-pairs-name="status">dropdown</input-type>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>conferenceplace</dc-qualifier>
+                            <label>Conference Place</label>
+                            <hint>Enter the place (City - State) of the conference.</hint>
+                            <input-type size="34">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required></required>
                         </field>
-                    </fieldrow> -->
-                    <fieldrow>
                         <field>
                             <dc-schema>dc</dc-schema>
-                            <dc-element>language *</dc-element>
-                            <dc-qualifier>iso</dc-qualifier>
-                            <label>Language</label>
-                            <input-type value-pairs-name="common_iso_languages">list</input-type>
-                            <repeatable>true</repeatable>
+                            <dc-element>bibliographicCitation</dc-element>
+                            <dc-qualifier>conferencedate</dc-qualifier>
+                            <label>Conference Date</label>
+                            <hint>Enter the dates (Day(s)/month/year)of the conference.</hint>
+                            <input-type size="34">onebox</input-type>
+                            <repeatable>false</repeatable>
                             <required></required>
                         </field>
                     </fieldrow>
                 </fieldgroup>
-            </page>
+			</page>
         </form>
-		
+
     </form-definitions>
 
 
@@ -2522,6 +2938,12 @@
                 <stored-value>Published</stored-value>
             </pair>
         </value-pairs>
+        <value-pairs value-pairs-name="na" dc-term="type_specified">
+            <pair>
+                <displayed-value>N/A</displayed-value>
+                <stored-value></stored-value>
+            </pair>
+        </value-pairs>			
         <value-pairs value-pairs-name="type_article" dc-term="type_specified">
             <pair>
                 <displayed-value>Article</displayed-value>
@@ -2618,6 +3040,10 @@
                 <stored-value>it</stored-value>
             </pair>
             <pair>
+                <displayed-value>Arabic</displayed-value>
+                <stored-value>ar</stored-value>
+            </pair>
+            <pair>
                 <displayed-value>Japanese</displayed-value>
                 <stored-value>ja</stored-value>
             </pair>
@@ -2674,5 +3100,52 @@
                 <stored-value>video</stored-value>
             </pair>
         </value-pairs>    
-    </form-value-pairs>
+
+		<value-pairs value-pairs-name="loanpolicy" dc-term="description_loanpolicy">
+                <pair>
+                        <displayed-value>Only accessible in the library</displayed-value>
+                        <stored-value>Only accessible in the library</stored-value>
+                </pair>
+                <pair>
+                        <displayed-value>Available for local loan</displayed-value>
+                        <stored-value>Available for local loan</stored-value>
+                </pair>
+                <pair>
+                        <displayed-value>Available for interlibrary loan</displayed-value>
+                        <stored-value>Available for interlibrary loan</stored-value>
+                </pair>
+        </value-pairs>		
+		<value-pairs value-pairs-name="common_contributors" dc-term="contributor">
+				<pair>
+					<displayed-value>Personal Author</displayed-value>
+					<stored-value>author</stored-value>
+				</pair>
+				<pair>
+					<displayed-value>Editor</displayed-value>
+					<stored-value>editor</stored-value>
+				</pair>
+				<pair>
+					<displayed-value>Corporate Author</displayed-value>
+					<stored-value>corpauthor</stored-value>
+				</pair>
+		</value-pairs>
+		<value-pairs value-pairs-name="thesis_contributors" dc-term="contributor">
+				<pair>
+					<displayed-value>Personal Author</displayed-value>
+					<stored-value>author</stored-value>
+				</pair>
+
+				<pair>
+					<displayed-value>Thesis Advisor</displayed-value>
+					<stored-value>advisor</stored-value>
+				</pair>
+				<pair>
+					<displayed-value>University/Institute</displayed-value>
+					<stored-value>institution</stored-value>
+				</pair>
+		</value-pairs>
+		</form-value-pairs>
 </input-forms>
+
+		
+		

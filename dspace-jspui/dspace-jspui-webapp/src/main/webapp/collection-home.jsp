@@ -98,6 +98,8 @@
     }
 
     ItemCounter ic = new ItemCounter(UIUtil.obtainContext(request));
+
+    boolean customXMLimportEnabled = ConfigurationManager.getBooleanProperty("batchimport.customxml.enable");
 %>
 
 
@@ -225,17 +227,19 @@
                             <input type="radio" name="metadataFormat" value="MODS" />MODS
                             <input type="radio" name="metadataFormat" value="ENDNOTE" />EndNote / Other
                         </div>
+                        <% if (customXMLimportEnabled) {%>
                         <div>
                             <input type="radio" name="metadataFormat" value="XML" />XML ...
                             <label><fmt:message key="jsp.batchimport.xslt"/></label>
                             <input type="file" size="30" name="xslt"/>
                         </div>
-                       <!-- <div>
-                            <label><fmt:message key="jsp.batchimport.mode"/></label>
-                            <input type="radio" name="importmode" value="WORKSPACE" checked="true"/><fmt:message key="jsp.batchimport.mode.workspace"/>
-                            <input type="radio" name="importmode" value="DIRECT" /><fmt:message key="jsp.batchimport.mode.direct"/>
-                        </div> -->
-                       <input type="hidden" name="importmode" value="WORKSPACE"/>
+                        <%}%>
+                        <!-- <div>
+                             <label><fmt:message key="jsp.batchimport.mode"/></label>
+                             <input type="radio" name="importmode" value="WORKSPACE" checked="true"/><fmt:message key="jsp.batchimport.mode.workspace"/>
+                             <input type="radio" name="importmode" value="DIRECT" /><fmt:message key="jsp.batchimport.mode.direct"/>
+                         </div> -->
+                        <input type="hidden" name="importmode" value="WORKSPACE"/>
                         <div style="float: left;">
                             <label><fmt:message key="jsp.batchimport.file"/></label>
                             <input type="file" size="50" name="file"/>
@@ -336,7 +340,8 @@
                     <tr>
                         <td headers="t1" class="standard" align="center">
                             <dspace:popup page="<%= LocaleSupport.getLocalizedMessage(pageContext, 
-                 \"help.collection-admin\")%>"><fmt:message key="jsp.adminhelp"/></dspace:popup>
+                 
+                            \"help.collection-admin\")%>"><fmt:message key="jsp.adminhelp"/></dspace:popup>
                             </td>
                         </tr>
                     <% } %>
@@ -361,8 +366,8 @@
                     }
                 }
     %><p class="recentItem"><a href="<%= request.getContextPath()%>/handle/<%= items[i].getHandle()%>"><%= displayTitle%></a></p><%
-                                }
-                            }
+            }
+        }
     %>
     <p>&nbsp;</p>
     <%

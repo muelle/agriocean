@@ -9,17 +9,12 @@ package proj.oceandocs.submission;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.apache.log4j.Logger;
-
-import org.dspace.app.util.DCInput;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.log4j.Logger;
+import org.dspace.app.util.DCInput;
 
 /**
  * Class representing all DC inputs required for a submission, organized into pages

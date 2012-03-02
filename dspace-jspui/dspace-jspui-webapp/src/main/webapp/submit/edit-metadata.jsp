@@ -63,7 +63,10 @@
     // so no icon appears yet.
     int unknownConfidence = Choices.CF_UNSET - 100;
 
-    void doAuthorityField(javax.servlet.jsp.JspWriter out, Item item, String fieldName, DCInput field, int fieldCountIncr, boolean readonly, PageContext pageContext, String contextPath) throws java.io.IOException, DCInputsReaderException {
+    void doAuthorityField(javax.servlet.jsp.JspWriter out, Item item, String fieldName,
+            DCInput field, int fieldCountIncr, boolean readonly, PageContext pageContext, String contextPath)
+            throws java.io.IOException, DCInputsReaderException {
+
         String isize = field.getSize() != 0 ? Integer.toString(field.getSize()) : "30";
         String fieldCounter = "";
 
@@ -80,19 +83,18 @@
         if (fieldCount == 0) {
             fieldCount = 1;
         }
-        
-        String acField = "", acIndicator="", acUrl="";
+
+        String acField = "", acIndicator = "", acUrl = "";
 
         for (int i = 0; i < fieldCount; i++) {
             if (i < defaults.length) {
                 val = defaults[i].value.replaceAll("\"", "&quot;");
                 auth = defaults[i].authority;
                 conf = defaults[i].confidence;
-            }
-            else {
-            val = "";
-            auth = "";
-            conf = unknownConfidence;
+            } else {
+                val = "";
+                auth = "";
+                conf = unknownConfidence;
             }
 
 
@@ -102,16 +104,16 @@
                 String fieldAuthority = fieldName + "_authority" + ((repeatable && i != fieldCount - 1) ? "_" + (i + 1) : "");
                 String fieldConfidence = fieldName + "_confidence" + ((repeatable && i != fieldCount - 1) ? "_" + (i + 1) : "");
                 sb.append("<input type=\"text\" name=\"").append(fieldNameIdx).append("\" id=\"").append(fieldNameIdx).append("\" size=\"" + isize + "\" value=\"").append(val + "\"").append(readonly ? " readonly=\"true\" " : "").append("/>").append("\n");
-                
+
                 //autocomplete "magic"
-                acIndicator = fieldNameIdx+"_indicator";
-                acField = "autocomplete_"+fieldNameIdx;
+                acIndicator = fieldNameIdx + "_indicator";
+                acField = "autocomplete_" + fieldNameIdx;
                 acUrl = contextPath + "/authority/" + field.getAuthorityURLsuffix();
                 sb.append("<span id=\"").append(acIndicator).append("\" style=\"display: none;\">").append("<img src=\"").append(contextPath).append("/image/authority/load-indicator.gif\" alt=\"Loading...\"/></span>");
-                sb.append("<div id=\"").append(acField).append("\" class=\"autocomplete\"></div>");                 
+                sb.append("<div id=\"").append(acField).append("\" class=\"autocomplete\"></div>");
                 //====================
                 sb.append("</td>\n");
-                
+
                 //authority value field ... editable if the field value is not in the authority list and authorityis not closed
                 sb.append("<td>").append("<input type=\"text\" name=\"").append(fieldAuthority).append("\" id=\"").append(fieldAuthority).append("\" \" value=\"").append(auth + "\" size=\"10\"").append(field.isAuthorityClosed() ? " readonly=\"true\"" : "").append("/>").append("\n");
                 sb.append("<input type=\"hidden\" name=\"").append(fieldConfidence).append("\" id=\"").append(fieldConfidence).append("\" value=\"").append(conf + "\" />");
@@ -152,7 +154,7 @@
                         sb.append("<td>&nbsp;</td>");
                     }
                 } // put language selection list if neccessary (for the dc lang attribute)
-                
+
                 sb.append("</tr>");
                 sb.append("<script type=\"text/javascript\">");
                 sb.append("authoritySuggest(\"").append(fieldNameIdx).append("\", \"").append(acField).append("\", \"").append(acUrl).append("\", '").append(acIndicator).append("');");
@@ -162,8 +164,7 @@
         out.write(sb.toString());
         sb.append("</tr>");
     }
-    
-    
+
     // This method is resposible for showing a link next to an input box
     // that pops up a window that to display a controlled vocabulary.
     // It should be called from the doOneBox and doTwoBox methods.
@@ -210,73 +211,94 @@
 
     // Render the choice/authority controlled entry, or, if not indicated,
     // returns the given default inputBlock
-    /*StringBuffer doAuthority(PageContext pageContext, String fieldName,
-            int idx, int fieldCount, String fieldInput, String authorityValue,
-            int confidenceValue, boolean isName, boolean repeatable,
-            DCValue[] dcvs, StringBuffer inputBlock, int collectionID, int size) {
-        MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
-        ChoiceAuthorityManager cam = ChoiceAuthorityManager.getManager();
-        StringBuffer sb = new StringBuffer();
-
-        if (cam.isChoicesConfigured(fieldName)) {
-            boolean authority = mam.isAuthorityControlled(fieldName);
-            boolean required = authority && mam.isAuthorityRequired(fieldName);
-            boolean isSelect = "select".equals(cam.getPresentation(fieldName)) && !isName;
-
-            // if this is not the only or last input, append index to input @names
-            String authorityName = fieldName + "_authority";
-            String confidenceName = fieldName + "_confidence";
-            if (repeatable && !isSelect && idx != fieldCount - 1) {
-                fieldInput += '_' + String.valueOf(idx + 1);
-                authorityName += '_' + String.valueOf(idx + 1);
-                confidenceName += '_' + String.valueOf(idx + 1);
-            }
-
-            String confidenceSymbol = confidenceValue == unknownConfidence ? "blank" : Choices.getConfidenceText(confidenceValue).toLowerCase();
-            String confIndID = fieldInput + "_confidence_indicator_id";
-            if (authority) {
-                sb.append(" <img id=\"" + confIndID + "\" title=\"").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.authority.confidence.description." + confidenceSymbol)).append("\" class=\"ds-authority-confidence cf-") // set confidence to cf-blank if authority is empty
-                        .append(authorityValue == null || authorityValue.length() == 0 ? "blank" : confidenceSymbol).append(" \" src=\"").append(contextPath).append("/image/confidence/invisible.gif\" />").append("<input type=\"text\" value=\"").append(authorityValue != null ? authorityValue : "").append("\" id=\"").append(authorityName).append("\" name=\"").append(authorityName).append("\" class=\"ds-authority-value\"/>").append("<input type=\"hidden\" value=\"").append(confidenceSymbol).append("\" id=\"").append(confidenceName).append("\" name=\"").append(confidenceName).append("\" class=\"ds-authority-confidence-input\"/>");
-            }
-
-            // suggest is not supported for name input type
-            if ("suggest".equals(cam.getPresentation(fieldName)) && !isName) {
-                if (inputBlock != null) {
-                    sb.insert(0, inputBlock);
-                }
-                sb.append("<span id=\"").append(fieldInput).append("_indicator\" style=\"display: block;\">").append("<img src=\"").append(contextPath).append("/image/authority/load-indicator.gif\" alt=\"Loading...\"/>").append("</span><div id=\"").append(fieldInput).append("_autocomplete\" class=\"autocomplete\" style=\"display: block;\"> </div>");
-
-                sb.append("<script type=\"text/javascript\">").append("var gigo = DSpaceSetupAutocomplete('edit_metadata',").append("{ metadataField: '").append(fieldName).append("', isClosed: '").append(required ? "true" : "false").append("', inputName: '").append(fieldInput).append("', authorityName: '").append(authorityName).append("', containerID: '").append(fieldInput).append("_autocomplete', indicatorID: '").append(fieldInput).append("_indicator', ").append("contextPath: '").append(contextPath).append("', confidenceName: '").append(confidenceName).append("', confidenceIndicatorID: '").append(confIndID).append("', collection: ").append(String.valueOf(collectionID)).append(" }); </script>");
-            } // put up a SELECT element containing all choices
-            else if (isSelect) {
-                sb.append("<select id=\"").append(fieldInput).append("_id\" name=\"").append(fieldInput).append("\" size=\"").append(String.valueOf(repeatable ? 6 : 1)).append(repeatable ? "\" multiple>\n" : "\">\n");
-                Choices cs = cam.getMatches(fieldName, "", collectionID, 0, 0, null);
-                // prepend unselected empty value when nothing can be selected.
-                if (!repeatable && cs.defaultSelected < 0 && dcvs.length == 0) {
-                    sb.append("<option value=\"\"><!-- empty --></option>\n");
-                }
-                for (int i = 0; i < cs.values.length; ++i) {
-                    boolean selected = false;
-                    for (DCValue dcv : dcvs) {
-                        if (dcv.value.equals(cs.values[i].value)) {
-                            selected = true;
-                        }
-                    }
-                    sb.append("<option value=\"").append(cs.values[i].value.replaceAll("\"", "\\\"")).append("\"").append(selected ? " selected>" : ">").append(cs.values[i].label).append("</option>\n");
-                }
-                sb.append("</select>\n");
-            } // use lookup for any other presentation style (i.e "select")
-            else {
-                if (inputBlock != null) {
-                    sb.insert(0, inputBlock);
-                }
-                sb.append("<input type=\"image\" name=\"").append(fieldInput).append("_lookup\" ").append("onclick=\"javascript: return DSpaceChoiceLookup('").append(contextPath).append("/tools/lookup.jsp','").append(fieldName).append("','edit_metadata','").append(fieldInput).append("','").append(authorityName).append("','").append(confIndID).append("',").append(String.valueOf(collectionID)).append(",").append(String.valueOf(isName)).append(",false);\"").append(" title=\"").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.tools.lookup.lookup")).append("\" width=\"16px\" height=\"16px\" src=\"" + contextPath + "/image/authority/zoom.png\" />");
-            }
-        } else if (inputBlock != null) {
-            sb = inputBlock;
-        }
-        return sb;
-    }*/
+    /*
+     * StringBuffer doAuthority(PageContext pageContext, String fieldName, int
+     * idx, int fieldCount, String fieldInput, String authorityValue, int
+     * confidenceValue, boolean isName, boolean repeatable, DCValue[] dcvs,
+     * StringBuffer inputBlock, int collectionID, int size) {
+     * MetadataAuthorityManager mam = MetadataAuthorityManager.getManager();
+     * ChoiceAuthorityManager cam = ChoiceAuthorityManager.getManager();
+     * StringBuffer sb = new StringBuffer();
+     *
+     * if (cam.isChoicesConfigured(fieldName)) { boolean authority =
+     * mam.isAuthorityControlled(fieldName); boolean required = authority &&
+     * mam.isAuthorityRequired(fieldName); boolean isSelect =
+     * "select".equals(cam.getPresentation(fieldName)) && !isName;
+     *
+     * // if this is not the only or last input, append index to input @names
+     * String authorityName = fieldName + "_authority"; String confidenceName =
+     * fieldName + "_confidence"; if (repeatable && !isSelect && idx !=
+     * fieldCount - 1) { fieldInput += '_' + String.valueOf(idx + 1);
+     * authorityName += '_' + String.valueOf(idx + 1); confidenceName += '_' +
+     * String.valueOf(idx + 1); }
+     *
+     * String confidenceSymbol = confidenceValue == unknownConfidence ? "blank"
+     * : Choices.getConfidenceText(confidenceValue).toLowerCase(); String
+     * confIndID = fieldInput + "_confidence_indicator_id"; if (authority) {
+     * sb.append(" <img id=\"" + confIndID + "\"
+     * title=\"").append(LocaleSupport.getLocalizedMessage(pageContext,
+     * "jsp.authority.confidence.description." + confidenceSymbol)).append("\"
+     * class=\"ds-authority-confidence cf-") // set confidence to cf-blank if
+     * authority is empty .append(authorityValue == null ||
+     * authorityValue.length() == 0 ? "blank" : confidenceSymbol).append(" \"
+     * src=\"").append(contextPath).append("/image/confidence/invisible.gif\"
+     * />").append("<input type=\"text\" value=\"").append(authorityValue !=
+     * null ? authorityValue : "").append("\"
+     * id=\"").append(authorityName).append("\"
+     * name=\"").append(authorityName).append("\"
+     * class=\"ds-authority-value\"/>").append("<input type=\"hidden\"
+     * value=\"").append(confidenceSymbol).append("\"
+     * id=\"").append(confidenceName).append("\"
+     * name=\"").append(confidenceName).append("\"
+     * class=\"ds-authority-confidence-input\"/>"); }
+     *
+     * // suggest is not supported for name input type if
+     * ("suggest".equals(cam.getPresentation(fieldName)) && !isName) { if
+     * (inputBlock != null) { sb.insert(0, inputBlock); } sb.append("<span
+     * id=\"").append(fieldInput).append("_indicator\" style=\"display:
+     * block;\">").append("<img
+     * src=\"").append(contextPath).append("/image/authority/load-indicator.gif\"
+     * alt=\"Loading...\"/>").append("</span><div
+     * id=\"").append(fieldInput).append("_autocomplete\" class=\"autocomplete\"
+     * style=\"display: block;\"> </div>");
+     *
+     * sb.append("<script type=\"text/javascript\">").append("var gigo =
+     * DSpaceSetupAutocomplete('edit_metadata',").append("{ metadataField:
+     * '").append(fieldName).append("', isClosed: '").append(required ? "true" :
+     * "false").append("', inputName: '").append(fieldInput).append("',
+     * authorityName: '").append(authorityName).append("', containerID:
+     * '").append(fieldInput).append("_autocomplete', indicatorID:
+     * '").append(fieldInput).append("_indicator', ").append("contextPath:
+     * '").append(contextPath).append("', confidenceName:
+     * '").append(confidenceName).append("', confidenceIndicatorID:
+     * '").append(confIndID).append("', collection:
+     * ").append(String.valueOf(collectionID)).append(" }); </script>"); } //
+     * put up a SELECT element containing all choices else if (isSelect) {
+     * sb.append("<select id=\"").append(fieldInput).append("_id\"
+     * name=\"").append(fieldInput).append("\"
+     * size=\"").append(String.valueOf(repeatable ? 6 : 1)).append(repeatable ?
+     * "\" multiple>\n" : "\">\n"); Choices cs = cam.getMatches(fieldName, "",
+     * collectionID, 0, 0, null); // prepend unselected empty value when nothing
+     * can be selected. if (!repeatable && cs.defaultSelected < 0 && dcvs.length
+     * == 0) { sb.append("<option value=\"\"><!-- empty --></option>\n"); } for
+     * (int i = 0; i < cs.values.length; ++i) { boolean selected = false; for
+     * (DCValue dcv : dcvs) { if (dcv.value.equals(cs.values[i].value)) {
+     * selected = true; } } sb.append("<option
+     * value=\"").append(cs.values[i].value.replaceAll("\"",
+     * "\\\"")).append("\"").append(selected ? " selected>" :
+     * ">").append(cs.values[i].label).append("</option>\n"); }
+     * sb.append("</select>\n"); } // use lookup for any other presentation
+     * style (i.e "select") else { if (inputBlock != null) { sb.insert(0,
+     * inputBlock); } sb.append("<input type=\"image\"
+     * name=\"").append(fieldInput).append("_lookup\"
+     * ").append("onclick=\"javascript: return
+     * DSpaceChoiceLookup('").append(contextPath).append("/tools/lookup.jsp','").append(fieldName).append("','edit_metadata','").append(fieldInput).append("','").append(authorityName).append("','").append(confIndID).append("',").append(String.valueOf(collectionID)).append(",").append(String.valueOf(isName)).append(",false);\"").append("
+     * title=\"").append(LocaleSupport.getLocalizedMessage(pageContext,
+     * "jsp.tools.lookup.lookup")).append("\" width=\"16px\" height=\"16px\"
+     * src=\"" + contextPath + "/image/authority/zoom.png\" />"); } } else if
+     * (inputBlock != null) { sb = inputBlock; } return sb;
+    }
+     */
 %>
 <!--doLang-->
 <%!    void doLang(StringBuffer sb, Item item,
@@ -502,113 +524,74 @@
 
         DCValue[] defaults = item.getMetadata(schema, element, qualifier, Item.ANY);
 
-
         int fieldCount = defaults.length + fieldCountIncr;
         StringBuffer sb = new StringBuffer();
-        org.dspace.content.DCDate dateIssued;
-
-
+        org.dspace.content.DCDate dateIssued = null;
 
         if (fieldCount == 0) {
             fieldCount = 1;
-
-
         }
 
-        for (int i = 0; i
-                < fieldCount; i++) {
+        for (int i = 0; i < fieldCount; i++) {
             if (i < defaults.length) {
                 dateIssued = new org.dspace.content.DCDate(defaults[i].value);
-
-
             } else {
                 dateIssued = new org.dspace.content.DCDate("");
-
-
             }
-
+          
             sb.append("<td colspan=\"2\" nowrap=\"nowrap\" class=\"submitFormDateLabel\">").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.edit-metadata.month")).append("<select name=\"").append(fieldName).append("_month");
-
 
             if (repeatable && i > 0) {
                 sb.append('_').append(i);
-
-
             }
             if (readonly) {
                 sb.append("\" disabled=\"disabled");
-
-
             }
             sb.append("\"><option value=\"-1\"").append((dateIssued.getMonth() == -1 ? " selected=\"selected\"" : "")) //          .append(">(No month)</option>");
                     .append(">").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.edit-metadata.no_month")).append("</option>");
 
-
-
             for (int j = 1; j
                     < 13; j++) {
                 sb.append("<option value=\"").append(j).append((dateIssued.getMonth() == j ? "\" selected=\"selected\"" : "\"")).append(">").append(org.dspace.content.DCDate.getMonthName(j, I18nUtil.getSupportedLocale(request.getLocale()))).append("</option>");
-
-
             }
 
             sb.append("</select>") //            .append("Day:<input type=text name=\"")
                     .append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.edit-metadata.day")).append("<input type=\"text\" name=\"").append(fieldName).append("_day");
 
-
             if (repeatable && i > 0) {
                 sb.append("_").append(i);
-
-
             }
             if (readonly) {
                 sb.append("\" disabled=\"disabled");
-
-
             }
             sb.append("\" size=\"2\" maxlength=\"2\" value=\"").append((dateIssued.getDay() > 0
                     ? String.valueOf(dateIssued.getDay()) : "")) //          .append("\"/>Year:<input type=text name=\"")
                     .append("\"/>").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.edit-metadata.year")).append("<input type=\"text\" name=\"").append(fieldName).append("_year");
 
-
             if (repeatable && i > 0) {
                 sb.append("_").append(i);
-
-
             }
             if (readonly) {
                 sb.append("\" disabled=\"disabled");
-
-
             }
             sb.append("\" size=\"4\" maxlength=\"4\" value=\"").append((dateIssued.getYear() > 0
                     ? String.valueOf(dateIssued.getYear()) : "")).append("\"/></td>\n");
-
-
 
             if (repeatable && !readonly && i < defaults.length) {
                 // put a remove button next to filled in values
                 sb.append("<td><input type=\"submit\" name=\"submit_").append(fieldName).append("_remove_").append(i) //            .append("\" value=\"Remove This Entry\"/> </td></tr>");
                         .append("\" value=\"").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.edit-metadata.button.remove")).append("\"/> </td></tr>");
-
-
             } else if (repeatable && !readonly && i == fieldCount - 1) {
                 // put a 'more' button next to the last space
                 sb.append("<td><input type=\"submit\" name=\"submit_").append(fieldName) //            .append("_add\" value=\"Add More\"/> </td></tr>");
                         .append("_add\" value=\"").append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.edit-metadata.button.add")).append("\"/> </td></tr>");
-
-
             } else {
                 // put a blank if nothing else
                 sb.append("<td>&nbsp;</td></tr>");
-
-
             }
         }
 
         out.write(sb.toString());
-
-
     }
 %>
 <!--doSeriesNumber-->
@@ -1024,7 +1007,7 @@
                 sb.append("<option").append((v.equals(currentQual) ? " selected=\"selected\" " : "")).append(" value=\"").append(v).append("\">").append(q).append("</option>");
 
             } // do the input box
-            sb.append("</select>&nbsp;<input type=\"text\"").append("size=\""+isize+"\"").append(" name=\"").append(fieldName).append("_value");
+            sb.append("</select>&nbsp;<input type=\"text\"").append("size=\"" + isize + "\"").append(" name=\"").append(fieldName).append("_value");
 
 
             if (repeatable && j != fieldCount - 1) {
@@ -1128,7 +1111,9 @@
     }
 %>
 <!--doList-->
-<%!    /** Display Checkboxes or Radio buttons, depending on if repeatable! **/
+<%!    /**
+     * Display Checkboxes or Radio buttons, depending on if repeatable! *
+     */
     void doList(javax.servlet.jsp.JspWriter out, Item item,
             String fieldName, String schema, String element, String qualifier, boolean repeatable,
             boolean readonly, List valueList, String label, boolean askLang)
@@ -1253,13 +1238,12 @@
     SubmissionInfo si = SubmissionController.getSubmissionInfo(context, request);
     Item item = si.getSubmissionItem().getItem();
 
-    final int halfWidth = 23;
-    final int fullWidth = 50;
-    final int twothirdsWidth = 34;
+    //final int halfWidth = 23;
+    //final int fullWidth = 50;
+    //final int twothirdsWidth = 34;
 
     DCInputSetExt inputSet = (DCInputSetExt) request.getAttribute("submission.inputs");
     Integer pageNumStr = (Integer) request.getAttribute("submission.page");
-
 
     int pageNum = pageNumStr.intValue();
 
@@ -1267,13 +1251,11 @@
     String scope = si.isInWorkflow() ? "workflow" : "submit";
     // owning Collection ID for choice authority calls
 
-
     int collectionID = si.getSubmissionItem().getCollection().getID();
     // list of possible document type for current collection
     List<String> listOfTypes = (List<String>) request.getAttribute("submission.types");
     //submission type
     String doctype = (String) request.getAttribute("submission.doctype");
-
 
     if (doctype == null || "".equals(doctype)) {
         DCValue[] values = item.getMetadata("dc", "type", null, Item.ANY);
@@ -1301,6 +1283,7 @@
         %>
         <div><fmt:message key="jsp.submit.edit-metadata.info1"/>
             <dspace:popup page="<%= LocaleSupport.getLocalizedMessage(pageContext,
+            
             \"help.index\") + \"#describe2\"%>"><fmt:message key="jsp.submit.edit-metadata.help"/></dspace:popup></div>
             <%
                  }
@@ -1309,6 +1292,7 @@
             %>
         <div><fmt:message key="jsp.submit.edit-metadata.info2"/>
             <dspace:popup page="<%= LocaleSupport.getLocalizedMessage(pageContext,
+            
             \"help.index\") + \"#describe3\"%>"><fmt:message key="jsp.submit.edit-metadata.help"/></dspace:popup></div>
             <%
                  }
@@ -1337,8 +1321,7 @@
                                                 StringBuffer sb = new StringBuffer();
                                                 String isselected = "";
                                                 if (listOfTypes != null) {
-                                                    for (int i = 0; i
-                                                            < listOfTypes.size(); i++) {
+                                                    for (int i = 0; i < listOfTypes.size(); i++) {
                                                         isselected = listOfTypes.get(i).equals(doctype) ? "selected=\"selected\"" : "";
                                                         sb.append("<option value=\"" + listOfTypes.get(i) + "\"" + isselected + ">" + listOfTypes.get(i) + "</option>");
                                                     }
@@ -1368,7 +1351,7 @@
                         </fmt:message>
                     </h3>
                     <p class="metadataFieldgroupHint">
-                        <fmt:message key="jsp.submit.edit-metadata.typechosen " />
+                        <fmt:message key="jsp.submit.edit-metadata.typechosen"/>
                     </p>
                 </div>
             </div>
@@ -1381,8 +1364,7 @@
                 String gHint = null;
                 DCInputGroup iG = null;
 
-                for (int i = 0; i
-                        < iGroups.size(); i++) {
+                for (int i = 0; i < iGroups.size(); i++) {
                     iG = iGroups.get(i);
                     gLabel = iG.getLabel();
                     gHint = iG.getHint();
@@ -1424,11 +1406,8 @@
 
                                 boolean repeatable = iF.getRepeatable();
                                 String vocabulary = iF.getVocabulary();
-
                                 boolean askLang = iF.getAskLanguage();
-
                                 boolean readonly = false;
-
 
                                 if (iF.isReadOnly(scope)) {
                                     readonly = true;
@@ -1445,7 +1424,6 @@
                                         if (si.getJumpToField() == null || si.getJumpToField().length() == 0) {
                                             si.setJumpToField(fieldName);
                                         }
-
                                         String req = "<tr><td colspan=\"4\" class=\"submitFormWarn\">"
                                                 + iF.getWarning()
                                                 + "<a name=\"" + fieldName + "\"></a></td></tr>";
@@ -1463,27 +1441,21 @@
 
                                 int fieldCountIncr = 0;
 
-
                                 if (repeatable && !readonly) {
                                     fieldCountIncr = 1;
-
-
                                     if (si.getMoreBoxesFor() != null && si.getMoreBoxesFor().equals(fieldName)) {
                                         fieldCountIncr = 1;
-
-
                                     }
                                 }
 
                                 String inputType = iF.getInputType();
                                 String label = iF.getLabel();
 
-
                                 boolean closedVocabulary = iF.isClosedVocabulary();
                                 out.write("<tr>");
 
                                 if (iF.isAuthority()) {
-                                              doAuthorityField(out, item, fieldName, iF, fieldCountIncr, readonly, pageContext, request.getContextPath());
+                                    doAuthorityField(out, item, fieldName, iF, fieldCountIncr, readonly, pageContext, request.getContextPath());
                                 } else if (inputType.equals("name")) {
                                     doPersonalName(out, item, fieldName, dcSchema, dcElement, dcQualifier,
                                             repeatable, readonly, fieldCountIncr, label, pageContext, collectionID, inputsize, askLang);
@@ -1530,12 +1502,12 @@
                                 </tr>
 
                             <%                                                    } //hasVocabulary
-                            %>
+%>
                         </table>
                     </div> <!-- field -->
                     <%
                         } //row FOR loop
-                    %>
+%>
                 </div> <!-- row -->
                 <% }%><!-- end fields rows -->
 
@@ -1545,7 +1517,7 @@
                     } // field group for loop
 
                 } // input set
-            %>
+%>
             <%-- HACK:  Need a space - is there a nicer way to do this than <BR> or a --%>
             <%--        blank <P>? --%>
             <p>&nbsp;</p>
