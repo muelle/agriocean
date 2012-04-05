@@ -218,6 +218,9 @@ public class CitationManager {
                          */
                         if ("bibliographicCitation.authors".equalsIgnoreCase(m.group(m.groupCount()))) {
                             authors = (DCValue[]) map.get(m.group(m.groupCount()));
+                             // when there are no bibliographicCitation.authors, skip to next iteration
+                           if (authors == null)
+                               continue;
                             String allAuthorsNames = "";
                             for (int a = 0; a < authors.length; a++) {
                                 if (a > 0) {

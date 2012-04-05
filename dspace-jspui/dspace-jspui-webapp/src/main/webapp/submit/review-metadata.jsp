@@ -111,7 +111,7 @@
             StringBuffer row = new StringBuffer();
 
             row.append("<tr>");
-            row.append("<td width=\"40%\" class=\"metadataFieldLabel\">");
+            row.append("<td width=\"40%\" class=\"metadataFieldLabel\" style=\"white-space: normal;\">");
             row.append(input.getLabel());
             row.append("</td>");
             row.append("<td width=\"60%\" class=\"metadataFieldValue\">");
@@ -124,8 +124,7 @@
             if (values.length == 0) {
                 row.append(LocaleSupport.getLocalizedMessage(pageContext, "jsp.submit.review.no_md"));
             } else {
-                boolean isAuthorityControlled = mam.isAuthorityControlled(input.getSchema(),
-                        input.getElement(), input.getQualifier());
+                boolean isAuthorityControlled = input.isAuthority(); //mam.isAuthorityControlled(input.getSchema(), input.getElement(), input.getQualifier());
 
                 for (int i = 0; i < values.length; i++) {
                     boolean newline = true;

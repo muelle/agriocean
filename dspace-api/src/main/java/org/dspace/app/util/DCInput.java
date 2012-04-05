@@ -417,7 +417,10 @@ public class DCInput {
 
         return result;
     }
-
+/**
+     * If filed is under authority controll.
+     *
+     */
     public boolean isAuthority()
     {
         return this.authority;
