@@ -43,7 +43,9 @@
 <%@ page import="java.util.Map"%>
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.util.GregorianCalendar"%>
-<%@page import="org.dspace.app.webui.servlet.MyDSpaceServlet"%>
+<%@ page import="org.dspace.app.webui.servlet.MyDSpaceServlet"%>
+<%@ page import="proj.oceandocs.components.RecentSubm" %>
+<%@ page import="proj.oceandocs.components.CollectionItems" %>
 
 <%
     Context context = null;
@@ -100,6 +102,24 @@
     ItemCounter ic = new ItemCounter(UIUtil.obtainContext(request));
 
     boolean customXMLimportEnabled = ConfigurationManager.getBooleanProperty("batchimport.customxml.enable");
+    
+    String viewpage = (String)request.getAttribute("javax.servlet.forward.query_string") != null ? request.getAttribute("javax.servlet.forward.query_string").toString().split("=")[1] : "1";
+    int cur_page = 1;
+    try{
+        cur_page = Integer.parseInt(viewpage);
+    }catch(Exception e)
+    {
+        cur_page = 1;
+    }
+    if(cur_page < 1)
+        cur_page = 1;
+    
+    String nextaction = request.getContextPath() + "/";
+	nextaction = nextaction + "handle/" + collection.getHandle() + "?page="  + (cur_page + 1);
+	
+    
+    String prevaction = request.getContextPath() + "/";
+	prevaction = prevaction + "handle/" + collection.getHandle() + "?page=" + (cur_page - 1);
 %>
 
 
@@ -262,6 +282,43 @@
 
     <p class="copyrightText"><%= copyright%></p>
 
+    <%-- list Items in current collection--%>
+    <table cellspacing="2" width="100%">
+   <tr>
+       <td colspan="2">
+           <%--  do the top previous and next page links --%>
+	<div align="center">
+	
+        <a href="<%= prevaction %>"><fmt:message key="browse.single.prev"/></a>&nbsp;
+
+	&nbsp;<a href="<%= nextaction %>"><fmt:message key="browse.single.next"/></a>
+
+	</div>
+       </td>
+   </tr>
+   <tr>
+    <td valign="top" class="latestLayoutTitle"><fmt:message key="itemlist.dc.title" /> - <fmt:message key="metadata.dc.identifier.citation" /> - <fmt:message key="itemlist.dc.contributor.author" /></td>
+     <td align="right" valign="top" class="latestLayoutTitle"><fmt:message key="itemlist.dc.type" /></td>
+   </tr>
+
+   <%
+      out.print(CollectionItems.GenerateHTML(context, collection, cur_page, request.getContextPath()));
+   %>
+      
+   <tr>
+       <td colspan="2">
+           <%--  do the top previous and next page links --%>
+	<div align="center">
+	
+        <a href="<%= prevaction %>"><fmt:message key="browse.single.prev"/></a>&nbsp;
+
+	&nbsp;<a href="<%= nextaction %>"><fmt:message key="browse.single.next"/></a>
+
+	</div>
+       </td>
+   </tr>
+  </table>
+    
     <%-- Added by Dimitri Surinx --%>
     <%--<dspace:include page="overviewcol.jsp" /> --%>
 </td>

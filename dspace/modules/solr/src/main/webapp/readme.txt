@@ -1,0 +1,1 @@
+Just text file to make Git create this folder during clone, otherwise Maven with scream about webapp folder absent

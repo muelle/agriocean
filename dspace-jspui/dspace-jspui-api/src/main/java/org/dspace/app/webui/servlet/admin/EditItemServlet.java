@@ -7,26 +7,14 @@
  */
 package org.dspace.app.webui.servlet.admin;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
+import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
 import org.apache.commons.lang.StringUtils;
-
 import org.apache.log4j.Logger;
 import org.dspace.app.util.AuthorizeUtil;
 import org.dspace.app.util.DCInput;
@@ -38,19 +26,8 @@ import org.dspace.app.webui.util.JSPManager;
 import org.dspace.app.webui.util.UIUtil;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.authorize.AuthorizeManager;
-import org.dspace.content.Bitstream;
-import org.dspace.content.BitstreamFormat;
-import org.dspace.content.Bundle;
 import org.dspace.content.Collection;
-import org.dspace.content.DCDate;
-import org.dspace.content.DCPersonName;
-import org.dspace.content.DCSeriesNumber;
-import org.dspace.content.DCValue;
-import org.dspace.content.DSpaceObject;
-import org.dspace.content.FormatIdentifier;
-import org.dspace.content.Item;
-import org.dspace.content.MetadataField;
-import org.dspace.content.MetadataSchema;
+import org.dspace.content.*;
 import org.dspace.content.authority.ChoiceAuthorityManager;
 import org.dspace.content.authority.Choices;
 import org.dspace.content.authority.MetadataAuthorityManager;
@@ -550,6 +527,7 @@ public class EditItemServlet extends DSpaceServlet {
             String element = inputs.get(j).getElement();
             String qualifier = inputs.get(j).getQualifier();
             String schema = inputs.get(j).getSchema();
+            boolean isAuthorityControlled = inputs.get(j).isAuthority();
             if (qualifier != null && !qualifier.equals(Item.ANY)) {
                 fieldName = schema + "_" + element + '_' + qualifier;
             } else {
@@ -562,7 +540,7 @@ public class EditItemServlet extends DSpaceServlet {
             ChoiceAuthorityManager cmgr = ChoiceAuthorityManager.getManager();
             String inputType = inputs.get(j).getInputType();
             if (inputType.equals("name")) {
-                readNames(request, item, schema, element, qualifier, inputs.get(j).getRepeatable());
+                readNames(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), isAuthorityControlled);
             } else if (inputType.equals("date")) {
                 readDate(request, item, schema, element, qualifier);
             } // choice-controlled input with "select" presentation type is
@@ -603,7 +581,7 @@ public class EditItemServlet extends DSpaceServlet {
             } else if ((inputType.equals("onebox"))
                     || (inputType.equals("twobox"))
                     || (inputType.equals("textarea"))) {
-                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual);
+                readText(request, item, schema, element, qualifier, inputs.get(j).getRepeatable(), language_qual == null ? LANGUAGE_QUALIFIER : language_qual, isAuthorityControlled);
             } else {
                 throw new ServletException("Field " + fieldName
                         + " has an unknown input type: " + inputType);
@@ -939,10 +917,10 @@ public class EditItemServlet extends DSpaceServlet {
      *            set to true if the field is repeatable on the form
      */
     protected void readNames(HttpServletRequest request, Item item,
-            String schema, String element, String qualifier, boolean repeated) {
+            String schema, String element, String qualifier, boolean repeated, 
+            boolean isAuthorityControlled) {
         String metadataField = MetadataField.formKey(schema, element, qualifier);
         String fieldKey = MetadataField.formKey(schema, element, qualifier);
-        boolean isAuthorityControlled = false;
 
         // Names to add
         List<String> firsts = new LinkedList<String>();
@@ -1015,7 +993,7 @@ public class EditItemServlet extends DSpaceServlet {
         for (int i = 0; i < lasts.size(); i++) {
             String f = firsts.get(i);
             String l = lasts.get(i);
-            String ll = "";
+            String ll = "*";
             if (i < langs.size()) {
                 ll = langs.get(i);
             }
@@ -1097,20 +1075,21 @@ public class EditItemServlet extends DSpaceServlet {
      *            language to set (ISO code)
      */
     protected void readText(HttpServletRequest request, Item item, String schema,
-            String element, String qualifier, boolean repeated, String lang) {
+            String element, String qualifier, boolean repeated, String lang, 
+            boolean isAuthorityControlled) {
         // FIXME: Of course, language should be part of form, or determined
         // some other way
         String metadataField = MetadataField.formKey(schema, element, qualifier);
 
         String fieldKey = MetadataAuthorityManager.makeFieldKey(schema, element, qualifier);
-        boolean isAuthorityControlled = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
+        //boolean isAuthorityControlled = MetadataAuthorityManager.getManager().isAuthorityControlled(fieldKey);
 
         // Values to add
-        List<String> vals = null;
+        List<String> vals;
         List<String> auths = null;
         List<String> confs = null;
 
-        List<String> langs = null;
+        List<String> langs;
 
         if (repeated) {
             vals = getRepeatedParameter(request, metadataField, metadataField);
@@ -1185,7 +1164,7 @@ public class EditItemServlet extends DSpaceServlet {
                     } else {
                         item.addMetadata(schema, element, qualifier, l, s,
                                 authKey, (sconf != null && sconf.length() > 0)
-                                ? Choices.getConfidenceValue(sconf) : Choices.CF_ACCEPTED);
+                                ? Choices.getConfidenceValue(sconf) : Choices.CF_ACCEPTED, isAuthorityControlled);
                     }
                 } else {
                     item.addMetadata(schema, element, qualifier, l, s);
@@ -1411,5 +1390,6 @@ public class EditItemServlet extends DSpaceServlet {
             language = "en";
         }
         return language;
-    }   
+    }
 }
+

@@ -16,32 +16,20 @@ import java.util.MissingResourceException;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.jstl.fmt.LocaleSupport;
 import javax.servlet.jsp.tagext.TagSupport;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.dspace.app.util.MetadataExposure;
 import org.dspace.app.webui.util.StyleSelection;
 import org.dspace.app.webui.util.UIUtil;
 import org.dspace.browse.BrowseException;
-import org.dspace.content.Bitstream;
-import org.dspace.content.Bundle;
-import org.dspace.content.Collection;
-import org.dspace.content.DCDate;
-import org.dspace.content.DCValue;
-import org.dspace.content.Item;
+import org.dspace.content.*;
 import org.dspace.content.authority.MetadataAuthorityManager;
-import org.dspace.core.ConfigurationManager;
-import org.dspace.core.Constants;
-import org.dspace.core.Context;
-import org.dspace.core.I18nUtil;
-import org.dspace.core.PluginManager;
-import org.dspace.core.Utils;
+import org.dspace.core.*;
 
 /**
  * <P>
@@ -578,6 +566,11 @@ public class ItemTag extends TagSupport
 
         out.println("</table></center><br/>");
 
+        if (ConfigurationManager.getBooleanProperty("google.plusone.enabled"))
+        {
+            out.println("<g:plusone size=\"small\"></g:plusone>");
+        }
+
         listBitstreams();
 
         if (ConfigurationManager
@@ -651,6 +644,11 @@ public class ItemTag extends TagSupport
         listCollections();
 
         out.println("</table></center><br/>");
+
+        if (ConfigurationManager.getBooleanProperty("google.plusone.enabled"))
+        {
+            out.println("<g:plusone size=\"small\"></g:plusone>");
+        }
 
         listBitstreams();
 
@@ -866,7 +864,54 @@ public class ItemTag extends TagSupport
                                 // Work out what the bitstream link should be
                                 // (persistent
                                 // ID if item has Handle)
-                                String bsLink = "<a target=\"_blank\" href=\""
+                                
+                                 String bsLink = "<a target=\"_blank\"";
+                                
+                                /*
+                                 *  if goggle analytics downloads tracking is turned on 
+                                 * in dspace.cfg we will add async event call.
+                                 * Note: GA tracking code must be put in ga.jspf file                                 * 
+                                 */
+
+                                boolean gaEnabled = ConfigurationManager.getBooleanProperty("google.analytics.enabled");
+                                boolean gaTrackDownloads = ConfigurationManager.getBooleanProperty("google.analytics.trackdownloads");
+                                String gaLabel = ConfigurationManager.getProperty("google.analytics.tracklabel");
+
+                                if (gaEnabled && gaTrackDownloads)
+                                {
+                                    StringBuilder trackLabel = new StringBuilder();
+
+                                    String[] labelParts = gaLabel.split("\\+");
+                                    for (int lpc = 0; lpc < labelParts.length; lpc++)
+                                    {
+                                        if (labelParts[lpc].equalsIgnoreCase("handle"))
+                                        {
+                                            trackLabel.append("handle=").append(item.getHandle()).append(" ");
+                                        }
+                                        if (labelParts[lpc].equalsIgnoreCase("collection"))
+                                        {
+                                            trackLabel.append("collection=").append(item.getOwningCollection().getName()).append(" ");
+                                        }
+                                        if (labelParts[lpc].equalsIgnoreCase("title"))
+                                        {
+                                            DCValue[] dcvs = item.getMetadata("dc.title");
+                                            if (dcvs != null && dcvs.length > 0)
+                                            {
+                                                trackLabel.append("title=").append(dcvs[0].value).append(" ");
+                                            }
+                                        }
+                                        if (labelParts[lpc].equalsIgnoreCase("bitstream"))
+                                        {
+                                            trackLabel.append("bitstream=").append(UIUtil.encodeBitstreamName(bitstreams[k].getName(),
+                                                Constants.DEFAULT_ENCODING)).append(" ");
+                                        }
+                                    }
+                                
+                                    bsLink = bsLink + " onClick=\"javascript: _gaq.push(['_trackEvent', 'Downloads', "
+                                        + "'Download/View', '" + trackLabel.toString() + "']);\"";
+                                }
+
+                                bsLink = bsLink + " href=\""
                                         + request.getContextPath();
 
                                 if ((handle != null)

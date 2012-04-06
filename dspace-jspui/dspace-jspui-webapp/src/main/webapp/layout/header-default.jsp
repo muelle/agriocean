@@ -40,7 +40,7 @@
     List parts = (List)request.getAttribute("dspace.layout.linkparts");
     String extraHeadData = (String)request.getAttribute("dspace.layout.head");
     String dsVersion = Util.getSourceVersion();
-    String generator = dsVersion == null ? "DSpace" : "DSpace "+dsVersion;
+    String generator = dsVersion == null ? "DSpace" : "AgriOcean "+dsVersion;
 
     Boolean admin = (Boolean) request.getAttribute("is.admin");
     boolean isAdmin = (admin == null ? false : admin.booleanValue());
@@ -49,6 +49,10 @@
     int c = currentPage.indexOf('?');
     if (c > -1)
         currentPage = currentPage.substring(0, c);
+    
+    //check if google analytics enabled
+    boolean gaEnabled = ConfigurationManager.getBooleanProperty("google.analytics.enabled");
+    boolean gplusEnabled = ConfigurationManager.getBooleanProperty("google.plusone.enabled");
 %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -92,6 +96,21 @@
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/scriptaculous/controls.js"> </script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/scriptaculous/dropdown.js"> </script>
     <script type="text/javascript" src="<%= request.getContextPath() %>/static/js/authority-controll.js"> </script>
+
+<% if (gplusEnabled)
+    {
+%>
+    <%@ include file="/gplus.jspf" %>
+<%
+    }
+%>
+<% if (gaEnabled)
+    {
+%>
+    <%@ include file="/ga.jspf" %>
+<%
+    }
+%>
     </head>
 
     <%-- HACK: leftmargin, topmargin: for non-CSS compliant Microsoft IE browser --%>

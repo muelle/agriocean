@@ -4,7 +4,7 @@
    <artifactId>dspace-parent</artifactId>
    <packaging>pom</packaging>
    <version>1.7.1</version>
-   <name>AgriOcean DSpace Parent Project</name>
+   <name>A DSpace Parent Project</name>
    <url>http://projects.dspace.org</url>
 
    <organization>

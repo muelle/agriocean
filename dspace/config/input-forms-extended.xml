@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+ti<?xml version="1.0"?>
 <input-forms>
 
     <collection-type>
@@ -261,7 +261,7 @@
                             <dc-qualifier>title</dc-qualifier>
                             <label>Journal Title + ISSN *</label>
                             <hint>Enter a word from the journal title and choose the correct title out of the picklist. </hint>
-                            <input-type size="69">onebox</input-type>
+                            <input-type size="59">onebox</input-type>
                             <repeatable>false</repeatable>
                             <required>Enter (a part of) the title and choose from the list</required>
                             <authority closed="false" editable="true" presentation="suggest" limit="0">issn</authority>
