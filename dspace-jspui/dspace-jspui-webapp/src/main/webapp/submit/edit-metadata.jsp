@@ -77,7 +77,7 @@
 
         int fieldCount = defaults.length + fieldCountIncr;
         StringBuffer sb = new StringBuffer();
-        String val = "", auth = "";
+        String val, auth, lang;
 
         int conf = unknownConfidence;
         if (fieldCount == 0) {
@@ -91,10 +91,12 @@
                 val = defaults[i].value.replaceAll("\"", "&quot;");
                 auth = defaults[i].authority != null ? defaults[i].authority : "";
                 conf = defaults[i].confidence;
+                lang = defaults[i].language;
             } else {
                 val = "";
                 auth = "";
                 conf = unknownConfidence;
+                lang = Item.ANY;
             }
 
 
@@ -126,7 +128,7 @@
                         if (repeatable && i != fieldCount - 1) {
                             fieldCounter = '_' + Integer.toString(i + 1);
                         }
-                        doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                        doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
                     } else {
                         sb.append("<td>&nbsp;</td>");
                     } // put a remove button next to filled in values
@@ -140,7 +142,7 @@
                         if (repeatable && i != fieldCount - 1) {
                             fieldCounter = '_' + Integer.toString(i + 1);
                         }
-                        doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                        doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
                     } else {
                         sb.append("<td>&nbsp;</td>");
                     }
@@ -149,7 +151,7 @@
                 } else {
                     if (askLang) {
                         String fieldNameLang = fieldName + "_lang";
-                        doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                        doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
                     } else {
                         sb.append("<td>&nbsp;</td>");
                     }
@@ -302,37 +304,13 @@
 %>
 <!--doLang-->
 <%!    void doLang(StringBuffer sb, Item item,
-            String fieldName, String fieldCounter, boolean repeatable, int size)
+            String fieldName, String fieldCounter, boolean repeatable, int size, String language)
             throws java.io.IOException, DCInputsReaderException {
         //String isize = size !=0 ? Integer.toString(size): "6";
 
         List languages = new DCInputsReaderExt().getPairs("common_iso_languages");
         String display, value;
-        int j;
-        String langAttr = "";
-        String[] qualifiedFieldName = fieldName.split("_");
-        String schema = null;
-        String element = null;
-        String qulifer = null;
-
-        if (qualifiedFieldName.length > 2 && qualifiedFieldName.length < 4) {
-            schema = qualifiedFieldName[0];
-            element = qualifiedFieldName[1];
-        } else if (qualifiedFieldName.length >= 4) {
-            schema = qualifiedFieldName[0];
-            element = qualifiedFieldName[1];
-            qulifer = qualifiedFieldName[2];
-        }
-        DCValue[] metadata = item.getMetadata(schema, element, qulifer, Item.ANY);
-        if (metadata.length > 0) {
-            try {
-                if (java.lang.Integer.parseInt(fieldCounter.replace("_", "")) <= metadata.length) {
-                    langAttr = metadata[java.lang.Integer.parseInt(fieldCounter.replace("_", "")) - 1].language;
-                }
-            } catch (Exception e) {
-                langAttr = "";
-            }
-        }
+       
         sb.append("<td>").append("<select name=\"").append(fieldName);
 
         if (repeatable && !"".equals(fieldCounter)) {
@@ -353,7 +331,7 @@
             value = (String) languages.get(i + 1);
 
             sb.append("<option ");
-            if (value.equals(langAttr)) {
+            if (value.equals(language)) {
                 sb.append("selected=\"selected\" ");
             }
             sb.append("value=\"").append(value.replaceAll("\"", "&quot;")).append("\">").append(display).append("</option>");
@@ -377,7 +355,7 @@
         StringBuffer headers = new StringBuffer();
         StringBuffer sb = new StringBuffer();
         org.dspace.content.DCPersonName dpn;
-        String auth;
+        String auth, lang;
 
         int conf = 0;
         StringBuffer name = new StringBuffer();
@@ -414,10 +392,12 @@
                 dpn = new org.dspace.content.DCPersonName(defaults[i].value);
                 auth = defaults[i].authority;
                 conf = defaults[i].confidence;
+                lang = defaults[i].language;
             } else {
                 dpn = new org.dspace.content.DCPersonName();
                 auth = "";
                 conf = unknownConfidence;
+                lang = Item.ANY;
             }
 
             sb.append("<tr><td><input type=\"text\" name=\"").append(last.toString()).append("\" size=\"" + isize + "\" ");
@@ -454,7 +434,7 @@
 
                     }
 
-                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
 
 
                 } else {
@@ -476,7 +456,7 @@
 
 
                     }
-                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
 
 
                 } else {
@@ -499,7 +479,7 @@
 
 
                     }
-                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
                     sb.append("<td>&nbsp;</td>");
                 } else {
                     // put a blank if nothing else
@@ -670,7 +650,7 @@
 
         int fieldCount = defaults.length + fieldCountIncr;
         StringBuffer sb = new StringBuffer();
-        String val, auth;
+        String val, auth, lang;
 
         int conf = unknownConfidence;
 
@@ -683,9 +663,11 @@
                 val = defaults[i].value;
                 auth = defaults[i].authority;
                 conf = defaults[i].confidence;
+                lang = defaults[i].language;
             } else {
                 val = "";
                 auth = "";
+                lang = Item.ANY;
             }
             sb.append("<td colspan=\"2\">\n");
             String fieldNameIdx = fieldName + ((repeatable && i != fieldCount - 1) ? "_" + (i + 1) : "");
@@ -698,7 +680,7 @@
                 if (repeatable && i != fieldCount - 1) {
                     fieldCounter = '_' + Integer.toString(i + 1);
                 }
-                doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
             } else {
                 sb.append("<td>&nbsp;</td>");
             }
@@ -731,23 +713,24 @@
 
         int fieldCount = defaults.length + fieldCountIncr;
         StringBuffer sb = new StringBuffer();
-        String val, auth;
+        String val, auth, lang;
 
         int conf = 0;
         if (fieldCount == 0) {
             fieldCount = 1;
         }
 
-        for (int i = 0; i
-                < fieldCount; i++) {
+        for (int i = 0; i < fieldCount; i++) {
             if (i < defaults.length) {
                 val = defaults[i].value.replaceAll("\"", "&quot;");
                 auth = defaults[i].authority;
                 conf = defaults[i].confidence;
+                lang = defaults[i].language;
             } else {
                 val = "";
                 auth = "";
                 conf = unknownConfidence;
+                lang = Item.ANY;
             }
 
             sb.append("<td colspan=\"2\">");
@@ -762,7 +745,7 @@
                     if (repeatable && i != fieldCount - 1) {
                         fieldCounter = '_' + Integer.toString(i + 1);
                     }
-                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
                 } else {
                     sb.append("<td>&nbsp;</td>");
                 } // put a remove button next to filled in values
@@ -776,7 +759,7 @@
                     if (repeatable && i != fieldCount - 1) {
                         fieldCounter = '_' + Integer.toString(i + 1);
                     }
-                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
                 } else {
                     sb.append("<td>&nbsp;</td>");
                 } // put a 'more' button next to the last space
@@ -784,7 +767,7 @@
             } else {
                 if (askLang) {
                     String fieldNameLang = fieldName + "_lang";
-                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                    doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, lang);
                 } else {
                     sb.append("<td>&nbsp;</td>");
                 }
@@ -825,8 +808,7 @@
 
         }
 
-        for (int i = 0; i
-                < fieldCount; i++) {
+        for (int i = 0; i < fieldCount; i++) {
             if (i != fieldCount) {
                 //param is field name and index, starting from 1 (e.g. myfield_2)
                 fieldParam = fieldName + "_" + (i + 1);
@@ -910,7 +892,7 @@
 
 
                 }
-                doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0);
+                doLang(sb, item, fieldNameLang, fieldCounter, repeatable, 0, defaults[i].language);
 
 
             } else {
@@ -1048,7 +1030,6 @@
 
         DCValue[] defaults = item.getMetadata(schema, element, qualifier, Item.ANY);
         StringBuffer sb = new StringBuffer();
-        Iterator vals;
         String display, value;
 
 
@@ -1070,8 +1051,7 @@
             value = (String) valueList.get(i + 1);
 
 
-            for (j = 0; j
-                    < defaults.length; j++) {
+            for (j = 0; j < defaults.length; j++) {
                 if (value.equals(defaults[j].value)) {
                     break;
                 }
@@ -1086,8 +1066,7 @@
 
         if (askLang) {
             String fieldNameLang = fieldName + "_lang";
-            doLang(
-                    sb, item, fieldNameLang, fieldCounter, false, 0);
+            doLang(sb, item, fieldNameLang, fieldCounter, false, 0, "");
         } else {
             sb.append("<td>&nbsp;</td>");
         }
@@ -1168,8 +1147,6 @@
                     < defaults.length; j++) {
                 if (value.equals(defaults[j].value)) {
                     break;
-
-
                 }
             }
             // print input field
@@ -1218,7 +1195,7 @@
 
 
         if (askLang) {
-            doLang(sb, item, fieldName, "", false, 0);
+            doLang(sb, item, fieldName, "", false, 0, "");
 
 
         }
