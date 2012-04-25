@@ -120,6 +120,8 @@
     
     String prevaction = request.getContextPath() + "/";
 	prevaction = prevaction + "handle/" + collection.getHandle() + "?page=" + (cur_page - 1);
+        
+   boolean showItems = ConfigurationManager.getBooleanProperty("agriocean.showCollectionItems");
 %>
 
 
@@ -282,7 +284,8 @@
 
     <p class="copyrightText"><%= copyright%></p>
 
-    <%-- list Items in current collection--%>
+    <%-- list Items in current collection if turned on in dspace.cfg--%>
+    <% if (showItems) {%>
     <table cellspacing="2" width="100%">
    <tr>
        <td colspan="2">
@@ -318,6 +321,7 @@
        </td>
    </tr>
   </table>
+        <%}%>
     
     <%-- Added by Dimitri Surinx --%>
     <%--<dspace:include page="overviewcol.jsp" /> --%>
