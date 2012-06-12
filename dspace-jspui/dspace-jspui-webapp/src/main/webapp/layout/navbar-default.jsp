@@ -31,7 +31,7 @@
 <%
     // Is anyone logged in?
     EPerson user = (EPerson) request.getAttribute("dspace.current.user");
-
+    String admin_email = ConfigurationManager.getProperty("mail.admin");
     // Is the logged in user an admin
     Boolean admin = (Boolean)request.getAttribute("is.admin");
     boolean isAdmin = (admin == null ? false : admin.booleanValue());
@@ -107,7 +107,7 @@
   <%-- om het mailto adres aan te melden --%>
   <% String admini = ConfigurationManager.getProperty("mail.mainpage.contact"); %>
   <tr><td class="navigatiobarTitle">Contact:</td></tr>
-  <tr><td class="navigatiobarRow"><a href="mailto:<% out.print(admini); %>"><br/><fmt:message key="jsp.layout.navbar.contact.admin" /></a><br/><br/></td></tr>
+  <tr><td class="navigatiobarRow"><a href="mailto:<% out.print(admin_email); %>"><br/><fmt:message key="jsp.layout.navbar.contact.admin" /></a><br/><br/></td></tr>
   <tr><td>
   <%= sideNews %>
   </td></tr>

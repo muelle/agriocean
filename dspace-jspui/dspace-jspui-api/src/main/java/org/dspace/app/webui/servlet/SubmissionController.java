@@ -1260,6 +1260,48 @@ public class SubmissionController extends DSpaceServlet
         return info;
     }
 
+    public static String getSubmissionParametersAsJSobject(Context context,
+            HttpServletRequest request) throws SQLException, ServletException
+    {
+        SubmissionInfo si = getSubmissionInfo(context, request);
+
+        SubmissionStepConfig step = getCurrentStepConfig(request, si);
+        
+         String info = "{";
+
+        if ((si.getSubmissionItem() != null) && si.isInWorkflow())
+        {
+            info = info + "\"workflow_id\": \"" + si.getSubmissionItem().getID() + "\",";
+        }
+        else if (si.getSubmissionItem() != null)
+        {
+            info = info + "\"workspace_item_id\": \"" + si.getSubmissionItem().getID() + "\",";
+        }
+
+        if (si.getBundle() != null)
+        {
+            info = info + "\"bundle_id\": \"" + si.getBundle().getID() + "\",";
+        }
+
+        if (si.getBitstream() != null)
+        {
+            info = info + "\"bitstream_id\": \"" + si.getBitstream().getID() + "\",";
+        }
+
+        if (step != null)
+        {
+            info = info + "\"step\": \"" + step.getStepNumber() + "\",";
+        }
+
+        // save the current page from the current Step Servlet
+        int page = AbstractProcessingStep.getCurrentPage(request);
+        info = info + "\"page\": \"" + page + "\",";
+
+        // save the current JSP name to a hidden variable
+        info = info + "\"jsp\": \"" + request.getContextPath() + "/submit/choose-file.jsp\"";
+
+        return info + "}";
+    }
    
 
     /**

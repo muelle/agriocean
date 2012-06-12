@@ -21,11 +21,6 @@
        when changes have occured, this spawns a new build cycle and releases snapshots
        into the snapshot repository below.
     -->
-    <scm>
-        <connection>scm:svn:http://scm.dspace.org/svn/repo/dspace/tags/dspace-1.7.1</connection>
-        <developerConnection>scm:svn:https://scm.dspace.org/svn/repo/dspace/tags/dspace-1.7.1</developerConnection>
-        <url>http://scm.dspace.org/svn/repo/dspace/tags/dspace-1.7.1</url>
-    </scm>
 
     <!--
        Runtime and Compile Time dependencies for DSpace.
@@ -59,30 +54,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-          <plugin>
-                <groupId>com.google.code.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <version>1.4.0</version>
-                <configuration>
-                    <header>http://scm.dspace.org/svn/repo/licenses/LICENSE_HEADER</header>
-                    <includes>
-                        <include>src/**</include>
-                    </includes>
-                    <excludes>
-                        <exclude>src/test/resources/dspaceFolder/**</exclude>
-                        <include>**/test/**</include>
-                    </excludes>
-                    <properties />
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <!--<executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions> -->
             </plugin>
         </plugins>
     </build>

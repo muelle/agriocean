@@ -1081,3 +1081,13 @@ div#ds-main
     display: block;
     float: left;
 }
+
+.fileUploadForm
+{
+    width: 80%;
+    border: 0px solid #000000;
+    margin:0 auto;
+    padding: 10px;
+    
+    /* background-color: #D3C1F2; */
+}

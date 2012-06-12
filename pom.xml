@@ -566,17 +566,6 @@
       </dependencies>
    </dependencyManagement>
 
-   <licenses>
-      <license>
-         <name>DSpace Sourcecode License</name>
-         <url>LICENSE.txt</url>
-         <distribution>repo</distribution>
-         <comments>
-            A BSD compatable OSS license for the DSpace codebase.
-         </comments>
-      </license>
-   </licenses>
-
    <issueManagement>
       <system>JIRA</system>
       <url>http://jira.dspace.org/jira/browse/DS</url>

@@ -252,7 +252,7 @@
 
         <!--
            Builds each separate XMLUI module for the XMLUI war (for development/Eclipse)
-        -->
+       
         <profile>
             <id>dspace-xmlui-api</id>
             <activation>
@@ -299,11 +299,11 @@
             <modules>
                 <module>../dspace-xmlui-lang</module>
             </modules>
-        </profile>
+        </profile>  -->
 
         <!--
            Builds XMLUI WAR for DSpace
-        -->
+        
         <profile>
             <id>dspace-xmlui</id>
             <activation>
@@ -314,7 +314,7 @@
             <modules>
                 <module>../dspace-xmlui</module>
             </modules>
-        </profile>
+        </profile> -->
 
         <!--
            Builds each separate LNI module for the LNI war (for development/Eclipse)
