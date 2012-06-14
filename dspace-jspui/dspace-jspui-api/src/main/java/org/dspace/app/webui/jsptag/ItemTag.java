@@ -470,8 +470,12 @@ public class ItemTag extends TagSupport
 
                         if (isLink)
                         {
+                            String link_text = Utils.addEntities(values[j].value);
+                           if (link_text.length() > 50) {
+                               link_text = link_text.substring(0, 50) + "...";
+                           } 
                             out.print("<a href=\"" + values[j].value + "\">"
-                                    + Utils.addEntities(values[j].value) + "</a>");
+                                    + link_text + "</a>");
                         }
                         else if (isDate)
                         {

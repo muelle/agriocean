@@ -20,10 +20,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.Bitstream;
-import org.dspace.content.BitstreamFormat;
-import org.dspace.content.Bundle;
-import org.dspace.content.Item;
+import org.dspace.content.*;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.core.Utils;
@@ -96,6 +93,7 @@ public class CreativeCommons {
     public static void setLicense(Context context, Item item,
             String cc_license_url) throws SQLException, IOException,
             AuthorizeException {
+        
         Bundle bundle = getCcBundle(item);
 
         // get some more information
@@ -121,6 +119,11 @@ public class CreativeCommons {
         // set the RDF bitstream
         setBitstreamFromBytes(item, bundle, BSN_LICENSE_RDF, bs_rdf_format,
                 license_rdf.getBytes());
+        
+        //set dc.rights to CC url
+        item.clearMetadata(MetadataSchema.DC_SCHEMA,"rights","uri", Item.ANY);
+        item.addMetadata(MetadataSchema.DC_SCHEMA,"rights","uri", Item.ANY, cc_license_url);
+        item.update();
     }
 
     public static void setLicense(Context context, Item item,
