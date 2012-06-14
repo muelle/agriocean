@@ -239,9 +239,9 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                       font-weight: normal }
 
 .collectionListItem-home { font-family: "verdana", "Arial", "Helvetica", sans-serif;
-                      /*font-size: 12pt;*/
-                      font-weight: normal;
-		      list-style-type: none }
+                           /*font-size: 12pt;*/
+                           font-weight: normal;
+                           list-style-type: none }
 .collectionDescription { margin-left: 20px;
                          margin-right: 10px;
                          font-family: "verdana", "Arial", "Helvetica", sans-serif;
@@ -349,7 +349,7 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                         margin-right: 10px;
                         font-family: "verdana", "Arial", "Helvetica", sans-serif;
                         font-size: 8pt;
-                        
+
                         text-align: center;
                         vertical-align: top; }
 
@@ -482,7 +482,9 @@ UL { font-family: "verdana", "Arial", "Helvetica", sans-serif;
                      color: #000000;
                      vertical-align: top;
                      text-align: left;
-                     text-decoration: none }
+                     text-decoration: none; 
+                     overflow: hidden;
+                     text-overflow: ellipsis;}
 
 .recentItem { margin-left: 10px;
               margin-right: 10px;
@@ -871,7 +873,7 @@ input.ds-authority-lock.is-unlocked
 }
 .navigatiobarTitle
 {
-   border-bottom: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .borderBanner
@@ -1088,6 +1090,6 @@ div#ds-main
     border: 0px solid #000000;
     margin:0 auto;
     padding: 10px;
-    
+
     /* background-color: #D3C1F2; */
 }

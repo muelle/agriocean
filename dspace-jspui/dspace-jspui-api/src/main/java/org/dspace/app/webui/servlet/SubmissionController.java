@@ -31,9 +31,11 @@ import org.dspace.app.webui.util.UIUtil;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
+import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
+import org.dspace.license.CreativeCommons;
 import org.dspace.workflow.WorkflowItem;
 import org.dspace.submit.AbstractProcessingStep;
 
@@ -355,6 +357,14 @@ public class SubmissionController extends DSpaceServlet
             JSPManager.showInternalError(request, response);
         }
 
+        String ccLicenseUrl = request.getParameter("cc_license_url");
+
+        if ((ccLicenseUrl != null) && (ccLicenseUrl.length() > 0))
+        {
+            // save the CC license
+            CreativeCommons.setLicense(context, subInfo.getSubmissionItem().getItem(), ccLicenseUrl);
+        }
+        
         // if this is the furthest step the user has been to, save that info
         if (!subInfo.isInWorkflow() && (currentStepConfig.getStepNumber() > getStepReached(subInfo)))
         {
