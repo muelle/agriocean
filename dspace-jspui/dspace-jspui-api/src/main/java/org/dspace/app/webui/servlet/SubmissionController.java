@@ -7,21 +7,14 @@
  */
 package org.dspace.app.webui.servlet;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.Enumeration;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.fileupload.FileUploadBase.FileSizeLimitExceededException;
 import org.apache.log4j.Logger;
-
 import org.dspace.app.util.SubmissionInfo;
 import org.dspace.app.util.SubmissionStepConfig;
 import org.dspace.app.webui.submit.JSPStepManager;
@@ -31,13 +24,12 @@ import org.dspace.app.webui.util.UIUtil;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.Bitstream;
 import org.dspace.content.Bundle;
-import org.dspace.content.Item;
 import org.dspace.content.WorkspaceItem;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
 import org.dspace.license.CreativeCommons;
-import org.dspace.workflow.WorkflowItem;
 import org.dspace.submit.AbstractProcessingStep;
+import org.dspace.workflow.WorkflowItem;
 
 /**
  * Submission Manager servlet for DSpace. Handles the initial submission of
@@ -363,6 +355,8 @@ public class SubmissionController extends DSpaceServlet
         {
             // save the CC license
             CreativeCommons.setLicense(context, subInfo.getSubmissionItem().getItem(), ccLicenseUrl);
+        } else {
+            
         }
         
         // if this is the furthest step the user has been to, save that info
