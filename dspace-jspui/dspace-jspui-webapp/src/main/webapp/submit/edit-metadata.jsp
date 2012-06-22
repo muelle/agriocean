@@ -723,9 +723,9 @@
         for (int i = 0; i < fieldCount; i++) {
             if (i < defaults.length) {
                 val = defaults[i].value.replaceAll("\"", "&quot;");
-                auth = defaults[i].authority;
+                auth = defaults[i].authority != null ? defaults[i].authority : "";
                 conf = defaults[i].confidence;
-                lang = defaults[i].language;
+                lang = defaults[i].language != null ? defaults[i].language : "";
             } else {
                 val = "";
                 auth = "";

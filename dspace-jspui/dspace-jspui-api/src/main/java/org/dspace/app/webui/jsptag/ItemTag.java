@@ -345,6 +345,7 @@ public class ItemTag extends TagSupport
         style = styleIn;
     }
 
+    @Override
     public void release()
     {
         style = "default";
@@ -386,10 +387,10 @@ public class ItemTag extends TagSupport
             boolean isLink = false;
             boolean isResolver = false;
             
-            String style = null;
+            String fieldstyle = null;
             Matcher fieldStyleMatcher = fieldStylePatter.matcher(field);
             if (fieldStyleMatcher.matches()){
-                style = fieldStyleMatcher.group(1);
+                fieldstyle = fieldStyleMatcher.group(1);
             }
             
             String browseIndex;
@@ -405,12 +406,12 @@ public class ItemTag extends TagSupport
 
             // Find out if the field should rendered with a particular style
 
-            if (style != null)
+            if (fieldstyle != null)
             {
-                isDate = style.equals("date");
-                isLink = style.equals("link");
-                isResolver = style.equals("resolver") || urn2baseurl.keySet().contains(style);
-                field = field.replaceAll("\\("+style+"\\)", "");
+                isDate = fieldstyle.equals("date");
+                isLink = fieldstyle.equals("link");
+                isResolver = fieldstyle.equals("resolver") || urn2baseurl.keySet().contains(fieldstyle);
+                field = field.replaceAll("\\("+fieldstyle+"\\)", "");
             } 
 
             // Get the separate schema + element + qualifier
@@ -445,7 +446,7 @@ public class ItemTag extends TagSupport
                 try
                 {
                     label = I18nUtil.getMessage("metadata."
-                            + (style != null ? style + "." : "") + field,
+                            + (fieldstyle != null ? fieldstyle + "." : "") + field,
                             context);
                 }
                 catch (MissingResourceException e)
@@ -499,9 +500,9 @@ public class ItemTag extends TagSupport
                             else
                             {
                                 String foundUrn = null;
-                                if (!style.equals("resolver"))
+                                if (!fieldstyle.equals("resolver"))
                                 {
-                                    foundUrn = style;
+                                    foundUrn = fieldstyle;
                                 }
                                 else
                                 {
@@ -629,7 +630,7 @@ public class ItemTag extends TagSupport
                 }
 
                 out.print("</td><td headers=\"s2\" class=\"metadataFieldValue\">");
-                out.print(Utils.addEntities(values[i].value));
+                out.print(Utils.addEntities(htmlEllipsis(values[i].value)));
                 out.print("</td><td headers=\"s3\" class=\"metadataFieldValue\">");
 
                 if (values[i].language == null)
@@ -1115,5 +1116,14 @@ public class ItemTag extends TagSupport
             }
         }
         return null;
+    }
+    
+    String htmlEllipsis (String value){
+        String[] parts = value.split(" ");
+        if (parts[0].length() > 50)
+            return value.substring(0, 50) + "...";
+        else
+            return value;
+        
     }
 }

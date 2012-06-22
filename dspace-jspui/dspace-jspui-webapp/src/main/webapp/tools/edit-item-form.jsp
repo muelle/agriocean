@@ -92,7 +92,7 @@
                 val = defaults[i].value.replaceAll("\"", "&quot;");
                 auth = defaults[i].authority != null ? defaults[i].authority : "";
                 conf = defaults[i].confidence;
-                lang = defaults[i].language;
+                lang = defaults[i].language != null ? defaults[i].language : "";
             } else {
                 val = "";
                 auth = "";
@@ -669,9 +669,9 @@
         for (int i = 0; i < fieldCount; i++) {
             if (i < defaults.length) {
                 val = defaults[i].value;
-                auth = defaults[i].authority;
+                auth = defaults[i].authority != null ? defaults[i].authority : "";
                 conf = defaults[i].confidence;
-                lang = defaults[i].language;
+                lang = defaults[i].language != null ? defaults[i].language : "";
             } else {
                 val = "";
                 auth = "";
@@ -732,9 +732,9 @@
                 < fieldCount; i++) {
             if (i < defaults.length) {
                 val = defaults[i].value.replaceAll("\"", "&quot;");
-                auth = defaults[i].authority;
+                auth = defaults[i].authority != null ? defaults[i].authority : "";
                 conf = defaults[i].confidence;
-                lang = defaults[i].language;
+                lang = defaults[i].language != null ? defaults[i].language : "";
             } else {
                 val = "";
                 auth = "";
@@ -1579,7 +1579,7 @@
                             if ((dcva[i].value != null) && (!"".equals(dcva[i].value))) {
                                 parm = "other_" + i + "_" + dc;
                                 parmVal = dcva[i].value;
-                                parmLang = dcva[i].language;
+                                parmLang = dcva[i].language != null ? dcva[i].language : "";
                 %>
                 <div class="metadataFieldrow">
                     <div class="metadataField">

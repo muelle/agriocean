@@ -396,6 +396,10 @@
         <servlet-name>proj.agriocean.batchimport.BatchImportServlet</servlet-name>
         <servlet-class>proj.agriocean.batchimport.BatchImportServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>license</servlet-name>
+        <jsp-file>/license.jsp</jsp-file>
+    </servlet>
     <servlet-mapping>
         <servlet-name>shibboleth-login</servlet-name>
         <url-pattern>/shibboleth-login</url-pattern>
@@ -625,6 +629,10 @@
     <servlet-mapping>
         <servlet-name>proj.agriocean.batchimport.BatchImportServlet</servlet-name>
         <url-pattern>/submit/batchimport</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>license</servlet-name>
+        <url-pattern>/licence</url-pattern>
     </servlet-mapping>
     <mime-mapping>
         <extension>ico</extension>

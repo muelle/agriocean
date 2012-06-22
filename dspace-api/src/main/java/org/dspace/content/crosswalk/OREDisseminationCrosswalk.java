@@ -8,6 +8,8 @@
 package org.dspace.content.crosswalk;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.print.DocFlavor;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.dspace.authorize.AuthorizeException;
@@ -228,7 +231,8 @@ public class OREDisseminationCrosswalk
         	{
         		arLink = new Element("link",ATOM_NS);
         		arLink.setAttribute("rel", ORE_NS.getURI()+"aggregates");
-        		arLink.setAttribute("href",dsUrl + "/bitstream/handle/" + item.getHandle() + "/" + encodeForURL(bs.getName()) + "?sequence=" + bs.getSequenceID());
+                       // String bitstreamURI = new URI(dsURL + "/bitstream/" + item.getHandle()+ "/" + bs.getSequenceID() + "/" + bs.getName()).toURL();
+        		arLink.setAttribute("href", dsUrl + "/bitstream/" + item.getHandle()+ "/" + bs.getSequenceID() + "/" + URLEncoder.encode(bs.getName(), "UTF-8"));
         		arLink.setAttribute("title",bs.getName());
         		arLink.setAttribute("type",bs.getFormat().getMIMEType());
         		arLink.setAttribute("length",Long.toString(bs.getSize()));

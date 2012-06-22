@@ -10,5 +10,5 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <dspace:layout titlekey="jsp.license.page-title">
-    
+    <p>Here must be some license text.</p>
 </dspace:layout>
