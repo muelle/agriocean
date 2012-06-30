@@ -2560,6 +2560,7 @@ public class Item extends DSpaceObject {
 
     public void updateSubjectFields() {
         try {
+            if (!"".equals(ConfigurationManager.getProperty("dc.needURI"))) {
             String[] dcToBeMapped = ConfigurationManager.getProperty("dc.needURI").split(",");
             String[] dcMapTo = ConfigurationManager.getProperty("dc.mapURI").split(",");
             String[] dcURIs = ConfigurationManager.getProperty("dc.URIs").split(",");
@@ -2599,6 +2600,7 @@ public class Item extends DSpaceObject {
                         this.update();
                     }
                 }
+            }
             }
 
         } catch (Exception e) {

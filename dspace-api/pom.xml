@@ -5,7 +5,7 @@
     <artifactId>dspace-api</artifactId>
     <name>A DSpace Kernel :: API and Implementation</name>
     <description>DSpace core data model and service APIs.</description>
-    <url>http://projects.dspace.org/dspace-api</url>
+    <!-- <url>http://projects.dspace.org/dspace-api</url> -->
 
     <!--
        A Parent POM that Maven inherits DSpace Defaults
@@ -35,6 +35,8 @@
                 <configuration>
                     <debug>true</debug>
                     <showDeprecation>false</showDeprecation>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>

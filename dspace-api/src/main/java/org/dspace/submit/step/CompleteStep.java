@@ -94,7 +94,7 @@ public class CompleteStep extends AbstractProcessingStep
 
             item.updateCitationString();
             item.updateISSN();
-            item.updateSubjectFields();
+            //item.updateSubjectFields();
 
             success = true;
         }

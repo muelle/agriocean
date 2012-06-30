@@ -23,6 +23,7 @@ import org.dspace.app.webui.util.JSPManager;
 import org.dspace.app.webui.util.UIUtil;
 import org.dspace.authorize.AuthorizeException;
 import org.dspace.content.*;
+import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
 import org.dspace.license.CreativeCommons;
@@ -305,9 +306,9 @@ public class SubmissionController extends DSpaceServlet {
         if ((ccLicenseUrl != null) && (ccLicenseUrl.length() > 0)) {
             // save the CC license
             CreativeCommons.setLicense(context, subInfo.getSubmissionItem().getItem(), ccLicenseUrl);
-        } else {
+        } else if (subInfo.getSubmissionItem() != null && request.getParameter("cc_license_url") != null){
             Item item = subInfo.getSubmissionItem().getItem();
-            String localLicenseURL = request.getContextPath() + "/licence";
+            String localLicenseURL = ConfigurationManager.getProperty("dspace.baseUrl") + "/licence";
             //set dc.rights to CC url
             item.clearMetadata(MetadataSchema.DC_SCHEMA, "rights", "uri", Item.ANY);
             item.addMetadata(MetadataSchema.DC_SCHEMA, "rights", "uri", Item.ANY, localLicenseURL);
