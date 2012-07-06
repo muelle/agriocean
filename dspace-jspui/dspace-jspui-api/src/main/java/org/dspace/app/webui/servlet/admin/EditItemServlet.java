@@ -781,7 +781,7 @@ public class EditItemServlet extends DSpaceServlet {
 
         item.updateISSN();
         //item.updateCitationString();
-        item.updateSubjectFields();
+        //item.updateSubjectFields();
         item.update();
 
         // Complete transaction

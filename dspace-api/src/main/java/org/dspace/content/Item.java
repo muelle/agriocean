@@ -2558,56 +2558,6 @@ public class Item extends DSpaceObject {
         }
     }
 
-    public void updateSubjectFields() {
-        try {
-            if (!"".equals(ConfigurationManager.getProperty("dc.needURI"))) {
-            String[] dcToBeMapped = ConfigurationManager.getProperty("dc.needURI").split(",");
-            String[] dcMapTo = ConfigurationManager.getProperty("dc.mapURI").split(",");
-            String[] dcURIs = ConfigurationManager.getProperty("dc.URIs").split(",");
-
-            int len = dcToBeMapped.length;
-
-            if (dcMapTo.length < len) {
-                len = dcMapTo.length;
-            }
-            if (dcURIs.length < len) {
-                len = dcURIs.length;
-            }
-
-            ArrayList<String> authorityDone = new ArrayList<String>();
-            DCValue[] dcv;
-            String[] qual;
-
-            for (int i = 0; i < len; i++) {
-                authorityDone.clear();
-                dcv = getMetadata(dcToBeMapped[i]);
-                if (dcv != null) {
-                    for (int j = 0; j < dcv.length; j++) {
-                        if ((dcv[j].authority != null) && (!"".equals(dcv[j].authority)) && !authorityDone.contains(dcv[j].authority)) {
-                            authorityDone.add(dcv[j].authority);
-                        }
-                    }
-
-
-                    qual = splitFieldName(dcMapTo[i]);
-                    if (qual.length >= 2) {
-                        //clear old uri first
-                        this.clearMetadata(qual[0], qual[1], qual.length == 3 ? qual[2] : null, ANY);
-                        this.update();
-                        for (String authority : authorityDone) {
-                            this.addMetadata(qual[0], qual[1], qual.length == 3 ? qual[2] : null, ANY, dcURIs[i] + authority);
-                        }
-                        this.update();
-                    }
-                }
-            }
-            }
-
-        } catch (Exception e) {
-            log.error(Item.class.getName() + ": ", e);
-        }
-    }
-
     private String[] splitFieldName(String fieldname) {
         String[] parts;
 
