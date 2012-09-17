@@ -521,7 +521,7 @@ public class BitstreamStorageManager
         TableRow bitstream = DatabaseManager.find(context, "bitstream", id);
 
 		GeneralFile file = getFile(bitstream);
-
+                
 		return (file != null) ? FileFactory.newFileInputStream(file) : null;
     }
 
@@ -781,7 +781,12 @@ public class BitstreamStorageManager
 
         // Get the store to use
         int storeNumber = bitstream.getIntColumn("store_number");
-
+        
+        if (storeNumber >= assetStores.length) {
+          log.error("Assets store index higher than number of assets stores congigured. (BitstreamStorageManager.java, getFile();)");  
+          return null;
+        }
+        
         // Default to zero ('assetstore.dir') for backwards compatibility
         if (storeNumber == -1)
         {

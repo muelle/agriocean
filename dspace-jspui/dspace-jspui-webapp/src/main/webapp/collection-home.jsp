@@ -247,6 +247,7 @@
                             <label><fmt:message key="jsp.batchimport.format"/></label>
                             <input type="radio" name="metadataFormat" value="AGRIS" checked="true"/>AGRIS AP
                             <input type="radio" name="metadataFormat" value="MODS" />MODS
+                            <input type="radio" name="metadataFormat" value="INMAGIC" />Inmagic
                             <input type="radio" name="metadataFormat" value="ENDNOTE" />EndNote / Other
                         </div>
                         <% if (customXMLimportEnabled) {%>

@@ -3,7 +3,7 @@
    <groupId>org.dspace</groupId>
    <artifactId>dspace-lni-client</artifactId>
    <packaging>jar</packaging>
-   <name>DSpace LNI :: CLI Client Application</name>
+   <name>A DSpace LNI :: CLI Client Application</name>
    <description>
       Example Client for working with DSpace LNI Service.
    </description>

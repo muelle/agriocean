@@ -51,12 +51,10 @@ public class BatchImportServlet extends DSpaceServlet {
     private static final Namespace DIM_NS = Namespace.getNamespace("http://www.dspace.org/xmlns/dspace/dim");
 
     static enum MetadataType {
-
-        MODS, AGRIS, XML, ENDNOTE, UNKNOWN
+        MODS, AGRIS, XML, ENDNOTE, INMAGIC, UNKNOWN
     };
 
     static enum ImportMode {
-
         WORKSPASE, DIRECT
     };
     private MetadataType metadataType;
@@ -114,6 +112,8 @@ public class BatchImportServlet extends DSpaceServlet {
                                     metadataType = MetadataType.ENDNOTE;
                                 } else if ("XML".equals(value)) {
                                     metadataType = MetadataType.XML;
+                                }else if ("INMAGIC".equals(value)) {
+                                    metadataType = MetadataType.INMAGIC;
                                 }
                             } else if ("collection_id".equals(name)) {
                                 collectionID = Integer.parseInt(value);
@@ -190,6 +190,9 @@ public class BatchImportServlet extends DSpaceServlet {
                 case ENDNOTE:
                     RISBIBTEXProcessor processor = new RISBIBTEXProcessor();
                     return processor.process(context, collection, fileToImport).toString();
+                case INMAGIC:
+                    XSLTpath += "INMAGIC2DIM.xsl";
+                    return processXML(context, collection);
 
                 case XML:
                     return processXML(context, collection);

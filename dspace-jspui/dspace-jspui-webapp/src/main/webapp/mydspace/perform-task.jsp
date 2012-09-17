@@ -7,6 +7,13 @@
     http://www.dspace.org/license/
 
 --%>
+<%@page import="java.util.MissingResourceException"%>
+<%@page import="org.dspace.app.webui.util.UIUtil"%>
+<%@page import="org.dspace.core.I18nUtil"%>
+<%@page import="java.util.LinkedHashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="org.dspace.content.DCValue"%>
 <%--
   - Perform task page
   -
@@ -70,9 +77,51 @@
     </fmt:message></p>
 <%
     }
-%>
-    
-    <dspace:item item="<%= item %>" />
+String[] fieldsToShow = {"dc.title", "dc.contributor.*", "dc.date.issued", "dc.type", "dc.abstract", "dc.identifier.citation"};
+      LinkedHashMap<String, ArrayList<String>> metadata = new LinkedHashMap<String, ArrayList<String>>();
+      DCValue[] dcvs;
+
+      for (String field : fieldsToShow) {
+        String label = "";
+        try {
+          label = I18nUtil.getMessage("metadata." + field, UIUtil.obtainContext(request));
+        } catch (MissingResourceException e) {
+          // if there is not a specific translation for the style we
+          // use the default one
+          label = field;
+        }
+        dcvs = item.getMetadata(field);
+        if (dcvs.length > 0) {
+          ArrayList<String> values = new ArrayList<String>();
+
+          for (DCValue dcv : dcvs) {
+            values.add(dcv.value);
+          }
+          metadata.put(label, values);
+        }
+      }
+    %>
+
+    <table class="itemDisplayTable">
+      <%
+        String resultValue = "";
+        for (Map.Entry<String, ArrayList<String>> entry : metadata.entrySet()) {
+          resultValue = "";
+          for (String value : entry.getValue()) {
+            resultValue = resultValue + value + ", ";
+          }
+          resultValue = resultValue.substring(0, resultValue.length() - 2);
+      %>
+      <tr>
+        <td class="metadataFieldLabel"><%= entry.getKey()%></td>
+        <td class="metadataFieldValue"><%= resultValue%></td>
+      </tr>
+      <%
+        }
+      %>
+    </table>
+
+  <br />
 
     <p>&nbsp;</p>
 

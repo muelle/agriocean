@@ -3,7 +3,7 @@
    <groupId>org.dspace</groupId>
    <artifactId>dspace-lni-core</artifactId>
    <packaging>jar</packaging>
-   <name>DSpace LNI :: Core Implementation</name>
+   <name>A DSpace LNI :: Core Implementation</name>
    <description>DSpace Lightweight Network Interface</description>
    <url>http://projects.dspace.org/dspace-lni/dspace-lni-core</url>
 

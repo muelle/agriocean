@@ -272,13 +272,19 @@ public class CreativeCommons {
     private static String getStringFromBitstream(Item item,
             String bitstream_name) throws SQLException, IOException,
             AuthorizeException {
-        byte[] bytes = getBytesFromBitstream(item, bitstream_name);
+      try {  
+      byte[] bytes = getBytesFromBitstream(item, bitstream_name);
 
         if (bytes == null) {
             return null;
         }
 
         return new String(bytes);
+      } catch (Exception e) {
+        log.error("Item ID = " + item.getID() + ", bitstream name = " + bitstream_name );
+        log.error("Error message: " + e.getLocalizedMessage());
+        return null;
+      }
     }
 
     /**
