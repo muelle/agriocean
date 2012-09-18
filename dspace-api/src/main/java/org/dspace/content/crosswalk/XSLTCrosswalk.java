@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.SelfNamedPlugin;
@@ -93,16 +92,23 @@ public abstract class XSLTCrosswalk extends SelfNamedPlugin
     protected static final String CONFIG_PREFIX = "crosswalk.";
 
     private static final String CONFIG_STYLESHEET = ".stylesheet";
+    
+    protected String getConfigPrefix()
+    {
+        return CONFIG_PREFIX;
+    }
 
     /**
      * Derive list of plugin name from DSpace configuration entries
      * for crosswalks. The <em>direction</em> parameter should be either
      * "dissemination" or "submission", so it looks for keys like
-     * <code>crosswalk.submission.{NAME}.stylesheet</code>
+     * <code>crosswalk.[type].submission.{NAME}.stylesheet</code>.
+     * The type parameter is a string that uniquely defines a subclass of XSLT Crosswalks.
+     * When type is null, the basic XSLT Crosswalk is assumed.
      */
-    protected static String[] makeAliases(String direction)
+    protected static String[] makeAliases(String type, String direction)
     {
-        String prefix = CONFIG_PREFIX+direction+".";
+        String prefix = CONFIG_PREFIX+(type == null? "": (type+"."))+direction+".";
         String suffix = CONFIG_STYLESHEET;
 
         List<String> aliasList = new ArrayList<String>();
@@ -119,6 +125,17 @@ public abstract class XSLTCrosswalk extends SelfNamedPlugin
             }
         }
         return aliasList.toArray(new String[aliasList.size()]);
+    }
+    
+    /**
+     * Derive list of plugin name from DSpace configuration entries
+     * for crosswalks. The <em>direction</em> parameter should be either
+     * "dissemination" or "submission", so it looks for keys like
+     * <code>crosswalk.submission.{NAME}.stylesheet</code>
+     */
+    protected static String[] makeAliases(String direction)
+    {
+        return makeAliases(null, direction);
     }
 
     private XSLTransformer transformer = null;
@@ -141,7 +158,7 @@ public abstract class XSLTCrosswalk extends SelfNamedPlugin
                 log.error("Must use PluginManager to instantiate XSLTCrosswalk so the class knows its name.");
                 return null;
             }
-            String cmPropName = CONFIG_PREFIX+direction+"."+myAlias+CONFIG_STYLESHEET;
+            String cmPropName = getConfigPrefix()+direction+"."+myAlias+CONFIG_STYLESHEET;
             String fname = ConfigurationManager.getProperty(cmPropName);
             if (fname == null)
             {

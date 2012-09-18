@@ -12,16 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.dspace.authorize.AuthorizeException;
-import org.dspace.content.DCValue;
-import org.dspace.content.DSpaceObject;
-import org.dspace.content.Collection;
-import org.dspace.content.Community;
-import org.dspace.content.Item;
-import org.dspace.content.Site;
+import org.dspace.content.*;
 import org.dspace.content.authority.Choices;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Constants;
@@ -85,7 +79,7 @@ public class XSLTDisseminationCrosswalk
     private boolean preferList = false;
 
     // load the namespace and schema from config
-    private void init()
+    protected void init()
         throws CrosswalkInternalException
     {
         if (namespaces != null || schemaLocation != null)
@@ -100,7 +94,7 @@ public class XSLTDisseminationCrosswalk
         }
 
         // all configs for this plugin instance start with this:
-        String prefix = CONFIG_PREFIX+DIRECTION+"."+myAlias+".";
+        String prefix = getConfigPrefix()+DIRECTION+"."+myAlias+".";
 
         // get the schema location string, should already be in the
         // right format for value of "schemaLocation" attribute.
@@ -201,6 +195,8 @@ public class XSLTDisseminationCrosswalk
         try
         {
             Document ddim = new Document(createDIM(dso));
+            // extra DIM field elements can be added to make non-DC information available in XSLT crosswalks
+            appendExtraDIMFieldElements(ddim, dso);
             Document result = xform.transform(ddim);
             Element root = result.getRootElement();
             root.detach();
@@ -211,6 +207,15 @@ public class XSLTDisseminationCrosswalk
             log.error("Got error: "+e.toString());
             throw new CrosswalkInternalException("XSL translation failed: "+e.toString(), e);
         }
+    }
+    
+    /**
+     * Extra elements can be added to the DIM representation to make non-DC information available to the XSLT transformation
+     * @param dimDoc
+     * @param dso 
+     */
+    protected void appendExtraDIMFieldElements(Document dimDoc, DSpaceObject dso)
+    {
     }
 
     /**
@@ -387,7 +392,7 @@ public class XSLTDisseminationCrosswalk
      * @param value The value of the DIM field.
      * @return A new DIM field element
      */
-    private static Element createField(String schema, String element, String qualifier, String language, String value)
+    protected static Element createField(String schema, String element, String qualifier, String language, String value)
     {
         return createField(schema, element, qualifier, language, value, null, -1);
     }
@@ -404,7 +409,7 @@ public class XSLTDisseminationCrosswalk
      * @param confidence confidence in the authority
      * @return A new DIM field element
      */
-    private static Element createField(String schema, String element, String qualifier, String language, String value,
+    protected static Element createField(String schema, String element, String qualifier, String language, String value,
                                         String authority, int confidence)
     {
         Element field = new Element("field",DIM_NS);
