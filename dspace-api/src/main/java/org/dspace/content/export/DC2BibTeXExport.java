@@ -57,13 +57,19 @@ public class DC2BibTeXExport implements IDCTextBasedExport {
         if (dcType == null)
             return null;
         
-        String key = "bibtextarget.of." + dcType + (dcSubtype!=null? "."+dcSubtype : "");
+        String key = "bibtextarget.of." + dcType.toLowerCase() + (dcSubtype!=null? "."+dcSubtype.toLowerCase() : "");
         String target = ConfigurationManager.getProperty(MODNAME, key);
         if (target!=null)
             return target;
             
         // if no mapping is found for (dcType,dcSubtype), the mapping for dcType is used.
-        return ConfigurationManager.getProperty(MODNAME, "bibtextarget.of." + dcType);
+        target = ConfigurationManager.getProperty(MODNAME, "bibtextarget.of." + dcType.toLowerCase());
+        if (target!=null)
+            return target;
+        
+        // if still no mapping was found, look for a default bibtex target
+        log.debug("key " + key + " not found in module " + MODNAME + ". Will look for default.bibtextarget.");
+        return ConfigurationManager.getProperty(MODNAME, "default.bibtextarget");
     }
     
     /**
