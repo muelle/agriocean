@@ -356,19 +356,19 @@ public class EditItemServlet extends DSpaceServlet {
     private void showEditForm(Context context, HttpServletRequest request,
             HttpServletResponse response, Item item) throws ServletException,
             IOException, SQLException, AuthorizeException {
-        if (request.getParameter("cc_license_url") != null) {
-            // check authorization
-            AuthorizeUtil.authorizeManageCCLicense(context, item);
-
-            // turn off auth system to allow replace also to user that can't
-            // remove/add bitstream to the item
-            context.turnOffAuthorisationSystem();
-            // set or replace existing CC license
-            CreativeCommons.setLicense(context, item,
-                    request.getParameter("cc_license_url"));
-            context.restoreAuthSystemState();
-            context.commit();
-        }
+//        if (request.getParameter("cc_license_url") != null) {
+//            // check authorization
+//            AuthorizeUtil.authorizeManageCCLicense(context, item);
+//
+//            // turn off auth system to allow replace also to user that can't
+//            // remove/add bitstream to the item
+//            context.turnOffAuthorisationSystem();
+//            // set or replace existing CC license
+//            CreativeCommons.setLicense(context, item,
+//                    request.getParameter("cc_license_url"));
+//            context.restoreAuthSystemState();
+//            context.commit();
+//        }
 
         // Get the handle, if any
         String handle = HandleManager.findHandle(context, item);
@@ -761,12 +761,12 @@ public class EditItemServlet extends DSpaceServlet {
         }
 
 
-        if (button.equals(
-                "submit_addcc")) {
-            // Show cc-edit page
-            request.setAttribute("item", item);
-            JSPManager.showJSP(request, response, "/tools/creative-commons-edit.jsp");
-        }
+//        if (button.equals(
+//                "submit_addcc")) {
+//            // Show cc-edit page
+//            request.setAttribute("item", item);
+//            JSPManager.showJSP(request, response, "/tools/creative-commons-edit.jsp");
+//        }
 
 
         if (button.equals(

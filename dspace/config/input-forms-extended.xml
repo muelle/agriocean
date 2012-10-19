@@ -143,6 +143,18 @@
                         <field>
                             <dc-schema>dc</dc-schema>
                             <dc-element>rights</dc-element>
+                            <dc-qualifier>uri</dc-qualifier>
+                            <label>Creative Commons License</label>
+                            <hint>Enter here the type of Creative Commons License chosen for the document (if any is chosen).</hint>	
+                            <input-type value-pairs-name="rights">dropdown</input-type>
+                            <repeatable>false</repeatable>
+                            <required></required>
+                        </field> 
+                    </fieldrow>
+                    <fieldrow>
+                        <field>
+                            <dc-schema>dc</dc-schema>
+                            <dc-element>rights</dc-element>
                             <dc-qualifier></dc-qualifier>
                             <label>Description of copyright</label>
                             <hint>Enter here any indication about the restriction on access, use and reproduction of your deposit.</hint>	
@@ -2299,6 +2311,21 @@
 					<stored-value>institution</stored-value>
 				</pair>
 		</value-pairs>
+		<value-pairs value-pairs-name="rights" dc-term="rights_uri">
+				<pair>
+					<displayed-value>Non-Commercial Creative Commons License</displayed-value>
+					<stored-value>http://creativecommons.org/licenses/by-nc/3.0/</stored-value>
+				</pair>
+
+				<pair>
+					<displayed-value>Creative Commons License authorising commercial use</displayed-value>
+					<stored-value>http://creativecommons.org/licenses/by/3.0/</stored-value>
+				</pair>
+				<pair>
+					<displayed-value>No Creative Commons License</displayed-value>
+					<stored-value>license</stored-value>
+				</pair>
+		</value-pairs>		
 		</form-value-pairs>
 </input-forms>
 

@@ -120,9 +120,9 @@ public class CreativeCommons {
 //                license_rdf.getBytes());
 
     //set dc.rights to CC url
-    item.clearMetadata(MetadataSchema.DC_SCHEMA, "rights", "uri", Item.ANY);
-    item.addMetadata(MetadataSchema.DC_SCHEMA, "rights", "uri", Item.ANY, cc_license_url);
-    item.update();
+//    item.clearMetadata(MetadataSchema.DC_SCHEMA, "rights", "uri", Item.ANY);
+//    item.addMetadata(MetadataSchema.DC_SCHEMA, "rights", "uri", Item.ANY, cc_license_url);
+//    item.update();
   }
 
   public static void setLicense(Context context, Item item,

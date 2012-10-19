@@ -632,7 +632,7 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>license</servlet-name>
-        <url-pattern>/licence</url-pattern>
+        <url-pattern>/license</url-pattern>
     </servlet-mapping>
     <mime-mapping>
         <extension>ico</extension>

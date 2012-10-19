@@ -230,27 +230,6 @@
             <p><input type="submit" name="submit_more" value="<fmt:message key="jsp.submit.upload-file-list.button4"/>" /></p>
             
             <%
-                String jurisdiction = ConfigurationManager.getProperty("webui.submit.cc-jurisdiction");
-                
-                if ((jurisdiction != null) && (!"".equals(jurisdiction))) {
-                    jurisdiction = "&amp;jurisdiction=" + jurisdiction.trim();
-                } else {
-                    jurisdiction = "";
-                }
-            %>
-            <script type="text/javascript">
-                function CCLicense(){
-                    $('mainForm').getInputs('hidden', 'cc_license_url')[0].value = document.getElementById("cc_js_result_uri").value;
-                    return true;
-                }
-            </script>
-
-            <div id="cc_js_widget_container">
-                <script type="text/javascript" src="http://api.creativecommons.org/jswidget/tags/0.97/complete.js?locale=en_US<%= jurisdiction%>"></script>
-                <input type="hidden" name="cc_license_url" value="" />
-            </div>
-
-            <%
                 }
             %>
             <table border="0" width="80%">

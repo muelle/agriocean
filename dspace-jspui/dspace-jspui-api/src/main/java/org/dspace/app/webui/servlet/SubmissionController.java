@@ -301,19 +301,7 @@ public class SubmissionController extends DSpaceServlet {
             JSPManager.showInternalError(request, response);
         }
 
-        String ccLicenseUrl = request.getParameter("cc_license_url");
-
-        if ((ccLicenseUrl != null) && (ccLicenseUrl.length() > 0)) {
-            // save the CC license
-            CreativeCommons.setLicense(context, subInfo.getSubmissionItem().getItem(), ccLicenseUrl);
-        } else if (subInfo.getSubmissionItem() != null && request.getParameter("cc_license_url") != null){
-            Item item = subInfo.getSubmissionItem().getItem();
-            String localLicenseURL = ConfigurationManager.getProperty("dspace.baseUrl") + "/licence";
-            //set dc.rights to CC url
-            item.clearMetadata(MetadataSchema.DC_SCHEMA, "rights", "uri", Item.ANY);
-            item.addMetadata(MetadataSchema.DC_SCHEMA, "rights", "uri", Item.ANY, localLicenseURL);
-            item.update();
-        }
+       
 
         // if this is the furthest step the user has been to, save that info
         if (!subInfo.isInWorkflow() && (currentStepConfig.getStepNumber() > getStepReached(subInfo))) {
