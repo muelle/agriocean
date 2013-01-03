@@ -30,6 +30,10 @@
                     <xsl:value-of select="dim_fun:qdcelements_get($item, 'dc', 'identifier', 'uri')"/>
                 </xsl:attribute>
                 
+				<xsl:call-template name="statement">
+				      <xsl:with-param name="propertyURI">http://www.w3.org/1999/02/22-rdf-syntax-ns#type</xsl:with-param>
+					  <xsl:with-param name="valueURI">http://voa3r.eu/class/Resource</xsl:with-param>
+				</xsl:call-template>
                 
                 <xsl:if test="dim_fun:qdcelement_nonempty($item, 'dc', 'title', '')">
                     <xsl:call-template name="statement">
@@ -317,11 +321,11 @@
                     </xsl:call-template>
                 </xsl:if>
 
-                <xsl:if test="dim_fun:qdcelement_nonempty($item,'voa3r','license','')">
+                <xsl:if test="dim_fun:qdcelement_nonempty($item,'dc','rights','uri')">
                     <xsl:call-template name="statement">
                         <xsl:with-param name="propertyURI">http://purl.org/dc/terms/license</xsl:with-param>
                         <xsl:with-param name="valueURI">
-                            <xsl:value-of select="dim_fun:qdcelements_get($item,'voa3r','license','')"/>
+                            <xsl:value-of select="dim_fun:qdcelements_get($item,'dc','rights','uri')"/>
                         </xsl:with-param>
                         <xsl:with-param name="contents">
                         </xsl:with-param>
