@@ -272,7 +272,7 @@
                                 <xsl:call-template name="literalValueString">
                                     <xsl:with-param name="sesURI">http://voa3r.eu/terms/EncodedSchema</xsl:with-param>
                                     <xsl:with-param name="contents">
-                                        <xsl:value-of select="concat('BibTEX:', .)"/>
+                                        <xsl:value-of select="."/>
                                     </xsl:with-param>
                                 </xsl:call-template>
                             </xsl:for-each>
