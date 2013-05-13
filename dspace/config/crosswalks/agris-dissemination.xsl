@@ -24,6 +24,7 @@
 
 
     <xsl:template match="/">
+	  <ags:resources>
         <ags:resource>
             <xsl:call-template name="addARNattribute"/>
             <xsl:call-template name="addTitles"/>
@@ -42,6 +43,7 @@
             <xsl:call-template name="addRights"/>
             <xsl:call-template name="addCitation"/>
         </ags:resource>
+	  </ags:resources>
     </xsl:template>
     
     <xsl:template name="addCitation">
